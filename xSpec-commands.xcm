@@ -1,0 +1,11 @@
+cd /media/suyog/DATA/xmm_obs/0810200501/work;
+data 1 PN_CCD4_spectrum_grouped.fits 2 MOS1_CCD1_spectrum_grouped.fits 3 MOS2_CCD1_spectrum_grouped.fits;
+cpd /xs;
+setplot energy;
+ignore bad;
+ignore **-0.3 15.0-**;
+plot data;
+model tbabs*zashift*(bbody+powerlaw);
+fit 100 1e-1;
+plot data residuals;
+
