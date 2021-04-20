@@ -7,8 +7,15 @@
 10th April 2021:
 ---
 Getting the spectra fits using PyXspec module.
+
+13th April 2021:
+---
+Adding ArgParse so that this code can be used by ``spectra.py``
+to fit spectra.
+Nope. This doesn't actually work.
 """
 
+import argparse
 import subprocess
 import matplotlib.pyplot as plt
 
@@ -16,48 +23,74 @@ from xspec import *
 from plotAnal import plotAnal
 
 
-def allSpec (workdir):
+##-- function to convert yes/no to bool --##
+def strToBool (s):
+    if type(s)==bool:
+        return s
+    elif s in ['yes', 'y', 'true', 'True', 'Y', 'YES', 'TRUE']:
+        return True
+    elif s in ['no', 'n', 'false', 'False', 'N', 'NO', 'FALSE']:
+        return False
+    else:
+        return print('\nPlease give bool values as yes/no.')
+
+##-- print error message --##
+def printErrorMessage (message):
+    width = len(str(message))+4
+    message = str(message).center(width, ' ')
+    print('\n\t\t'+'*'*(width+4))
+    print(f'\t\t**{message}**')
+    print('\t\t'+'*'*(width+4))
+
+
+
+def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, saveFig=True, showFig=True):
     
     pnName = workdir+"/PN_CCD4"
     mos1Name = workdir+"/MOS1_CCD1"
     mos2Name = workdir+"/MOS2_CCD1"
-    """
-    pnS = Spectrum(pnName+"_spectrum_source.fits")
-    pnS.background = pnName+"_spectrum_background.fits"
-    pnS.response = pnName+".rmf"
-    pnS.response.arf = pnName+".arf"
+    
+    if grouped:
+        pnS = Spectrum(pnName+"_spectrum_grouped.fits")
+        mos1S = Spectrum(mos1Name+"_spectrum_grouped.fits")
+        mos2S = Spectrum(mos2Name+"_spectrum_grouped.fits")
+    else:
+        pnS = Spectrum(pnName+"_spectrum_source.fits")
+        pnS.background = pnName+"_spectrum_background.fits"
+        pnS.response = pnName+".rmf"
+        pnS.response.arf = pnName+".arf"
         
-    mos1S = Spectrum(mos1Name+"_spectrum_source.fits")
-    mos1S.background = mos1Name+"_spectrum_background.fits"
-    mos1S.response = mos1Name+".rmf"
-    mos1S.response.arf = mos1Name+".arf"
+        mos1S = Spectrum(mos1Name+"_spectrum_source.fits")
+        mos1S.background = mos1Name+"_spectrum_background.fits"
+        mos1S.response = mos1Name+".rmf"
+        mos1S.response.arf = mos1Name+".arf"
         
-    mos2S = Spectrum(mos2Name+"_spectrum_source.fits")
-    mos2S.background = mos2Name+"_spectrum_background.fits"
-    mos2S.response = mos2Name+".rmf"
-    mos2S.response.arf = mos2Name+".arf"
-    """
-    pnS = Spectrum(pnName+"_spectrum_grouped.fits")
-    mos1S = Spectrum(mos1Name+"_spectrum_grouped.fits")
-    mos2S = Spectrum(mos2Name+"_spectrum_grouped.fits")
+        mos2S = Spectrum(mos2Name+"_spectrum_source.fits")
+        mos2S.background = mos2Name+"_spectrum_background.fits"
+        mos2S.response = mos2Name+".rmf"
+        mos2S.response.arf = mos2Name+".arf"
     
     Plot.xAxis = "KeV"
     
     AllData.ignore("bad")
-    pnS.ignore("**-0.3 15.0-**")
-    mos1S.ignore("**-0.3 15.0-**")
-    mos2S.ignore("**-0.3 15.0-**")
+    pnS.ignore("**-0.3 10.0-**")
+    mos1S.ignore("**-0.3 10.0-**")
+    mos2S.ignore("**-0.3 10.0-**")
     
     #m1 = Model("tbabs*zashift*(powerlaw+bbody)")
-    m1 = Model("zashift*powerlaw")
+    m1 = Model(model)
     
     #print(AllModels.sources)
     #print(m1.componentNames)
     #print(m1.zashift.parameterNames)
     
-    #m1.powerlaw.norm = 0.4
-    #m1.zashift.Redshift = 2.0
-    m1.zashift.Redshift.frozen = False
+    for modelPart in model.split('*'):
+        #if modelPart == 'powerlaw':
+        #    m1.powerlaw.norm = 0.4
+        if modelPart == "zashift":
+            #m1.zashift.Redshift = 2.0
+            m1.zashift.Redshift.frozen = False
+            break
     
     Xset.abund = "wilm"
     
@@ -69,13 +102,64 @@ def allSpec (workdir):
     #Plot.xLog = True
     #Plot("model")
     #Plot("data", "model", "residuals")
-    Plot("data", "residuals")
+    Plot("ldata", "residuals", "background")
+    
+    #-- make the matplotlib plot --#
+    fig, ax = plt.subplots(3, 1, figsize=(10, 10))
+    
+    for pG, color, label in zip([1, 2, 3], ['black', 'red', 'green'], ['PN', 'MOS1', 'MOS2']):
+        Sx, Sy = Plot.x(plotWindow=1, plotGroup=pG), Plot.y(plotWindow=1, plotGroup=pG)
+        SxErr, SyErr = Plot.xErr(plotWindow=1, plotGroup=pG), Plot.yErr(plotWindow=1, plotGroup=pG)
+        foldedS = Plot.model(plotWindow=1, plotGroup=pG)
+        
+        resiX, resiY = Plot.x(plotWindow=2, plotGroup=pG), Plot.y(plotWindow=2, plotGroup=pG)
+        resiXerr, resiYerr = Plot.xErr(plotWindow=2, plotGroup=pG), Plot.yErr(plotWindow=2, plotGroup=pG)
+    
+        Bx, By = Plot.x(plotWindow=3, plotGroup=pG), Plot.y(plotWindow=3, plotGroup=pG)
+        BxErr, ByErr = Plot.xErr(plotWindow=3, plotGroup=pG), Plot.yErr(plotWindow=3, plotGroup=pG)
+        
+        ax[0].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
+                       marker='.', markersize=3, label=label, \
+                       ls='none', color=color, linewidth=0.5)
+        ax[0].plot(Sx, foldedS, drawstyle='steps-pre', color=color)
+        ax[1].errorbar(x=resiX, y=resiY, xerr=resiXerr, yerr=resiYerr, \
+                       marker='.', markersize=3, label=label, \
+                       ls='none', color=color, linewidth=0.5)
+        ax[1].plot([0, resiX[-1]], [0,0], 'c', color='lightgreen')
+        ax[2].errorbar(x=Bx, y=By, xerr=BxErr, yerr=ByErr, \
+                       marker='.', markersize=3, label=label, \
+                       ls='none', color=color, linewidth=1.0)
+        ax[2].plot(Bx, foldedS, drawstyle='steps-pre', color=color, \
+                   linewidth=0.5, alpha=0.75)
+        
+    for i in range(3):
+        ax[i].set_xscale('log')
+        ax[i].legend(loc='upper right')
+    ax[0].set_yscale('log')
+    ax[2].set_yscale('log')
+    
+    ax[0].set_title('data and folded model')
+    ax[1].set_title('residuals')
+    ax[2].set_title('background')
+    
+    ax[0].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
+    ax[2].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
+    ax[2].set_xlabel('Energy (KeV)')
+    
+    plt.suptitle(f'{obsID}\n{model}', x=0.05, y=0.98, horizontalalignment='left')
+    plotAnal.beautifyPlot(ax, minor=True, logXformat='scalar', logXminorLabel=True)
+    plt.tight_layout()
+    if saveFig:
+        plt.savefig('EPIC_spectra_'+model.replace('*','-')+'.png', dpi=300)
+    if showFig:
+        plt.show()
+        plt.close()
     
     return True
     
     
 
-def main (instName, workdir, grouped=True, ax=None):
+def main (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, saveFig=True, showFig=True):
     
     """
     subprocess.run("cd "+workdir+";"+ \
@@ -110,16 +194,20 @@ def main (instName, workdir, grouped=True, ax=None):
     
     AllData.ignore("bad")
     #AllData.ignore("**-0.3 15.-**")
-    S.ignore("**-0.3 15.0-**")   
-    m1 = Model("tbabs*zashift*(powerlaw)")
+    S.ignore("**-0.3 10.0-**")   
+    m1 = Model(model)
     
     #print(AllModels.sources)
     #print(m1.componentNames)
     #print(m1.zashift.parameterNames)
     
-    #m1.powerlaw.norm = 0.4
-    #m1.zashift.Redshift = 2.0
-    m1.zashift.Redshift.frozen = False
+    for modelPart in model.split('*'):
+        #if modelPart == 'powerlaw':
+        #    m1.powerlaw.norm = 0.4
+        if modelPart == "zashift":
+            #m1.zashift.Redshift = 2.0
+            m1.zashift.Redshift.frozen = False
+            break
     
     Xset.abund = "wilm"
     
@@ -130,33 +218,51 @@ def main (instName, workdir, grouped=True, ax=None):
     Plot.device = "/xs"
     #Plot.yLog = True
     #Plot("model")
-    Plot("ldata", "residuals")
+    Plot("ldata", "residuals", "background")
     
     #-- make the matplotlib plot --#
     Sx, Sy = Plot.x(plotWindow=1), Plot.y(plotWindow=1)
     SxErr, SyErr = Plot.xErr(plotWindow=1), Plot.yErr(plotWindow=1)
     foldedS = Plot.model(plotWindow=1)
+    
     resiX, resiY = Plot.x(plotWindow=2), Plot.y(plotWindow=2)
     resiXerr, resiYerr = Plot.xErr(plotWindow=2), Plot.yErr(plotWindow=2)
     
-    if ax is None:
-        fig, ax = plt.subplots(2, 1, figsize=(5, 10))
+    Bx, By = Plot.x(plotWindow=3), Plot.y(plotWindow=3)
+    BxErr, ByErr = Plot.xErr(plotWindow=3), Plot.yErr(plotWindow=3)
+    
+    #if ax is None:
+        #print('printing the matplotlib plot.')
+    fig, ax = plt.subplots(2, 1, figsize=(10, 10))
         
-    ax[0].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, 
-                   marker='.', markersize=3, 
+    ax[0].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
+                   marker='.', markersize=3, \
                    ls='none', color='black', linewidth=0.5)
-    ax[0].plot(Sx, foldedS, drawstyle='steps-pre')
-    ax[1].errorbar(x=resiX, y=resiY, xerr=resiXerr, yerr=resiYerr, 
-                   marker='.', markersize=3, 
+    ax[0].plot(Sx, foldedS, drawstyle='steps-pre', color='black')
+    ax[1].errorbar(x=resiX, y=resiY, xerr=resiXerr, yerr=resiYerr, \
+                   marker='.', markersize=3, \
                    ls='none', color='black', linewidth=0.5)
     ax[1].plot([0, resiX[-1]], [0,0], 'c', color='lightgreen')
+    ax[0].errorbar(x=Bx, y=By, xerr=BxErr, yerr=ByErr, \
+                   marker='.', markersize=3, \
+                   ls='none', color='blue', alpha=0.75, linewidth=0.5)
+    ax[0].set_xscale('log')
+    ax[1].set_xscale('log')
     ax[0].set_yscale('log')
     
-    if ax is None:
-        ax[0].set_title('data and folded model')
-        ax[1].set_title('residuals')
+    #if ax is None:
+    ax[0].set_title('data, background and folded model')
+    ax[1].set_title('residuals')
     
-        #plotAnal.beautifyPlot(ax)
+    ax[0].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
+    ax[1].set_xlabel('Energy (KeV)')
+    
+    plt.suptitle(f'{obsID}\n{instName}\n{model}', x=0.05, y=0.98, horizontalalignment='left')
+    plotAnal.beautifyPlot(ax, minor=True, logXformat='scalar', logXminorLabel=True)
+    plt.tight_layout()
+    if saveFig:
+        plt.savefig(instName.split('_')[0]+'_spectra_'+model.replace('*','-')+'.png', dpi=300)
+    if showFig:
         plt.show()
         plt.close()
     
@@ -167,18 +273,53 @@ def main (instName, workdir, grouped=True, ax=None):
 
 
 if __name__=="__main__":
-    obsID = '0810200701'
+
+    description = 'Program to fit a model to the Spectra.'
+    
+    parser = argparse.ArgumentParser(description=description)   
+    
+    parser.add_argument('--workdir', action='store', type=str, default='/media/suyog/DATA/xmm_obs', \
+                        help='directory where obsid folders will be stored. (default:%(default)s)')
+    parser.add_argument('--obsID', action='store', default=None, #['0810200701'], \
+                        help='obsID to fit the Spectra for. (default:%(default)s)')
+    parser.add_argument('--instName', action='store', default='MOS1_CCD1', \
+                        help='the instrument to use. (default:%(default)s)')
+    parser.add_argument('--model', action='store', default="tbabs*zashift*(powerlaw)", \
+                        help='what model to use for fitting. (default:%(default)s)')
+    parser.add_argument('--grouped', action='store', default='yes', \
+                        help='whether to use grouped spectra data or not? (default:%(default)s)')
+    parser.add_argument('--saveFig', action='store', default='yes', \
+                        help='want to save the plot? (default:%(default)s)')
+    parser.add_argument('--showFig', action='store', default='yes', \
+                        help='want to see the plot? (default:%(default)s)')
+    
+    #-- location paths arguments --#
+    SAS_DIR = '/usr/local/xmmsas_20201028_0905'  
+    HEADAS = '/usr/local/heasoft-6.28/x86_64-pc-linux-gnu-libc2.27'
+    SAS_CCFPATH = '/ccf'
+    parser.add_argument('--sas_dir', action='store', type=str, default=SAS_DIR, \
+                        help='SAS_DIR environment variable. (default:%(default)s)')
+    parser.add_argument('--headas', action='store', type=str, default=HEADAS, \
+                        help='HEADAS environment variable. (default:%(default)s)')
+    parser.add_argument('--sas_ccfpath', action='store', type=str, default=SAS_CCFPATH, \
+                        help='SAS_CCFPATH environment variable. (default:%(default)s)')
+
+    #-- parse the arguments --#
+    args = parser.parse_args()
+    
+    obsID = args.obsID
     workdir = '/media/suyog/DATA/xmm_obs/'+obsID+'/work'
-    instName = 'MOS1_CCD1'
-    main(instName=instName, workdir=workdir, grouped=True)
-    #allSpec(workdir)
+    instName, model = args.instName, args.model
+    grouped, saveFig = strToBool(args.grouped), strToBool(args.saveFig)
     
-    
-    
-    
+    if instName == 'all':
+        allSpec(workdir, obsID=obsID, model=model, grouped=grouped, saveFig=saveFig)
+    else:
+        main(instName=instName, workdir=workdir, obsID=obsID, model=model, grouped=grouped, saveFig=saveFig)
     
     
 #################### End of Program #########################
 #############################################################
+
 
 
