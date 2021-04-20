@@ -34,6 +34,10 @@ The grouped MOS12 and PN Spectra should be usable with the xspec package when it
 
 Some problems with the Timing mode Spectra extraction. Dunno if it is even required?
 I do not have the RAWX and RAWY coordinates that are needed for the purpose of extraction.
+
+13 April 2021:
+---
+Writing the ``xspec_fitSpectra`` function to fit the spectra using ``pyXspec.py`` file.
 """
 
 import os
@@ -143,7 +147,7 @@ class spectra:
         #-- get the objName from the file --#
         objName = df.name.drop_duplicates().dropna().tolist()[0]
         self.objName = objName
-        print(f'The object at (RA, DEC) = ({ra},{dec}) is {objName}')
+        print(f'The object at (RA,DEC) = ({ra},{dec}) is {objName}')
 
         #-- copy and append objName to the file --#
         subprocess.run("cd "+workdir+";"+ \
@@ -180,55 +184,6 @@ class spectra:
         self.obsIDs = list(obsIDs-badObs)
 
         return print('Read location parameters from the xmmPipeline Pickle file.')
-
-
-    ##-- fit Spectra to extracted group Spectra data --##
-    def xspec_fitSpectra (self, instName):
-        """
-        Fits a model Spectra to the extracted Spectra data using xspec package.
-        See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec
-
-        Input: Extracted Spectra FITS file.
-        Output: Spectra plots.
-
-        THIS CANNOT'T RUN THROUGH THE PYTHON PROGRAM.
-        """
-        print('\nStarting to fit a model Spectra to the extracted Spectra using xspec.')
-        
-        #-- set the environment variables --#
-        os.environ['SAS_DIR'] = self.sas_dir
-        os.environ['HEADAS'] = self.headas
-        os.environ['SAS_CCFPATH'] = self.sas_ccfpath
-        
-        #-- iterating for all the obsIDs --#      
-        for obsID in self.obsIDs:
-            print('\nFitting Spectra for obsID {}.'.format(obsID))
-            workdir = self.workdir+'/'+obsID+'/work'
-
-            subprocess.run("cd "+workdir+";"+ \
-                           ". $HEADAS/headas-init.sh;"+ \
-                           ". $SAS_DIR/setsas.sh;"+ \
-                           #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                           "xspec"
-                           """
-                              " data l "+instName+"_spectrum_grouped.fits"+ \
-                              " response l "+instName+".rmf"+ \
-                              " arf l "+instName+".arf"+ \
-                              " cpd /xs"+ \
-                              " setplot energy"+ \
-                              " ignore bad"+ \
-                              " ignore **-0.3 15.-**"+ \
-                              " plot data;"
-                              " model wabs*powerlaw;"
-                              " fit 100 1e-1"
-                              " setplot rebin 3 4096"
-                              " plot data residuals"
-                              " error 2.706 1 2 3"
-                           """
-                           , shell=True)
-            print('\nSpectra fitting for obsID {} finished.'.format(obsID))
-            
-        return print('Fitted model Spectra to the extracted Spectra.')
 
 
     ##-- extract the Spectra in Image Mode --##
@@ -396,19 +351,57 @@ class spectra:
         return print('\nCompleted extracting Spectra in Image Mode.')
 
 
+    ##-- fit Spectra to extracted group Spectra data --##
+    def xspec_fitSpectra (self, instName='MOS1_CCD1'):
+        """
+        Fits a model Spectra to the extracted Spectra data using xspec package.
+        See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec
+
+        Input: Extracted Spectra FITS file.
+        Output: Spectra plots.
+
+        THIS CANNOT'T RUN THROUGH THE PYTHON PROGRAM.
+        """
+        print('\nStarting to fit a model Spectra to the extracted Spectra using xspec.')
+        
+        #-- set the environment variables --#
+        os.environ['SAS_DIR'] = self.sas_dir
+        os.environ['HEADAS'] = self.headas
+        os.environ['SAS_CCFPATH'] = self.sas_ccfpath
+        
+        #-- iterating for all the obsIDs --#      
+        for obsID in self.obsIDs:
+            print('\nFitting Spectra for obsID {}.'.format(obsID))
+            workdir = self.workdir+'/'+obsID+'/work'
+
+            models = ['zashift*powerlaw', 'zashift*bbody',
+                      'tbabs*zashift*powerlaw', 'tbabs*zashift*bbody',
+                      'zashift*\(powerlaw+bbody\)', 'tbabs*zashift*\(powerlaw+bbody\)']
+
+            for model in models[4:]:
+                subprocess.run("cd "+workdir+";"+ \
+                               ". $HEADAS/headas-init.sh;"+ \
+                               ". $SAS_DIR/setsas.sh;"+ \
+                               #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
+                               "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+" --instName all " \
+                                    +"--model "+model+";"
+                               , shell=True)
+            print('\nSpectra fitting for obsID {} finished.'.format(obsID))
+            
+        return print('Fitted model Spectra to the extracted Spectra.')
+
+
     ##-- function to save the final results --##
     def save_results (self):
         """
-        Does two tasks,
-            One, saves a pickle file at each obsID directory containing 
-                 sourceCCDs, sourceLoc, backgroundLoc and otherSources for it.
-            Two, copies the Source, Background Events lists and other output files 
-                 from each obsID directory to a results folder in the main directory.
+        Does one tasks
+                Copies the Spectra images from each obsID directory to a results 
+                folder in the main directory.
         """
-        print('\nLastly saving results to a pickle file for each obsID.')
+        print('\nLastly saving results for each obsID to a common results folder.')
 
         maindir = self.workdir
-
+        #objName+".dat;"
         #-- make the results directory --#
         if not os.path.isdir(maindir+'/results'):
             subprocess.run("cd "+maindir+";"+ \
@@ -420,7 +413,7 @@ class spectra:
             print('\nSaving results for obsID {}.'.format(obsID))
             workdir = maindir+'/'+obsID+'/work'
             
-            #-- save the CCD and coords info in a pickle file --#
+            """ #-- save the CCD and coords info in a pickle file --#
             result = {}
             result['sourceCCDs'] = self.sourceCCDs[obsID]
             result['sourceLoc'] = self.sourceLoc[obsID]
@@ -430,20 +423,18 @@ class spectra:
 
             outfile = open(workdir+'/'+'ccd_coords_info.pickle', 'wb')
             pickle.dump(result, outfile)
-            outfile.close()
+            outfile.close() """
             
             #-- copy Event lists and other results --#
-            srcFiles = glob.glob(workdir+'/*source*.fits')
-            bkgFiles = glob.glob(workdir+'/*background*.fits')
-            pngFiles = glob.glob(workdir+'/*.png')
-            jpegFiles = glob.glob(workdir+'/*.jpeg')
-            csvFiles = glob.glob(workdir+'/*.csv')
+            spectraImgFiles = glob.glob(workdir+'/*spectra*.png')
 
-            files = srcFiles + bkgFiles + pngFiles + jpegFiles + csvFiles
-            for file in files:
+            for file in spectraImgFiles:
                 fname = os.path.basename(file)         #--get file name from the glob path.
                 fname = fname.replace('_'+obsID, '')   #--remove obsID from file name, if it is already there.
                 fname = obsID +'_'+ fname              #--add the obsID at the start of file name.
+                
+                file = file.replace('(','\(').replace(')','\)')
+                fname = fname.replace('(','\(').replace(')','\)')
 
                 subprocess.run("cp "+file+" "+resultdir+"/"+fname, shell=True)
 
@@ -477,13 +468,15 @@ def main (args):
         print('Using the obsIDs passed.')
 
     #-- run the spectra functions --#
-    obj.readPickleFile()
-    obj.extractSpectra_imageMode()
+    #obj.readPickleFile()
+    #obj.extractSpectra_imageMode()
+    #obj.xspec_fitSpectra()
+    obj.save_results()
 
-    print(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
-
-    print('\nHurray! extractProds Method Succesfully ran.')
-    if len(obj.badObs)!=0:
+    print('\nHurray! The Spectra method ran successfully.')
+    if len(obj.smallMode) != 0:
+        print(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
+    if len(obj.badObs) != 0:
         print('These obsIDs were excluded from analysis: ', obj.badObs)
 
     return True
