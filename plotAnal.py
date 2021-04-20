@@ -3,6 +3,30 @@
 ###           plotAnal functionality              ###
 #####################################################
 
+"""
+13th May 2020:
+A module to ease up beatifying the plots.
+
+13th June 2020:
+Made changes on this.
+If the fit is linear regression then the rSquared coefficient of determination
+is the square of the pearson correlation coefficient. 
+
+20th August 2020:
+Adding keyword for number of ticks shown.
+
+23rd September 2020:
+Adding keyword for axis colours via ax.spines['bottom'].set_color()
+    NOTE: spines can only be used with figure and not subplots!
+    
+24th January 2021:
+Made modifications in the beautifyPlot().
+
+14th April 2021:
+---
+Adding modifications to the beautifyPlot function.
+"""
+
 import math
 import scipy
 import statsmodels.api as sm
@@ -204,7 +228,9 @@ class plotAnal:
 
         
     def beautifyPlot (figures, labelsize=11, lengthMajor=10, tickNum=10, tickDirection='out', \
-                      lengthMinor=5, minor=False, grid=False, axisColor=None, yTicks=True, xTicks=True):
+                      lengthMinor=5, minor=False, grid=False, axisColor=None, yTicks=True, \
+                      xTicks=True, logFormat=None, logXformat=None, logYformat=None, logMinor=True, \
+                      minorLabel=False, logXminorLabel=False, logYminorLabel=False):
         """
         If axes subplots is used, with multiple rows and columns, then the ndarray of axes subobjects 
         can be flattened:
@@ -224,37 +250,60 @@ class plotAnal:
                 #if figure.name!='polar':
                 #    figure.xaxis.set_major_locator(tck.AutoLocator())  
                 #    figure.yaxis.set_major_locator(plt.MaxNLocator(10))
-                
-                if xTicks==True:
-                    if tickNum!=None:
-                        figure.xaxis.set_major_locator(tck.MaxNLocator(tickNum))
-                    else:
-                        figure.xaxis.set_major_locator(tck.AutoLocator())
-                    
-                if yTicks==True:
-                    if tickNum!=None:
-                        figure.yaxis.set_major_locator(tck.MaxNLocator(tickNum))
-                    else:
-                        figure.yaxis.set_major_locator(tck.AutoLocator())
-                        
+                      
                 figure.tick_params(axis='both', which='major', labelsize=labelsize, length=lengthMajor, direction=tickDirection)
                 figure.tick_params(axis='both', which='minor', length=lengthMinor, direction=tickDirection)
                 
-                if minor==True:
-                    figure.xaxis.set_minor_locator(tck.AutoMinorLocator())
-                    figure.yaxis.set_minor_locator(tck.AutoMinorLocator())
-                    if tickDirection!=None:
-                        figure.tick_params(axis='both', which='minor')
+                if logFormat is not None:
+                    if logXformat is None:
+                        logXformat = logFormat
+                    if logYformat is None:
+                        logYformat = logFormat
                         
-                if grid==True:
+                xaxis, yaxis = figure.xaxis, figure.yaxis
+                logFormats, logMinorLabels = [logXformat, logYformat], [logXminorLabel, logYminorLabel]
+                for axis, ticks, lFormat, lMinorLabel in zip([xaxis, yaxis], [xTicks, yTicks], logFormats, logMinorLabels):
+                    if ticks:
+                        if type(axis._scale) == mpl.scale.LogScale:
+                            if lFormat == 'g':
+                                formatter = tck.FuncFormatter(lambda y, _: '{:g}'.format(y))
+                            elif lFormat == 'scalar':
+                                formatter = tck.ScalarFormatter()
+                            elif lFormat == 'norm':
+                                formatter = tck.ScalarFormatter(useMathText=True)
+                                formatter.set_scientific(True) 
+                                formatter.set_powerlimits((-1,1)) 
+                            elif lFormat == 'exp':
+                                formatter = tck.LogFormatter()
+                            else:
+                                formatter = tck.LogFormatterSciNotation()
+                            axis.set_major_formatter(formatter)
+                                
+                            if lMinorLabel:
+                                formatter = tck.FuncFormatter(lambda y, _: '{:g}'.format(y))
+                                axis.set_minor_formatter(formatter)
+                            if not logMinor:
+                                axis.set_minor_locator(tck.NullLocator())
+                        
+                        else:
+                            if tickNum is not None:
+                                axis.set_major_locator(tck.MaxNLocator(tickNum))
+                            else:
+                                axis.set_major_locator(tck.AutoLocator())
+                            if minor:
+                                axis.set_minor_locator(tck.AutoMinorLocator())
+                            if minorLabel:
+                                axis.set_minor_formatter(tck.FormatStrFormatter("%.2f"))
+                  
+                if grid == True:
                     figure.grid(True)
 
-                if axisColor!=None:
+                if axisColor is not None:
                     where = list(axisColor.keys())[i]
                     color = list(axisColor.values())[i]
                     figure.spines[where].set_color(color)
                     figure.tick_params(axis='y', colors=color)
-                    if minor==True:
+                    if minor == True:
                         figure.tick_params(axis='y', which='minor', colors=color)
                     
         except (TypeError, AttributeError) as e:
