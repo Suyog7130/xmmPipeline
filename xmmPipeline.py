@@ -112,7 +112,7 @@ class xmmObj:
 
     ##-- initialize some common parameters --##
     def __init__ (self, ra, dec, workdir, sas_dir, headas, sas_ccfpath, \
-                  srcCircRadius=None, bkgCircRadius=None, dSrcThreshold=70, \
+                  srcCircRadius=None, bkgCircRadius=None, dSrcThreshold=70, bkgCircGap=5, \
                   edetectmode='chain', esp_nsplinenodes=14, gti_indiThreshold=500, gti_combThreshold=None, \
                   lcBinSize=25, binBkglc='no'):
     
@@ -136,6 +136,7 @@ class xmmObj:
         self.srcCircRadius = srcCircRadius    #--radius of the source circle, arcsec changed to pixels later.
         self.bkgCircRadius = bkgCircRadius    #--radii of the background circles, arcsec.
         self.dSrcThreshold = dSrcThreshold    #--threshold distance from the source, arcsec.
+        self.bkgCircGap = bkgCircGap          #--gap to have around the circles, in pixels.
 
         self.edetectmode = edetectmode               #--run edetect_chain or individual tasks?
         self.esp_nsplinenodes = esp_nsplinenodes     #--for esplinemap within edetect_chain, controls no. of sources detected.
@@ -781,7 +782,7 @@ class xmmObj:
             #-- find the overlap region and background circles --#
             findOverlapObj = findOverlap(workdir=workdir, obsID=obsID, pnCCD=pnCCD, srcCoords=srcCoords, otherSrc=otherSrc, \
                                          srcR=self.srcCircRadius, bkgR=self.bkgCircRadius, srcThreshold=self.dSrcThreshold, \
-                                         saveFig=True, showFig=True)
+                                         gap=self.bkgCircGap, saveFig=True, showFig=True)
             bCircle1, bCircle2, correctSrc, srcR, isSmallMode = findOverlapObj.main()
             
             #-- save the background circle parameters --#
@@ -1174,7 +1175,7 @@ def extractProds_method (args):
     obj = xmmObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                  sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
                  srcCircRadius=args.srcCircRadius, bkgCircRadius=bkgCircRadius, dSrcThreshold=args.dSrcThreshold, \
-                 esp_nsplinenodes=args.esp_nsplinenodes, \
+                 bkgCircGap=args.bkgCircGap, esp_nsplinenodes=args.esp_nsplinenodes, \
                  gti_indiThreshold=args.gti_indiThreshold, gti_combThreshold=args.gti_combThreshold, \
                  lcBinSize=args.lcBinSize, binBkglc=args.binBkglc)
     
@@ -1190,15 +1191,15 @@ def extractProds_method (args):
     #-- run the extract products functions --#
     obj.removeFlareBackground()
     obj.findSourceCCD()
-    """ obj.extract_InstrumentalGTIs()
+    obj.extract_InstrumentalGTIs()
     obj.combineGTIs()
-    obj.combineEPICdata() """
+    obj.combineEPICdata()
     obj.find_otherSources()
     obj.getBackgroundCircles()
-    """ obj.extract_srcBkg_eventLists()
+    obj.extract_srcBkg_eventLists()
     #obj._extract_sMode_srcPNlc(obsID=obj.obsIDs[0])
     obj.obtain_lightCurves()
-    obj.save_results() """
+    obj.save_results()
 
     print('\nHurray! extractProds Method Succesfully ran.')
     if len(obj.badObs)!=0:
@@ -1256,8 +1257,10 @@ if __name__=="__main__":
     group.add_argument('--bkgCircRadius', action='store', nargs='+', default=None, \
                         help='radii of the background circles, arcsec. \
                               Default values are r1=0.5*threshold and r2=r1-10.')
-    group.add_argument('--dSrcThreshold', action='store', default=70,
+    group.add_argument('--dSrcThreshold', action='store', default=70, \
                         help='threshold distance from the source, arcsec. (default:%(default)s)')
+    group.add_argument('--bkgCircGap', action='store', default=5, \
+                        help='gap to have around the circles, in pixels. (default:%(default)s)')
 
     #group.add_argument('--edetectmode', action='store', choices=['individual', 'chain'], default='chain', \
     #                    help='run edetect_chain or individual edetect tasks?')

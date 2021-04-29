@@ -132,7 +132,7 @@ def imagePNMOS12_soft (workdir):
 ##-- findOverlap Class --##
 class findOverlap:
 
-    def __init__ (self, workdir, obsID='NA', pnCCD='4', srcCoords=None, otherSrc=None, \
+    def __init__ (self, workdir, obsID='NA', pnCCD='4', srcCoords=None, otherSrc=None, gap=5, \
                   srcR=None, bkgR=None, srcThreshold=None, saveFig=True, showFig=True):
 
         self.workdir = workdir
@@ -150,7 +150,7 @@ class findOverlap:
         self.srcR = srcR                  #--source circle radius passed by the user or that calculated, arcsec.
         self.bkgR = bkgR                  #--background circle radii passed by the user, arcsec.
         self.srcThreshold = srcThreshold  #--threshold distance from Source passed by the user, arcsec.
-        self.gap = 5                      #--gap to have around the circles, in pixels.
+        self.gap = gap                    #--gap to have around the circles, in pixels.
 
         self.bCircle1 = None     #--first found background circle, x, y and radius.
         self.bCircle2 = None     #--second found background circle, x, y and radius.
@@ -466,14 +466,14 @@ class findOverlap:
         #-- shortlisting random points --#
         xUse, yUse = [], []
         xUseN, yUseN = [], []
-        minDistToOtherSrc = 0
+        minDistToOtherSrc = Br1
         for ptX, ptY in zip(xxOverlap, yyOverlap):
             ptRepeat0 = np.repeat(np.array([(ptX, ptY)]), len(cornerLines), axis=0)
             pDistList = list(map(__pDistToLine, ptRepeat0, cornerLines))
             pDistList.sort()
 
             #-- check distance from main Source and cornerLines --#
-            if __euclideanDist((ptX, ptY), (xC, yC)) > DSource and pDistList[0] > Br1:
+            if __euclideanDist((ptX, ptY), (xC, yC)) > (DSource + self.gap) and pDistList[0] > Br1:
                     xUse.append(ptX)
                     yUse.append(ptY)
 
@@ -536,30 +536,28 @@ class findOverlap:
         Bx1, By1, Bx2, By2 = __backgroundPt(bkgPt=(Bx1, By1), ax=axes[3])
 
         #-- have max radius at these bkg locations --#
-        def __maxBkgRadius (Bx, By, bkgPt=None):
+        def __maxBkgRadius (Bx, By):
             ptRepeatA = np.repeat(np.array([(Bx, By)]), len(otherSrc), axis=0)
             ptRepeatB = np.repeat(np.array([(Bx, By)]), len(cornerLines), axis=0)
             checklist = list(map(__euclideanDist, ptRepeatA, otherSrc))
             checklist = checklist + list(map(__pDistToLine, ptRepeatB, cornerLines))
             checklist.append( __euclideanDist((xC, yC), (Bx, By)) )
-            if bkgPt is not None:
-                Bx1, By1, Br1 = bkgPt
-                """ Br2temp = __euclideanDist((Bx1, By1), (Bx, By)) - Br1
-                if min(checklist) <= Br2temp:
-                    return (min(checklist) - self.gap)
-                else:
-                    return Br2temp """
-                checklist.append( __euclideanDist((Bx1, By1), (Bx, By)) - Br1 )
             return (min(checklist) - self.gap)  #--leaving a gap around the circle.
 
         Br1new = __maxBkgRadius(Bx1, By1)
-        print(Br1, Br1new)
         if Br1new >= Br1:
             Br1 = Br1new
-        print(Br1, Br1new)
-        Br2new = __maxBkgRadius(Bx2, By2, bkgPt=(Bx1, By1, Br1))
+        Br2new = __maxBkgRadius(Bx2, By2)
         if Br2new >= Br2:
             Br2 = Br2new
+
+        #-- check for distance between the two bkg circles --#
+        if __euclideanDist((Bx1, By1), (Bx2, By2)) < Br1+Br2:
+            if Br1 > Br2:
+                Br1 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br2 - self.gap
+            elif Br2 < Br1:
+                Br2 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br1 - self.gap
+
         Br = np.array([Br1, Br2])*3600*header['CDELT2']  #--convert to arcsec
     
         #-- plot the randomly selected background points --#
