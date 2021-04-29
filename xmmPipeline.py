@@ -1123,7 +1123,8 @@ class xmmObj:
             #-- copy Event lists and other results --#
             srcFiles = glob.glob(workdir+'/*source*.fits')
             bkgFiles = glob.glob(workdir+'/*background*.fits')
-            pngFiles = glob.glob(workdir+'/*.png')
+            pngFiles = glob.glob(workdir+'/*overlap*.png') + glob.glob(workdir+'/*circles*.png') \
+                        + glob.glob(workdir+'/*lightcurve*.png')
             jpegFiles = glob.glob(workdir+'/*.jpeg')
             csvFiles = glob.glob(workdir+'/*.csv')
 

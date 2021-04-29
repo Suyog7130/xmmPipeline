@@ -553,9 +553,9 @@ class findOverlap:
 
         #-- check for distance between the two bkg circles --#
         if __euclideanDist((Bx1, By1), (Bx2, By2)) < Br1+Br2:
-            if Br1 > Br2:
+            if Br1 >= Br2:
                 Br1 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br2 - self.gap
-            elif Br2 < Br1:
+            else:
                 Br2 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br1 - self.gap
 
         Br = np.array([Br1, Br2])*3600*header['CDELT2']  #--convert to arcsec
