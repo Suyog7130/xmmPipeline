@@ -464,16 +464,16 @@ class findOverlap:
         self.srcR = (srcR*(1/3600)/header['CDELT2'] )*header['CDELT2L']  #--convert pixels to log pixels.
 
         #-- shortlisting random points --#
-        xUse, yUse = [], []
-        xUseN, yUseN = [], []
+        xUse, yUse, xUseN, yUseN = [], [], [], []
         minDistToOtherSrc = Br1
+        Bx1, By1 = None, None
         for ptX, ptY in zip(xxOverlap, yyOverlap):
             ptRepeat0 = np.repeat(np.array([(ptX, ptY)]), len(cornerLines), axis=0)
             pDistList = list(map(__pDistToLine, ptRepeat0, cornerLines))
             pDistList.sort()
 
             #-- check distance from main Source and cornerLines --#
-            if __euclideanDist((ptX, ptY), (xC, yC)) > (DSource + self.gap) and pDistList[0] > Br1:
+            if __euclideanDist((ptX, ptY), (xC, yC)) > (DSource + self.gap) and pDistList[0] > (Br1 + self.gap):
                     xUse.append(ptX)
                     yUse.append(ptY)
 
@@ -484,7 +484,7 @@ class findOverlap:
                     if distList[0] > DSource:
                         xUseN.append(ptX)
                         yUseN.append(ptY)
-                        if distList[0] >= minDistToOtherSrc:
+                        if distList[0] >= (minDistToOtherSrc + self.gap):
                             Bx1, By1 = ptX, ptY
  
         #print(len(xUseN), len(yUseN))
@@ -533,7 +533,11 @@ class findOverlap:
                 print(message)
                 return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
-        Bx1, By1, Bx2, By2 = __backgroundPt(bkgPt=(Bx1, By1), ax=axes[3])
+        if Bx1 is not None:
+            Bx1, By1, Bx2, By2 = __backgroundPt(bkgPt=(Bx1, By1), ax=axes[3])
+        else:
+            Bx1, By1, Bx2, By2 = __backgroundPt(ax=axes[3])
+
 
         #-- have max radius at these bkg locations --#
         def __maxBkgRadius (Bx, By):
@@ -662,9 +666,14 @@ class findOverlap:
         ax.set_title(obsID, fontsize=12, loc='right')
         plt.legend(loc='upper right')
         plt.tight_layout()
-        plt.savefig(workdir+'/'+'source_background_circles.png', dpi=600)
-        plt.show()
+
+        #-- save/show final figure --#
+        if self.saveFig:
+            plt.savefig(workdir+'/'+'source_background_circles.png', dpi=600)
+        if self.showFig:
+            plt.show()
         plt.close()
+        
         return True
 
 

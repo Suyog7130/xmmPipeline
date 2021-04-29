@@ -114,7 +114,7 @@ class xmmObj:
     def __init__ (self, ra, dec, workdir, sas_dir, headas, sas_ccfpath, \
                   srcCircRadius=None, bkgCircRadius=None, dSrcThreshold=70, bkgCircGap=5, \
                   edetectmode='chain', esp_nsplinenodes=14, gti_indiThreshold=500, gti_combThreshold=None, \
-                  lcBinSize=25, binBkglc='no'):
+                  lcBinSize=25, binBkglc='no', saveFig=True, showFig=True):
     
         self.ra = ra
         self.dec = dec
@@ -144,6 +144,9 @@ class xmmObj:
         self.gti_combThreshold = gti_combThreshold   #--remove obsIDs having total GTI below this value from further analysis, seconds.
         self.lcBinSize = lcBinSize            #--binning size for the light curve, seconds.
         self.binBkglc = binBkglc              #--whether to bin background light curve or not?
+
+        self.saveFig = strToBool(saveFig)
+        self.showFig = strToBool(showFig)
 
         
         
@@ -782,7 +785,7 @@ class xmmObj:
             #-- find the overlap region and background circles --#
             findOverlapObj = findOverlap(workdir=workdir, obsID=obsID, pnCCD=pnCCD, srcCoords=srcCoords, otherSrc=otherSrc, \
                                          srcR=self.srcCircRadius, bkgR=self.bkgCircRadius, srcThreshold=self.dSrcThreshold, \
-                                         gap=self.bkgCircGap, saveFig=True, showFig=True)
+                                         gap=self.bkgCircGap, saveFig=self.saveFig, showFig=self.showFig)
             bCircle1, bCircle2, correctSrc, srcR, isSmallMode = findOverlapObj.main()
             
             #-- save the background circle parameters --#
@@ -1076,8 +1079,11 @@ class xmmObj:
             plotAnal.beautifyPlot([ax], tickNum=6)
 
             plt.tight_layout()
-            plt.savefig(workdir+'/lightcurve_'+str(obsID)+'.png', dpi=300)
-            plt.show()
+            if self.saveFig:
+                plt.savefig(workdir+'/lightcurve_'+str(obsID)+'.png', dpi=300)
+            if self.showFig:
+                plt.show()
+            plt.close()
                            
             print('\nLight curves for obsID {} obtained.'.format(obsID))
             
@@ -1178,7 +1184,8 @@ def extractProds_method (args):
                  srcCircRadius=args.srcCircRadius, bkgCircRadius=bkgCircRadius, dSrcThreshold=args.dSrcThreshold, \
                  bkgCircGap=args.bkgCircGap, esp_nsplinenodes=args.esp_nsplinenodes, \
                  gti_indiThreshold=args.gti_indiThreshold, gti_combThreshold=args.gti_combThreshold, \
-                 lcBinSize=args.lcBinSize, binBkglc=args.binBkglc)
+                 lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
+                 saveFig=args.saveFig, showFig=args.showFig)
     
     #-- check if obsID has been given --#
     if args.obsIDs!=None:
@@ -1278,6 +1285,11 @@ if __name__=="__main__":
                               while the bkgBinSize takes the default value of 25 sec.')
     group.add_argument('--binBkglc', action='store', default='no', \
                         help='whether to bin background light curve or not? (default:%(default)s)')
+
+    group.add_argument('--saveFig', action='store', default='yes', \
+                        help='save the matplotlib plots or not? (default:%(default)s)')
+    group.add_argument('--showFig', action='store', default='yes', \
+                        help='show the matplotlib plots or not? (default:%(default)s)')
     
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
