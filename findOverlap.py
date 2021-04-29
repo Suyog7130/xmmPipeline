@@ -3,7 +3,42 @@
 ###      Find Overlap       ###
 ###############################
 
+"""
+08-12 February 2021:
+---
+New Python function to obtain the overlap region.
+
+22 February 2021:
+---
+Completing the modifications to the codes that were discussed on 13th of this month.
+
+26 February 2021:
+---
+Had the call with Dheeraj@MIT yester. Finalizing the things about this pipeline now.
+
+10 March 2021:
+---
+The radius of the Source and Background circles given as input to evselect have to be in Sky Coords 
+or Pixel units and not arcsec, as I had been giving. Thus, the returned values from findOverlap.py 
+have to be altered.
+
+30 March 2021:
+---
+Was thinking of using numba to accelerate the code, but since most of the functions 
+use matplotlib it is perhaps unfeasible.
+
+29th April 2021:
+---
+The Background circles were too small in some cases.
+Modifying the criterion for background circles radius and threshold.
+Instead of taking some random point from with the points that are a threshold distance
+away from other Sources, I can take the one with max radii. Currently, the Bkg radius is defined a-priori.
+
+I can also try to have the `xmmObj` class as a meta-class for the `findOverlap` class.
+"""
+
 import os
+import time
 import glob
 import argparse
 import subprocess
@@ -418,7 +453,7 @@ class findOverlap:
         #-- shortlisting random points --#
         xUse, yUse = [], []
         for ptX, ptY in zip(xxOverlap, yyOverlap):
-            if __euclideanDist((xC, yC), (ptX, ptY)) > DSource and \
+            if __euclideanDist((ptX, ptY), (xC, yC)) > DSource and \
                 __pDistToLine((ptX, ptY), cornerLines[0]) > Br1 and \
                 __pDistToLine((ptX, ptY), cornerLines[1]) > Br1 and \
                 __pDistToLine((ptX, ptY), cornerLines[2]) > Br1 and \
@@ -430,7 +465,7 @@ class findOverlap:
         xUseN, yUseN = [], []
         for ptX, ptY in zip(xUse, yUse):
             ptRepeat = np.repeat(np.array([(ptX, ptY)]), len(otherSrc), axis=0)
-            if min( list(map(__euclideanDist, otherSrc, ptRepeat)) ) > DSource:
+            if min( list(map(__euclideanDist, ptRepeat, otherSrc)) ) > DSource:
                 xUseN.append(ptX)
                 yUseN.append(ptY)
         #print(len(xUseN), len(yUseN))
@@ -476,6 +511,17 @@ class findOverlap:
                 return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
         Bx1, By1, Bx2, By2 = __backgroundPt(ax=axes[3])
+
+        #-- have max radius at these bkg locations --#
+        #Br = np.array([dSrcThreshold/2, dSrcThreshold/2 - 10])  #--value in arcsec.
+        #Br1, Br2 = Br*(1/3600)/header['CDELT2']
+        ptRepeatA = np.repeat(np.array([(Bx2, By2)]), len(otherSrc), axis=0)
+        ptRepeatB = np.repeat(np.array([(Bx2, By2)]), len(cornerLines), axis=0)
+        checklist = list(map(__euclideanDist, ptRepeatA, otherSrc))
+        checklist = checklist + list(map(__pDistToLine, ptRepeatB, cornerLines))
+        checklist.append( __euclideanDist((xC, yC), (Bx2, By2)) )
+        Br2 = min(checklist)
+
     
         #-- plot the randomly selected background points --#
         for i in range(4):
@@ -606,6 +652,7 @@ if __name__=="__main__":
     args = parser.parse_args()
     obsIDs = args.obsIDs
     
+    start = time.time()
     for obsID in obsIDs:
         print('\nWorking for obsID {}.'.format(obsID))
         workdir = maindir+'/'+str(obsID)+'/work'
@@ -613,6 +660,8 @@ if __name__=="__main__":
         findOverlapObj = findOverlap(workdir=workdir, obsID=obsID, saveFig=False)
         bCircle1, bCircle2, srcR, isSmallMode = findOverlapObj.main()
         print(bCircle1, bCircle2, srcR, isSmallMode, sep='\n')
+    end = time.time()
+    print(f'Time taken for execution: {np.round(end-start, 5)} sec')
     
     
     
@@ -634,3 +683,4 @@ if __name__=="__main__":
     
     
     
+

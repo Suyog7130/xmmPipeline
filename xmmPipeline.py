@@ -1,7 +1,72 @@
 
-###############################
-###      XMM Pipeline       ###
-###############################
+######################################
+###      Reduce the XMM Data       ###
+######################################
+
+"""
+1st January 2021:
+Starting the work on the python code. 
+The shell=True argument in subprocess.run causes the command string given to be parsed 
+before the shell command is executed, thus allowing variables to be added to the command string.
+
+Use 'echo $VAR' to get the value stored in the environmental variable VAR.
+
+Use os.environ['VAR']=VAR_VAL to set environmental variables in python. The export statement 
+doesn't work in subprocess.run() command because the things being run are restricted to the 
+particular process or shell.
+
+Each subprocess is different and the commands have to be run within one of them itself.
+
+Using triple commas ''' allows multi-line commands to be given in subprocess.run()
+
+4th January 2021:
+Completing the rest of the things in the code procedure today.
+Nope, argparse cannot be used for calling different functions, as I had thought. It automatically 
+executes these functions, whenever they are used used in the ArgumentParser statement.
+
+6th January 2021:
+Writing the download data using 'browse_extract_wget.pl' part.
+
+'if not xxx()' is same as 'if xxx()==False' as long as xxx() returns a Boolean value.
+
+DO NOT PUT '/' at the end of directory paths, as a convention.
+
+7th January 2021:
+Completed the code!
+
+16th January 2021:
+Proceeding with the further things, first of which is filtering the Flare background.
+
+20th January 2021:
+Completing removeFlareBackground() function and getting the GTIs. Dheeraj's code is of help here.
+
+21st January 2021:
+Got some queries clarified. The code works now. Have of thought of 2 separate methods for 
+the pipeline. See the Notes.
+
+22nd January 2021:
+Added methods reduceData and extractProds. Completing the latter today and checking if
+any errors arise when iterating for all the obsIDs.
+
+31st January 2021:
+Working on getting the background circles.
+
+3rd February 2021:
+Completed autodetecting the Overlap Region.
+
+28th February 2021:
+Finalizing this stuff.
+
+10th March 2021:
+The radius of the Source and Background circles given as input to evselect have to be in Sky Coords 
+or Pixel units and not arcsec, as I had been giving. Thus, the returned values from findOverlap.py 
+have to be altered.
+
+29th April 2021:
+---
+The Background circles were too small in some cases.
+Modifying the criterion for background circles radius and threshold.
+"""
 
 import os
 import subprocess
@@ -15,7 +80,15 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+#from skimage import feature  #--for canny edge filter.
+#from skimage import measure  #--for find_contours.
+#from skimage.transform import probabilistic_hough_line
+#import scipy.ndimage as ndimage  #--for sobel filter.
+
+#from astropy.io import fits
 from astropy.table import Table
+#from bs4 import BeautifulSoup
+#from multiprocessing import Pool
 
 from findOverlap import findOverlap
 from plotAnal import plotAnal
@@ -1117,15 +1190,15 @@ def extractProds_method (args):
     #-- run the extract products functions --#
     obj.removeFlareBackground()
     obj.findSourceCCD()
-    obj.extract_InstrumentalGTIs()
+    """ obj.extract_InstrumentalGTIs()
     obj.combineGTIs()
-    obj.combineEPICdata()
+    obj.combineEPICdata() """
     obj.find_otherSources()
     obj.getBackgroundCircles()
-    obj.extract_srcBkg_eventLists()
+    """ obj.extract_srcBkg_eventLists()
     #obj._extract_sMode_srcPNlc(obsID=obj.obsIDs[0])
     obj.obtain_lightCurves()
-    obj.save_results()
+    obj.save_results() """
 
     print('\nHurray! extractProds Method Succesfully ran.')
     if len(obj.badObs)!=0:
@@ -1231,5 +1304,6 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
+
 
 
