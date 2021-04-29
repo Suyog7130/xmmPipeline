@@ -39,7 +39,13 @@ Tried using this, but there are so many complications.
 So, have simply added another function to find the max bkg radii possible within the threshold,
 to be used after the bkg coords have been found.
 
+I think, I can have Bx1,By1 be found together with the xUseN,yUseN and continue having `__maxBkgRadius`
+function for the Radii.
+Yeah! This works. However, whether or not optimum radii are obtained, depends on which of the circles
+is taken as first and which as the second.
+
 I can also try to have the `xmmObj` class as a meta-class for the `findOverlap` class.
+Nope! It's better not to do this because I run `findOverlap.py` for each obsID separately.
 """
 
 import os
@@ -144,6 +150,7 @@ class findOverlap:
         self.srcR = srcR                  #--source circle radius passed by the user or that calculated, arcsec.
         self.bkgR = bkgR                  #--background circle radii passed by the user, arcsec.
         self.srcThreshold = srcThreshold  #--threshold distance from Source passed by the user, arcsec.
+        self.gap = 5                      #--gap to have around the circles, in pixels.
 
         self.bCircle1 = None     #--first found background circle, x, y and radius.
         self.bCircle2 = None     #--second found background circle, x, y and radius.
@@ -444,7 +451,7 @@ class findOverlap:
         srcToLines = [__pDistToLine((xC, yC), cornerLine) for cornerLine in cornerLines]  #--output is in pixels.
         if min(srcToLines) < srcR*(1/3600)/header['CDELT2']:
             print('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
-            srcR = min(srcToLines)*3600*header['CDELT2']  #--convert to arcsec
+            srcR = ( min(srcToLines)*3600*header['CDELT2'] - self.gap)   #--convert to arcsec
 
         if self.srcR != None:
             srcR_given = float(self.srcR)   #--convert from arcsec.
@@ -459,6 +466,7 @@ class findOverlap:
         #-- shortlisting random points --#
         xUse, yUse = [], []
         xUseN, yUseN = [], []
+        minDistToOtherSrc = 0
         for ptX, ptY in zip(xxOverlap, yyOverlap):
             ptRepeat0 = np.repeat(np.array([(ptX, ptY)]), len(cornerLines), axis=0)
             pDistList = list(map(__pDistToLine, ptRepeat0, cornerLines))
@@ -476,11 +484,13 @@ class findOverlap:
                     if distList[0] > DSource:
                         xUseN.append(ptX)
                         yUseN.append(ptY)
+                        if distList[0] >= minDistToOtherSrc:
+                            Bx1, By1 = ptX, ptY
  
         #print(len(xUseN), len(yUseN))
         
         ##-- find random background points --##
-        def __backgroundPt (xToUse=xUseN, yToUse=yUseN, ax=None):
+        def __backgroundPt (xToUse=xUseN, yToUse=yUseN, bkgPt=None, ax=None):
             """ 
             Internal function to select random constrained points.
             At first, the arrays (xUseN, yUseN) are used to find the random points.
@@ -500,8 +510,11 @@ class findOverlap:
                 return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
             #-- first random point --#
-            idx1 = np.random.choice( range(len(xToUse)) )
-            Bx1, By1 = xToUse[idx1], yToUse[idx1]
+            if bkgPt is None:
+                idx1 = np.random.choice( range(len(xToUse)) )
+                Bx1, By1 = xToUse[idx1], yToUse[idx1]
+            else:
+                Bx1, By1 = bkgPt
 
             #-- second random point --#
             count = 0
@@ -520,7 +533,7 @@ class findOverlap:
                 print(message)
                 return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
-        Bx1, By1, Bx2, By2 = __backgroundPt(ax=axes[3])
+        Bx1, By1, Bx2, By2 = __backgroundPt(bkgPt=(Bx1, By1), ax=axes[3])
 
         #-- have max radius at these bkg locations --#
         def __maxBkgRadius (Bx, By, bkgPt=None):
@@ -531,11 +544,22 @@ class findOverlap:
             checklist.append( __euclideanDist((xC, yC), (Bx, By)) )
             if bkgPt is not None:
                 Bx1, By1, Br1 = bkgPt
-                checklist.append( __euclideanDist((Bx1, By1), (Bx, By)) - Br1)
-            return (min(checklist) - 2)
+                """ Br2temp = __euclideanDist((Bx1, By1), (Bx, By)) - Br1
+                if min(checklist) <= Br2temp:
+                    return (min(checklist) - self.gap)
+                else:
+                    return Br2temp """
+                checklist.append( __euclideanDist((Bx1, By1), (Bx, By)) - Br1 )
+            return (min(checklist) - self.gap)  #--leaving a gap around the circle.
 
-        Br1 = __maxBkgRadius(Bx1, By1)
-        Br2 = __maxBkgRadius(Bx2, By2, bkgPt=(Bx1, By1, Br1))
+        Br1new = __maxBkgRadius(Bx1, By1)
+        print(Br1, Br1new)
+        if Br1new >= Br1:
+            Br1 = Br1new
+        print(Br1, Br1new)
+        Br2new = __maxBkgRadius(Bx2, By2, bkgPt=(Bx1, By1, Br1))
+        if Br2new >= Br2:
+            Br2 = Br2new
         Br = np.array([Br1, Br2])*3600*header['CDELT2']  #--convert to arcsec
     
         #-- plot the randomly selected background points --#
