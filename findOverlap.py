@@ -450,6 +450,7 @@ class findOverlap:
         print(f'The Source radius is set at {np.round(srcR, 2)} arcsec.')
         self.srcR = (srcR*(1/3600)/header['CDELT2'] )*header['CDELT2L']  #--convert pixels to log pixels.
             
+        """         
         #-- shortlisting random points --#
         xUse, yUse = [], []
         for ptX, ptY in zip(xxOverlap, yyOverlap):
@@ -459,8 +460,68 @@ class findOverlap:
                 __pDistToLine((ptX, ptY), cornerLines[2]) > Br1 and \
                 __pDistToLine((ptX, ptY), cornerLines[3]) > Br1:
                     xUse.append(ptX)
+                    yUse.append(ptY) 
+        """
+
+        #-- shortlisting random points --#
+        xUse, yUse = [], []
+        xUseN, yUseN = [], []
+        for ptX, ptY in zip(xxOverlap, yyOverlap):
+            ptRepeat0 = np.repeat(np.array([(ptX, ptY)]), len(cornerLines), axis=0)
+            pDistList = list(map(__pDistToLine, ptRepeat0, cornerLines))
+            pDistList.sort()
+            if __euclideanDist((ptX, ptY), (xC, yC)) > DSource and pDistList[0] > Br1:
+
+                    xUse.append(ptX)
                     yUse.append(ptY)
 
+                    #-- check distance from other sources --#
+                    ptRepeat = np.repeat(np.array([(ptX, ptY)]), len(otherSrc), axis=0)
+                    distList = list(map(__euclideanDist, ptRepeat, otherSrc))
+                    distList.sort()
+                    if distList[0] > DSource:
+                        xUseN.append(ptX)
+                        yUseN.append(ptY)
+                        Bx1, By1 = ptX, ptY
+                        if distList[0] > Br1 and distList[0] <= pDistList[0]:
+                            Br1 = distList[0]
+        
+        """ if not Br1 > useBr1:
+            Br1 = useBr1 """
+
+        #-- second random point --#
+        def __secondRandPt (xToUse=xUseN, yToUse=yUseN, P1=(Bx1, By1), ax=None):
+            Bx1, By1 = P1
+
+            #-- check if the arrays are empty --#
+            if len(xToUse)<2:
+                idx1 = np.random.choice( range(len(xToUse)) )
+                Bx1, By1 = xToUse[idx1], yToUse[idx1]
+                return __secondRandPt(xToUse=xUse, yToUse=yUse, P1=(Bx1, By1), ax=ax)
+
+            count = 0
+            Br2 = Br1
+            while count<25:
+                idx2 = np.random.choice( range(len(xToUse)) )
+                Bx2, By2 = xToUse[idx2], yToUse[idx2]
+                count += 1
+                dist = __euclideanDist((Bx1, By1), (Bx2, By2))
+                if dist >= Br1+Br2:
+                    print('Found {} useful points in the region.'.format( len(xToUse) ))
+                    axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
+                    Br2 = dist
+                    return [Bx2, By2, Br2]
+                
+            #-- when other sources are too many --#
+            if count==25:
+                idx2 = np.random.choice( range(len(xToUse)) )
+                Bx2, By2 = xToUse[idx2], yToUse[idx2]
+                return [Bx2, By2, 0]
+                #return __secondRandPt(xToUse=xUse, yToUse=yUse, P1=(Bx1, By1), ax=ax)
+
+        Bx2, By2, Br2 = __secondRandPt(ax=axes[3])
+
+        """ 
         #-- check distance from other sources --#
         xUseN, yUseN = [], []
         for ptX, ptY in zip(xUse, yUse):
@@ -472,14 +533,14 @@ class findOverlap:
         
         ##-- find random background points --##
         def __backgroundPt (xToUse=xUseN, yToUse=yUseN, ax=None):
-            """
+            
             Internal function to select random constrained points.
             At first, the arrays (xUseN, yUseN) are used to find the random points.
 
             If the number of points in these is small and two random points atleast the 
             threshold distance away from eachother are not found, then the arrays (xUse, yUse)
             are used.
-            """
+           
             message = f'\nNOTE:There are too many other sources for obsID {obsID}, such that at the threshold given, no background circles are possible.' \
                         +'\nKindly redo the product extraction for this one later with some changed parameters.' \
                         +'\nFor now the other sources are not taken into account for obtaining the background circles.\n'
@@ -521,7 +582,7 @@ class findOverlap:
         checklist = checklist + list(map(__pDistToLine, ptRepeatB, cornerLines))
         checklist.append( __euclideanDist((xC, yC), (Bx2, By2)) )
         Br2 = min(checklist)
-
+        """
     
         #-- plot the randomly selected background points --#
         for i in range(4):
