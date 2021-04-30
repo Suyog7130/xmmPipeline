@@ -451,7 +451,7 @@ class findOverlap:
         srcToLines = [__pDistToLine((xC, yC), cornerLine) for cornerLine in cornerLines]  #--output is in pixels.
         if min(srcToLines) < srcR*(1/3600)/header['CDELT2']:
             print('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
-            srcR = ( min(srcToLines)*3600*header['CDELT2'] - self.gap)   #--convert to arcsec
+            srcR = min(srcToLines)*3600*header['CDELT2']  #--convert to arcsec
 
         if self.srcR != None:
             srcR_given = float(self.srcR)   #--convert from arcsec.
@@ -545,7 +545,7 @@ class findOverlap:
             ptRepeatB = np.repeat(np.array([(Bx, By)]), len(cornerLines), axis=0)
             checklist = list(map(__euclideanDist, ptRepeatA, otherSrc))
             checklist = checklist + list(map(__pDistToLine, ptRepeatB, cornerLines))
-            checklist.append( __euclideanDist((xC, yC), (Bx, By)) )
+            checklist.append( __euclideanDist((xC, yC), (Bx, By)) - srcR*(1/3600)/header['CDELT2'] )
             return (min(checklist) - self.gap)  #--leaving a gap around the circle.
 
         Br1new = __maxBkgRadius(Bx1, By1)
