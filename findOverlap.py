@@ -46,6 +46,13 @@ is taken as first and which as the second.
 
 I can also try to have the `xmmObj` class as a meta-class for the `findOverlap` class.
 Nope! It's better not to do this because I run `findOverlap.py` for each obsID separately.
+
+30th April 2021:
+---
+Made the second background point non-random as well.
+The program takes a little longer now, but both the circles are large sized.
+Gonna check if there's any errors that come up because of this.
+Also lowered the Bkg Circle Gap to 2.5 pixels instead of 5 pixles.
 """
 
 import os
@@ -451,7 +458,7 @@ class findOverlap:
         srcToLines = [__pDistToLine((xC, yC), cornerLine) for cornerLine in cornerLines]  #--output is in pixels.
         if min(srcToLines) < srcR*(1/3600)/header['CDELT2']:
             print('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
-            srcR = (min(srcToLines) - self.gap) * 3600*header['CDELT2']  #--convert to arcsec
+            srcR = min(srcToLines)*3600*header['CDELT2']  #--convert to arcsec
 
         if self.srcR != None:
             srcR_given = float(self.srcR)   #--convert from arcsec.
@@ -516,31 +523,21 @@ class findOverlap:
             else:
                 Bx1, By1 = bkgPt
 
-            #-- second random point --#
-            """ count = 0
-            while count<25:
-                idx2 = np.random.choice( range(len(xToUse)) )
-                Bx2, By2 = xToUse[idx2], yToUse[idx2]
-                #print(__euclideanDist((Bx1, By1), (Bx2, By2)))
-                count += 1
-                if __euclideanDist((Bx1, By1), (Bx2, By2)) >= Br1+Br2:
-                    print('Found {} useful points in the region.'.format( len(xToUse) ))
-                    axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
-                    return [Bx1, By1, Bx2, By2] """
-            count = 0
+            #-- second background point --#
             totalBr = Br1 + Br2
+            Bx2, By2 = None, None
             for ptX, ptY in zip(xToUse, yToUse):
-                count += 1
                 dist = __euclideanDist((Bx1, By1), (ptX, ptY))
                 if dist >= totalBr:
                     totalBr = dist
                     Bx2, By2 = ptX, ptY
-            if count > 0:
+
+            if Bx2 is not None:
                 axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
                 return [Bx1, By1, Bx2, By2]
                 
             #-- when other sources are too many --#
-            if count==25:
+            else:
                 print(message)
                 return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
