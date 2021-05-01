@@ -269,23 +269,27 @@ class spectra:
                                ". $HEADAS/headas-init.sh;"+ \
                                ". $SAS_DIR/setsas.sh;"+ \
                                '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                               "evselect table=MOS1_CCD"+mos1CCD+".evts:EVENTS withspectrumset=yes spectrumset=MOS1_CCD"+mos1CCD+"_spectrum_source.fits"+ \
+                               "evselect table=MOS1_CCD"+mos1CCD+".evts:EVENTS"+ \
+                                   " withspectrumset=yes spectrumset=MOS1_spectrum_source_"+obsID+".fits"+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
                                    " expression='#XMMEA_EM && (PATTERN<=12) && ((X, Y) IN circle("+ \
                                    srcX+","+srcY+","+srcR+"))';"+ \
-                               "evselect table=MOS1_CCD"+mos1CCD+".evts:EVENTS withspectrumset=yes spectrumset=MOS1_CCD"+mos1CCD+"_spectrum_background.fits"+ \
+                               "evselect table=MOS1_CCD"+mos1CCD+".evts:EVENTS"+ \
+                                   " withspectrumset=yes spectrumset=MOS1_spectrum_background_"+obsID+".fits"+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
                                    " expression='#XMMEA_EM && (PATTERN<=12) && ((X,Y) in CIRCLE("+ \
                                    Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
-                               "backscale spectrumset=MOS1_CCD"+mos1CCD+"_spectrum_source.fits badpixlocation=MOS1_CCD"+mos1CCD+".evts;"+ \
-                               "backscale spectrumset=MOS1_CCD"+mos1CCD+"_spectrum_background.fits badpixlocation=MOS1_CCD"+mos1CCD+".evts;"+ \
-                               "rmfgen spectrumset=MOS1_CCD"+mos1CCD+"_spectrum_source.fits rmfset=MOS1_CCD"+mos1CCD+".rmf;"+ \
-                               "arfgen spectrumset=MOS1_CCD"+mos1CCD+"_spectrum_source.fits arfset=MOS1_CCD"+mos1CCD+".arf withrmfset=yes rmfset=MOS1_CCD"+mos1CCD+".rmf"+ \
+                               "backscale spectrumset=MOS1_spectrum_source_"+obsID+".fits badpixlocation=MOS1_CCD"+mos1CCD+".evts;"+ \
+                               "backscale spectrumset=MOS1_spectrum_background_"+obsID+".fits badpixlocation=MOS1_CCD"+mos1CCD+".evts;"+ \
+                               "rmfgen spectrumset=MOS1_spectrum_source_"+obsID+".fits rmfset=MOS1_"+obsID+".rmf;"+ \
+                               "arfgen spectrumset=MOS1_spectrum_source_"+obsID+".fits"+ \
+                                   " arfset=MOS1_"+obsID+".arf withrmfset=yes rmfset=MOS1_"+obsID+".rmf"+ \
                                    " badpixlocation=MOS1_CCD"+mos1CCD+".evts detmaptype=psf;"+ \
-                               "specgroup spectrumset=MOS1_CCD"+mos1CCD+"_spectrum_source.fits mincounts=20 oversample=3 rmfset=MOS1_CCD"+mos1CCD+".rmf"+ \
-                                   " arfset=MOS1_CCD"+mos1CCD+".arf backgndset=MOS1_CCD"+mos1CCD+"_spectrum_background.fits"+ \
-                                   " groupedset=MOS1_CCD"+mos1CCD+"_spectrum_grouped.fits;" 
-                               #"fv MOS1_CCD"+mos1CCD+"_spectrum_grouped.fits;"
+                               "specgroup spectrumset=MOS1_spectrum_source_"+obsID+".fits"+ \
+                                   " mincounts=20 oversample=3 rmfset=MOS1_"+obsID+".rmf"+ \
+                                   " arfset=MOS1_"+obsID+".arf backgndset=MOS1_spectrum_background_"+obsID+".fits"+ \
+                                   " groupedset=MOS1_spectrum_grouped_"+obsID+".fits;" 
+                               #"fv MOS1_spectrum_grouped_"+obsID+".fits;"
                                , shell=True)
                 print('\nMOS1 Spectra extracted.')
 
@@ -297,23 +301,27 @@ class spectra:
                                ". $HEADAS/headas-init.sh;"+ \
                                ". $SAS_DIR/setsas.sh;"+ \
                                '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                               "evselect table=MOS2_CCD"+mos2CCD+".evts:EVENTS withspectrumset=yes spectrumset=MOS2_CCD"+mos2CCD+"_spectrum_source.fits"+ \
+                               "evselect table=MOS2_CCD"+mos2CCD+".evts:EVENTS"+ \
+                                   " withspectrumset=yes spectrumset=MOS2_spectrum_source_"+obsID+".fits"+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
                                    " expression='#XMMEA_EM && (PATTERN<=12) && ((X, Y) IN circle("+ \
                                    srcX+","+srcY+","+srcR+"))';"+ \
-                               "evselect table=MOS2_CCD"+mos2CCD+".evts:EVENTS withspectrumset=yes spectrumset=MOS2_CCD"+mos2CCD+"_spectrum_background.fits"+ \
+                               "evselect table=MOS2_CCD"+mos2CCD+".evts:EVENTS"+ \
+                                   " withspectrumset=yes spectrumset=MOS2_spectrum_background_"+obsID+".fits"+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
                                    " expression='#XMMEA_EM && (PATTERN<=12) && ((X,Y) in CIRCLE("+ \
                                    Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
-                               "backscale spectrumset=MOS2_CCD"+mos2CCD+"_spectrum_source.fits badpixlocation=MOS2_CCD"+mos2CCD+".evts;"+ \
-                               "backscale spectrumset=MOS2_CCD"+mos2CCD+"_spectrum_background.fits badpixlocation=MOS2_CCD"+mos2CCD+".evts;"+ \
-                               "rmfgen spectrumset=MOS2_CCD"+mos2CCD+"_spectrum_source.fits rmfset=MOS2_CCD"+mos2CCD+".rmf;"+ \
-                               "arfgen spectrumset=MOS2_CCD"+mos2CCD+"_spectrum_source.fits arfset=MOS2_CCD"+mos2CCD+".arf withrmfset=yes rmfset=MOS2_CCD"+mos2CCD+".rmf"+ \
+                               "backscale spectrumset=MOS2_spectrum_source_"+obsID+".fits badpixlocation=MOS2_CCD"+mos2CCD+".evts;"+ \
+                               "backscale spectrumset=MOS2_spectrum_background_"+obsID+".fits badpixlocation=MOS2_CCD"+mos2CCD+".evts;"+ \
+                               "rmfgen spectrumset=MOS2_spectrum_source_"+obsID+".fits rmfset=MOS2_"+obsID+".rmf;"+ \
+                               "arfgen spectrumset=MOS2_spectrum_source_"+obsID+".fits"+ \
+                                   " arfset=MOS2_"+obsID+".arf withrmfset=yes rmfset=MOS2_"+obsID+".rmf"+ \
                                    " badpixlocation=MOS2_CCD"+mos2CCD+".evts detmaptype=psf;"+ \
-                               "specgroup spectrumset=MOS2_CCD"+mos2CCD+"_spectrum_source.fits mincounts=20 oversample=3 rmfset=MOS2_CCD"+mos2CCD+".rmf"+ \
-                                   " arfset=MOS2_CCD"+mos2CCD+".arf backgndset=MOS2_CCD"+mos2CCD+"_spectrum_background.fits"+ \
-                                   " groupedset=MOS2_CCD"+mos2CCD+"_spectrum_grouped.fits;" 
-                               "fv MOS2_CCD"+mos2CCD+"_spectrum_grouped.fits;"
+                               "specgroup spectrumset=MOS2_spectrum_source_"+obsID+".fits"+ \
+                                   " mincounts=20 oversample=3 rmfset=MOS2_"+obsID+".rmf"+ \
+                                   " arfset=MOS2_"+obsID+".arf backgndset=MOS2_spectrum_background_"+obsID+".fits"+ \
+                                   " groupedset=MOS2_spectrum_grouped_"+obsID+".fits;" 
+                               #"fv MOS2_spectrum_grouped_"+obsID+".fits;"
                                , shell=True)
                 print('\nMOS2 Spectra extracted.')
 
@@ -324,26 +332,26 @@ class spectra:
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                            #"ds9 PN_CCD"+pnCCD+"_image.fits -scale log;"
                            "evselect table=PN_CCD"+pnCCD+".evts:EVENTS"+ \
-                               " withspectrumset=yes spectrumset=PN_CCD"+pnCCD+"_spectrum_source.fits"+ \
+                               " withspectrumset=yes spectrumset=PN_spectrum_source_"+obsID+".fits"+ \
                                " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
                                " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && ((X, Y) IN circle("+ \
                                srcX+","+srcY+","+srcR+"))';"+ \
                            "evselect table=PN_CCD"+pnCCD+".evts:EVENTS"+ \
-                               " withspectrumset=yes spectrumset=PN_CCD"+pnCCD+"_spectrum_background.fits"+ \
+                               " withspectrumset=yes spectrumset=PN_spectrum_background_"+obsID+".fits"+ \
                                " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
                                " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && ((X,Y) in CIRCLE("+ \
                                Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
-                           "backscale spectrumset=PN_CCD"+pnCCD+"_spectrum_source.fits badpixlocation=PN_CCD"+pnCCD+".evts;"+ \
-                           "backscale spectrumset=PN_CCD"+pnCCD+"_spectrum_background.fits badpixlocation=PN_CCD"+pnCCD+".evts;"+ \
-                           "rmfgen spectrumset=PN_CCD"+pnCCD+"_spectrum_source.fits rmfset=PN_CCD"+pnCCD+".rmf;"+ \
-                           "arfgen spectrumset=PN_CCD"+pnCCD+"_spectrum_source.fits"+ \
-                               " arfset=PN_CCD"+pnCCD+".arf withrmfset=yes rmfset=PN_CCD"+pnCCD+".rmf"+ \
+                           "backscale spectrumset=PN_spectrum_source_"+obsID+".fits badpixlocation=PN_CCD"+pnCCD+".evts;"+ \
+                           "backscale spectrumset=PN_spectrum_background_"+obsID+".fits badpixlocation=PN_CCD"+pnCCD+".evts;"+ \
+                           "rmfgen spectrumset=PN_spectrum_source_"+obsID+".fits rmfset=PN_"+obsID+".rmf;"+ \
+                           "arfgen spectrumset=PN_spectrum_source_"+obsID+".fits"+ \
+                               " arfset=PN_"+obsID+".arf withrmfset=yes rmfset=PN_"+obsID+".rmf"+ \
                                " badpixlocation=PN_CCD"+pnCCD+".evts detmaptype=psf;"+ \
-                           "specgroup spectrumset=PN_CCD"+pnCCD+"_spectrum_source.fits"+ \
-                               " mincounts=20 oversample=3 rmfset=PN_CCD"+pnCCD+".rmf"+ \
-                               " arfset=PN_CCD"+pnCCD+".arf backgndset=PN_CCD"+pnCCD+"_spectrum_background.fits"+ \
-                               " groupedset=PN_CCD"+pnCCD+"_spectrum_grouped.fits;"
-                           "fv PN_CCD"+pnCCD+"_spectrum_grouped.fits;"
+                           "specgroup spectrumset=PN_spectrum_source_"+obsID+".fits"+ \
+                               " mincounts=20 oversample=3 rmfset=PN_"+obsID+".rmf"+ \
+                               " arfset=PN_"+obsID+".arf backgndset=PN_spectrum_background_"+obsID+".fits"+ \
+                               " groupedset=PN_spectrum_grouped_"+obsID+".fits;"
+                           #"fv PN_spectrum_grouped_"+obsID+".fits;"
                            , shell=True)
             print('\nPN Spectra extracted.')
             print('\nExtracting Image Mode Spectra for obsID {} finished.'.format(obsID)) 
@@ -378,13 +386,13 @@ class spectra:
                       'tbabs*zashift*powerlaw', 'tbabs*zashift*bbody',
                       'zashift*\(powerlaw+bbody\)', 'tbabs*zashift*\(powerlaw+bbody\)']
 
-            for model in models[4:]:
+            for model in models:
                 subprocess.run("cd "+workdir+";"+ \
                                ". $HEADAS/headas-init.sh;"+ \
                                ". $SAS_DIR/setsas.sh;"+ \
                                #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                                "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+" --instName all " \
-                                    +"--model "+model+";"
+                                    +"--model "+model+" --showFig=no;"
                                , shell=True)
             print('\nSpectra fitting for obsID {} finished.'.format(obsID))
             
@@ -412,18 +420,6 @@ class spectra:
         for obsID in self.obsIDs:
             print('\nSaving results for obsID {}.'.format(obsID))
             workdir = maindir+'/'+obsID+'/work'
-            
-            """ #-- save the CCD and coords info in a pickle file --#
-            result = {}
-            result['sourceCCDs'] = self.sourceCCDs[obsID]
-            result['sourceLoc'] = self.sourceLoc[obsID]
-            result['backgroundLoc'] = self.backgroundLoc[obsID]
-            result['otherSources'] = self.otherSources[obsID]
-            result['smallMode'] = self.smallMode[obsID]
-
-            outfile = open(workdir+'/'+'ccd_coords_info.pickle', 'wb')
-            pickle.dump(result, outfile)
-            outfile.close() """
             
             #-- copy Event lists and other results --#
             spectraImgFiles = glob.glob(workdir+'/*spectra*.png')
@@ -468,10 +464,10 @@ def main (args):
         print('Using the obsIDs passed.')
 
     #-- run the spectra functions --#
-    #obj.readPickleFile()
-    #obj.extractSpectra_imageMode()
+    obj.readPickleFile()
+    obj.extractSpectra_imageMode()
     #obj.xspec_fitSpectra()
-    obj.save_results()
+    #obj.save_results()
 
     print('\nHurray! The Spectra method ran successfully.')
     if len(obj.smallMode) != 0:
