@@ -132,7 +132,7 @@ def imagePNMOS12_soft (workdir):
 ##-- findOverlap Class --##
 class findOverlap:
 
-    def __init__ (self, workdir, obsID='NA', pnCCD='4', srcCoords=None, otherSrc=None, gap=5, \
+    def __init__ (self, workdir, obsID='NA', pnCCD='4', srcCoords=None, otherSrc=None, gap=2.5, \
                   srcR=None, bkgR=None, srcThreshold=None, saveFig=True, showFig=True):
 
         self.workdir = workdir
@@ -451,7 +451,7 @@ class findOverlap:
         srcToLines = [__pDistToLine((xC, yC), cornerLine) for cornerLine in cornerLines]  #--output is in pixels.
         if min(srcToLines) < srcR*(1/3600)/header['CDELT2']:
             print('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
-            srcR = min(srcToLines)*3600*header['CDELT2']  #--convert to arcsec
+            srcR = (min(srcToLines) - self.gap) * 3600*header['CDELT2']  #--convert to arcsec
 
         if self.srcR != None:
             srcR_given = float(self.srcR)   #--convert from arcsec.
@@ -517,7 +517,7 @@ class findOverlap:
                 Bx1, By1 = bkgPt
 
             #-- second random point --#
-            count = 0
+            """ count = 0
             while count<25:
                 idx2 = np.random.choice( range(len(xToUse)) )
                 Bx2, By2 = xToUse[idx2], yToUse[idx2]
@@ -526,7 +526,18 @@ class findOverlap:
                 if __euclideanDist((Bx1, By1), (Bx2, By2)) >= Br1+Br2:
                     print('Found {} useful points in the region.'.format( len(xToUse) ))
                     axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
-                    return [Bx1, By1, Bx2, By2]
+                    return [Bx1, By1, Bx2, By2] """
+            count = 0
+            totalBr = Br1 + Br2
+            for ptX, ptY in zip(xToUse, yToUse):
+                count += 1
+                dist = __euclideanDist((Bx1, By1), (ptX, ptY))
+                if dist >= totalBr:
+                    totalBr = dist
+                    Bx2, By2 = ptX, ptY
+            if count > 0:
+                axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
+                return [Bx1, By1, Bx2, By2]
                 
             #-- when other sources are too many --#
             if count==25:

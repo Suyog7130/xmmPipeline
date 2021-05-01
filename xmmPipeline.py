@@ -112,7 +112,7 @@ class xmmObj:
 
     ##-- initialize some common parameters --##
     def __init__ (self, ra, dec, workdir, sas_dir, headas, sas_ccfpath, \
-                  srcCircRadius=None, bkgCircRadius=None, dSrcThreshold=70, bkgCircGap=5, \
+                  srcCircRadius=None, bkgCircRadius=None, dSrcThreshold=70, bkgCircGap=2.5, \
                   edetectmode='chain', esp_nsplinenodes=14, gti_indiThreshold=500, gti_combThreshold=None, \
                   lcBinSize=25, binBkglc='no', saveFig=True, showFig=True):
     
@@ -1267,7 +1267,7 @@ if __name__=="__main__":
                               Default values are r1=0.5*threshold and r2=r1-10.')
     group.add_argument('--dSrcThreshold', action='store', default=70, \
                         help='threshold distance from the source, arcsec. (default:%(default)s)')
-    group.add_argument('--bkgCircGap', action='store', default=5, \
+    group.add_argument('--bkgCircGap', action='store', default=2.5, \
                         help='gap to have around the circles, in pixels. (default:%(default)s)')
 
     #group.add_argument('--edetectmode', action='store', choices=['individual', 'chain'], default='chain', \
