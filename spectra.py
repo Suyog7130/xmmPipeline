@@ -38,6 +38,12 @@ I do not have the RAWX and RAWY coordinates that are needed for the purpose of e
 13 April 2021:
 ---
 Writing the ``xspec_fitSpectra`` function to fit the spectra using ``pyXspec.py`` file.
+
+08 May 2021:
+---
+Lots of fitting to the Spectra thing remains.
+Note: Gotta make sure that only the available grouped Spectra files are looked for in `pyXspec.py`
+      when `all` is passed as the `instName`, since Small-mode obsIDs do not have the MOS Spectra.
 """
 
 import os
@@ -522,3 +528,4 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
+
