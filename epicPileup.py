@@ -11,6 +11,27 @@ See: `https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epatplot`
 
 This would be used to correct for the Pile-up seperately for individual
 obsIDs. Thus, the `workdir` is changed to `workdir`+'/work' folder.
+
+This procedure will give the Source Annulus radii for which Pile-up is 
+negligible for any particular obsIDs. Henceforth, it is this Source region
+for which the Light Curve and the Spectra extraction should be done.
+
+So, I will have to: 
+    -> Modify `xmmPipeline.py` so that it knows which obsIDs have the 
+       Pile-up issue and need the Source region to lie within an Annulus.
+    -> Modify `spectra.py` so that the Source Spectra are extracted from 
+       within this Annulus.
+
+See the notes of Google Doc for open questions.
+
+09 May 2021:
+---
+`epatplot` calculates two diagnostic numbers which may be used to assess 
+the presence of pile-up: In the absence of pile-up, the 0.5 - 2.0 keV (default range) 
+observed-to-model singles and doubles pattern fractions ratios should both be 
+consistent with 1.0 within statistical errors (1 sigma errors are given). 
+If pile-up is present, the singles ratio will be smaller than 1.0 and the 
+doubles ratio will be larger than 1.0.
 """
 
 import os
@@ -52,9 +73,41 @@ def printErrorMessage (message):
     print('\t\t'+'*'*(width+4))
 
 
-class epicPileup (metaclass=spectra):
+##-- the EPIC Pile-up class --##
+class epicPileup (spectra):
 
-    def checkPileUp (self, workdir, obsID, saveFig=True, showFig=True):
+    ##-- check for Pile-up --##
+    def checkPileUp (self):
+        """
+        Uses `epatplot` to check and correct for the Pile-up issue by removing
+        some pixels from the center of the Source circle.
+
+        The observation is corrected for Pile-up by removing some pixels from 
+        the center of the Source. Now, this checking for Pile-up need be done
+        only once, for PN images, since, it will be the same for MOS, probably.
+
+        So, if Pile-up is found, one has to manually check for by iteratively 
+        removing more and more center pixels and find when the Pile-up becomes 
+        negligible. Then the Source circle would be an Annulus for this region.
+        The same Annulus parameters can be repeated for MOS1&2.
+
+        Note that `pnGTI.fits` GTI file is used instead of `combinedGTI_obsID.fits`
+        because the latter results in very few useful data points.
+
+        The result of this procedure would be the radii values of the Source
+        Annulus for which Pile-up is negligible. Henceforth, this Source region
+        will have to be used for obtaing the Spectra.
+
+        Input: Concatenated and Calibrated Event list, pnGTI file, 
+               `sourceCCDs` and the Source location parameters.
+        Output: The Source Annulus radii together with Filtered Event List
+                `source_PN_filtered_obsID.evts` and the corresponding image 
+                `source_PN_filteredPattern.ps`, and the Annulus files 
+                `source_PN_filteredAnnulus_obsID.evts` and `source_PN_filteredPattern_Annulus.ps` 
+                showing resolution of the Pile-up issue.
+
+        Note: The term `filtered` means that the GTI have been applied.
+        """
 
         #-- set the environment variables --#
         os.environ['SAS_DIR'] = self.sas_dir
@@ -63,7 +116,7 @@ class epicPileup (metaclass=spectra):
         
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nExtracting Image Mode Spectra for obsID {}.'.format(obsID))
+            print('\nChecking Pile-up in {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
             
             #-- get the location parameters --#
@@ -80,12 +133,23 @@ class epicPileup (metaclass=spectra):
             mos1CCD = str(self.sourceCCDs[obsID]['MOS1'])
             mos2CCD = str(self.sourceCCDs[obsID]['MOS2'])
             
+            #-- check for Pile-up in PN --#
             subprocess.run("cd "+workdir+";"+ \
-                                ". $HEADAS/headas-init.sh;"+ \
-                                ". $SAS_DIR/setsas.sh;"+ \
-                                '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                                ";", shell=True)
-        return True
+                           ". $HEADAS/headas-init.sh;"+ \
+                           ". $SAS_DIR/setsas.sh;"+ \
+                           '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
+                           "evselect table=PN_CCD"+pnCCD+".evts"+ \
+                               " withfilteredset=yes filteredset=source_PN_filtered_"+obsID+".evts"+ \
+                               " keepfilteroutput=yes"+ \
+                               " expression='((X,Y) in CIRCLE("+srcX+","+srcY+","+srcR+"))"+ \
+                               " && gti(pnGTI.fits,TIME)';"+ \
+                           "epatplot set=source_PN_filtered_"+obsID+".evts"+ \
+                               " plotfile=source_PN_filteredPattern.ps;"+ \
+                           "evince source_PN_filteredPattern.ps;"
+                           , shell=True)
+            print(f'\nCorrected Pile-up for {obsID}.')
+
+        return print('\nPile-up correction finished.')
 
 
 ##-- the main function --##
@@ -164,6 +228,7 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
+
 
 
 
