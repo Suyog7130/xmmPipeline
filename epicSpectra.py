@@ -4,46 +4,11 @@
 #######################################
 
 """
-31 March 2021:
+10th May 2021:
 ---
-Starting up this code today. Had gotten confused yester. However, I guess, 
-using the location coordinates got earlier, the spectra obtaining SAS threads can be followed through.
-
-I could read the individual pickle files for each obsIDs saved in their directories,
-but it is necessary to have the list of badObs as well. Therefore the the main pickle file containing
-the xmmObj has to be loaded, which requires import 'xmmObj' from 'xmmPipeline'.
-If this is necessary, then I suppose I can read the obsID list from the pickle file as well.
-Huh! But the user will be giving the RA and DEC of the object only. 
-Hhmm... I think if the pickle files and the results folders have name of the object on them, it would be
-great!
-
-PyXspec package comes pre-installed with the rest of Heasarc installation and can be used to run
-xspec commands through Python. However, the path to xspec needs to be added to $PYTHONPATH.
-Importing the package in Python raises some Shared library import error. Gotta resolve it.
-See the notes in Google Docs and the issues on the GitHub repo.
-
-01 April 2021:
----
-Since the 'specgroup' command requires both the Source and Background Spectrum to create the grouped spectrum, 
-I think it's better that the MOS12 spectrum is skipped completely for Small mode obsIDs, thereby only taking
-the PN Spectrum for any further purpose.
-
-I don't think I need the combined EPIC Spectra outlined here at the below SAS thread, atleast not now.
-The grouped MOS12 and PN Spectra should be usable with the xspec package when it starts to works.
-    See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-merging
-
-Some problems with the Timing mode Spectra extraction. Dunno if it is even required?
-I do not have the RAWX and RAWY coordinates that are needed for the purpose of extraction.
-
-13 April 2021:
----
-Writing the ``xspec_fitSpectra`` function to fit the spectra using ``pyXspec.py`` file.
-
-08 May 2021:
----
-Lots of fitting to the Spectra thing remains.
-Note: Gotta make sure that only the available grouped Spectra files are looked for in `pyXspec.py`
-      when `all` is passed as the `instName`, since Small-mode obsIDs do not have the MOS Spectra.
+Am making several changes to the code procedure arrangements. 
+See the GitHub repo, the Notes on Google Docs and the documentation for more information.
+For previous docstring comments, see earlier code files, namely `spectra.py`
 """
 
 import os

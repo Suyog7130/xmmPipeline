@@ -13,6 +13,16 @@ Getting the spectra fits using PyXspec module.
 Adding ArgParse so that this code can be used by ``spectra.py``
 to fit spectra.
 Nope. This doesn't actually work.
+
+20th April 2021:
+---
+It works fine now. See the notes for Google Drive for more info.
+
+08 May 2021:
+---
+Lots of fitting to the Spectra thing remains.
+Note: Gotta make sure that only the available grouped Spectra files are looked for in `pyXspec.py`
+      when `all` is passed as the `instName`, since Small-mode obsIDs do not have the MOS Spectra.
 """
 
 import argparse
@@ -44,7 +54,8 @@ def printErrorMessage (message):
 
 
 
-def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, saveFig=True, showFig=True):
+def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, \
+             saveFig=True, showFig=True):
     
     pnName = workdir+"/PN_CCD4"
     mos1Name = workdir+"/MOS1_CCD1"
@@ -90,7 +101,8 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, sav
         if modelPart == "zashift":
             #m1.zashift.Redshift = 2.0
             m1.zashift.Redshift.frozen = False
-            break
+        if modelPart == "bbody":
+            m1.bbody.kT = 0.05
     
     Xset.abund = "wilm"
     
@@ -153,13 +165,14 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, sav
         plt.savefig('EPIC_spectra_'+model.replace('*','-')+'.png', dpi=300)
     if showFig:
         plt.show()
-        plt.close()
+    plt.close()
     
     return True
     
     
 
-def main (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, saveFig=True, showFig=True):
+def main (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, \
+          saveFig=True, showFig=True):
     
     """
     subprocess.run("cd "+workdir+";"+ \
@@ -207,7 +220,8 @@ def main (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=Tr
         if modelPart == "zashift":
             #m1.zashift.Redshift = 2.0
             m1.zashift.Redshift.frozen = False
-            break
+        if modelPart == "bbody":
+            m1.bbody.kT = 0.05
     
     Xset.abund = "wilm"
     
@@ -264,7 +278,7 @@ def main (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=Tr
         plt.savefig(instName.split('_')[0]+'_spectra_'+model.replace('*','-')+'.png', dpi=300)
     if showFig:
         plt.show()
-        plt.close()
+    plt.close()
     
     return True
     
@@ -310,12 +324,15 @@ if __name__=="__main__":
     obsID = args.obsID
     workdir = '/media/suyog/DATA/xmm_obs/'+obsID+'/work'
     instName, model = args.instName, args.model
-    grouped, saveFig = strToBool(args.grouped), strToBool(args.saveFig)
+    grouped = strToBool(args.grouped), 
+    saveFig, showFig = strToBool(args.saveFig), strToBool(args.showFig)
     
     if instName == 'all':
-        allSpec(workdir, obsID=obsID, model=model, grouped=grouped, saveFig=saveFig)
+        allSpec(workdir, obsID=obsID, model=model, grouped=grouped, \
+                saveFig=saveFig, showFig=showFig)
     else:
-        main(instName=instName, workdir=workdir, obsID=obsID, model=model, grouped=grouped, saveFig=saveFig)
+        main(instName=instName, workdir=workdir, obsID=obsID, model=model, \
+             grouped=grouped, saveFig=saveFig, showFig=showFig)
     
     
 #################### End of Program #########################
