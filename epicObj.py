@@ -1,6 +1,6 @@
 
 ######################################
-###      Reduce the XMM Data       ###
+###      The `epicObj` class       ###
 ######################################
 
 """
@@ -43,8 +43,17 @@ def strToBool (s):
         return print('\nPlease give bool values as yes/no.')
 
 
+##-- print error message --##
+def printErrorMessage (message):
+    width = len(str(message))+4
+    message = str(message).center(width, ' ')
+    print('\n\t\t'+'*'*(width+4))
+    print(f'\t\t**{message}**')
+    print('\t\t'+'*'*(width+4))
+
+
 ##-- the XMM Object Class --##
-class xmmObj:
+class epicObj:
 
     ##-- initialize some common parameters --##
     def __init__ (self, ra, dec, workdir, sas_dir, headas, sas_ccfpath, \
