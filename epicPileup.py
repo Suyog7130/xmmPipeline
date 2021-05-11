@@ -48,33 +48,13 @@ import matplotlib.pyplot as plt
 
 from astropy.table import Table
 
-from xmmPipeline import xmmObj
-from spectra import spectra
+from epicObj import epicObj
+from epicObj import strToBool, printErrorMessage
 from plotAnal import plotAnal
 
 
-##-- function to convert yes/no to bool --##
-def strToBool (s):
-    if type(s)==bool:
-        return s
-    elif s in ['yes', 'y', 'true', 'True', 'Y', 'YES', 'TRUE']:
-        return True
-    elif s in ['no', 'n', 'false', 'False', 'N', 'NO', 'FALSE']:
-        return False
-    else:
-        return print('\nPlease give bool values as yes/no.')
-
-##-- print error message --##
-def printErrorMessage (message):
-    width = len(str(message))+4
-    message = str(message).center(width, ' ')
-    print('\n\t\t'+'*'*(width+4))
-    print(f'\t\t**{message}**')
-    print('\t\t'+'*'*(width+4))
-
-
 ##-- the EPIC Pile-up class --##
-class epicPileup (spectra):
+class epicPileup (epicObj):
 
     ##-- check for Pile-up --##
     def checkPileUp (self):
@@ -152,15 +132,17 @@ class epicPileup (spectra):
         return print('\nPile-up correction finished.')
 
 
+##-------------------------------------------------------------------------------------------##
+
 ##-- the main function --##
 def main (args):
 
-    #-- create an object of class spectra --#
+    #-- create an object of epicPileup class --#
     obj = epicPileup(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                      sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath)
     
     #-- get obsIDs and the objName --#
-    if args.objName == None:
+    if args.objName is None:
         try:
             obj.findObsIDs()
         except KeyError:
@@ -169,16 +151,17 @@ def main (args):
         obj.objName = args.objName
 
     #-- check if obsID has been passed --#
-    if args.obsIDs!=None:
+    if args.obsIDs is not None:
         obj.obsIDs = args.obsIDs
         print('Using the obsIDs passed.')
 
-    #-- run the spectra functions --#
-    obj.readPickleFile()
+    #-- run the functions --#
+    obj.readCCDcoordsPickle()
     obj.checkPileUp()
+    #obj.correctPileUp()
 
-    print('\nHurray! The Spectra method ran successfully.')
-    if len(obj.smallMode) != 0:
+    print('\nHurray! Pile-up correction ran successfully.')
+    if len(obj.smallMode) != 0 and args.obsIDs is None:
         print(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
     if len(obj.badObs) != 0:
         print('These obsIDs were excluded from analysis: ', obj.badObs)
@@ -186,6 +169,7 @@ def main (args):
     return True
 
 
+##-------------------------------------------------------------------------------------------##
 
 if __name__=="__main__":
     

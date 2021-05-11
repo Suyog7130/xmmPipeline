@@ -30,20 +30,6 @@ from epicObj import strToBool, printErrorMessage
 from plotAnal import plotAnal
 
 
-""" 
-##-- function to convert yes/no to bool --##
-def strToBool (s):
-    if type(s)==bool:
-        return s
-    elif s in ['yes', 'y', 'true', 'True', 'Y', 'YES', 'TRUE']:
-        return True
-    elif s in ['no', 'n', 'false', 'False', 'N', 'NO', 'FALSE']:
-        return False
-    else:
-        return print('\nPlease give bool values as yes/no.')
- """
-
-
 ##-- the reduceData main function --##
 def reduceData_method (args):
 
@@ -63,9 +49,9 @@ def reduceData_method (args):
     
     
 ##-- the extractProds main function --##
-def extractProds_method (args):
+def combineAndFind_method (args):
 
-    if args.bkgCircRadius!=None and len(args.bkgCircRadius)==1:
+    if args.bkgCircRadius is not None and len(args.bkgCircRadius)==1:
         r = float(args.bkgCircRadius)
         bkgCircRadius = [r, r]
     else:
@@ -97,6 +83,38 @@ def extractProds_method (args):
     obj.combineEPICdata()
     obj.find_otherSources()
     obj.getBackgroundCircles()
+    obj.writeCCDcoordsPickle()
+
+    print('\nHurray! extractProds Method Succesfully ran.')
+    if len(obj.badObs)!=0:
+        print('These obsIDs were excluded from analysis: ', obj.badObs)
+
+    return True
+
+
+##-- the extractProds main function --##
+def extractProds_method (args):
+
+    #-- create an object of class xmmObj --#
+    obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
+                 sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
+                 srcCircRadius=args.srcCircRadius, bkgCircRadius=bkgCircRadius, dSrcThreshold=args.dSrcThreshold, \
+                 bkgCircGap=args.bkgCircGap, esp_nsplinenodes=args.esp_nsplinenodes, \
+                 gti_indiThreshold=args.gti_indiThreshold, gti_combThreshold=args.gti_combThreshold, \
+                 lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
+                 saveFig=args.saveFig, showFig=args.showFig)
+    
+    #-- check if obsID has been given --#
+    if args.obsIDs!=None:
+        obj.obsIDs = args.obsIDs
+    else:
+        try:
+            obj.findObsIDs()
+        except KeyError:
+            print('\nNo obsIDs found for the given location. Confirm that you are connected to the Internet!')
+            
+    #-- run the extract products functions --#
+    obj.readCCDcoordsPickle()
     obj.extract_srcBkg_eventLists()
     #obj._extract_sMode_srcPNlc(obsID=obj.obsIDs[0])
     obj.obtain_lightCurves()
@@ -106,8 +124,8 @@ def extractProds_method (args):
     if len(obj.badObs)!=0:
         print('These obsIDs were excluded from analysis: ', obj.badObs)
 
-    print('\nNow saving this whole xmmObj to a Pickle file.')
-    outfile = open(args.workdir+'/'+'output_xmmObj.pickle', 'wb')
+    print('\nNow saving this whole epicObj to a Pickle file.')
+    outfile = open(args.workdir+'/'+'output_epicObj.pickle', 'wb')
     pickle.dump(obj, outfile)
     outfile.close()
     print('Saved to Pickle file!')
@@ -115,6 +133,7 @@ def extractProds_method (args):
     return True
 
 
+##-------------------------------------------------------------------------------------------##
 
 if __name__=="__main__":
     
@@ -132,7 +151,7 @@ if __name__=="__main__":
             
     #-- arguments for running specific functions --#            
     parser.add_argument('--method', action='store', type=str, #default='reduceData', \
-                        choices=['reduceData', 'extractProds'], \
+                        choices=['reduceData', 'combineAndFind', 'extractProds'], \
                         help='the set of specific functions to be executed. Default method is set to None.')
     parser.add_argument('--obsIDs', nargs='+', action='store', default=None, #['0831790201'], \
                         help='''obsIDs for which some specific function has to executed. 
@@ -191,11 +210,13 @@ if __name__=="__main__":
     #-- select the pipeline method --#
     if 'func' in args:
         args.func(args)
-    elif args.method=='reduceData':
+    elif args.method == 'reduceData':
         reduceData_method(args)
-    elif args.method=='extractProds':
+    elif args.method == 'combineAndFind':
+        combineAndFind_method(args)
+    elif args.method == 'extratProds':
         extractProds_method(args)
-    elif args.method==None:
+    elif args.method is None:
         printErrorMessage('Please give which method to proceed with!')
         parser.print_help()
 

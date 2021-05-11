@@ -9,6 +9,12 @@
 Am making several changes to the code procedure arrangements. 
 See the GitHub repo, the Notes on Google Docs and the documentation for more information.
 For previous docstring comments, see earlier code files, namely `spectra.py`
+
+11th May 2021:
+---
+Since model fitting for individual obsIDs has to be done manually, I don't think
+`xspec_fitSpectra` would be used now. `pyXspec.py` will have to be run manually
+for each obsIDs with the different model parameters varrying.
 """
 
 import os
@@ -25,137 +31,14 @@ import matplotlib.pyplot as plt
 
 from astropy.table import Table
 
-from xmmPipeline import xmmObj
+from epicObj import epicObj
+from epicObj import strToBool, printErrorMessage
 from plotAnal import plotAnal
 
 
-##-- function to convert yes/no to bool --##
-def strToBool (s):
-    if type(s)==bool:
-        return s
-    elif s in ['yes', 'y', 'true', 'True', 'Y', 'YES', 'TRUE']:
-        return True
-    elif s in ['no', 'n', 'false', 'False', 'N', 'NO', 'FALSE']:
-        return False
-    else:
-        return print('\nPlease give bool values as yes/no.')
 
-##-- print error message --##
-def printErrorMessage (message):
-    width = len(str(message))+4
-    message = str(message).center(width, ' ')
-    print('\n\t\t'+'*'*(width+4))
-    print(f'\t\t**{message}**')
-    print('\t\t'+'*'*(width+4))
-
-
-##-- the spectra object class --##
-class spectra:
-
-    ##-- initialize some common parameters --##
-    def __init__(self, ra, dec, workdir, sas_dir, headas, sas_ccfpath):
-
-        self.ra = ra
-        self.dec = dec
-        self.workdir = workdir
-        
-        self.sas_dir = sas_dir
-        self.headas = headas
-        self.sas_ccfpath = sas_ccfpath
-        
-        self.objName = None       #--name of the object found at the given location.
-        self.obsIDs = list()
-        self.badObs = list()      #--list of obsIDs, excluded from analysis, having total GTI below gti_combThreshold.
-        self.sourceCCDs = {}      #--CCD numbers for each obsID.
-        self.sourceLoc = {}       #--source location parameters for each obsID.
-        self.backgroundLoc = {}   #--background circle coordinates and radius for each obsID.
-
-        self.smallMode = {}       #--is obsID in smallMode, dict for all obsIDs.
-
-
-    ##-- function to find the obsIDs --##
-    def findObsIDs (self):
-        """
-        Input: Coordinates of the object and path to work directory.
-        Output: List of obsIDs.
-        """
-        ra, dec, workdir = str(self.ra), str(self.dec), self.workdir
-        print('\nLooking for obsIDs at RA={} and DEC={}\nWORKDIR is set at {}'.format(ra,dec,workdir))
-        
-        #-- check if workdir exists --#
-        if not os.path.isdir(workdir):
-            subprocess.run("sudo mkdir "+workdir, shell=True)
-            
-        #-- check if browse_extract_wget.pl file exists --#
-        if not os.path.isfile(workdir+"/"+"browse_extract_wget.pl"):
-            print('\nbrowse_extract_wget.pl not found.')
-            subprocess.run("cd "+workdir+";"+
-                           "sudo wget -q https://heasarc.gsfc.nasa.gov/FTP/heasarc/software/web_batch/browse_extract_wget.pl", shell=True)
-            
-            print('browse_extract_wget.pl downloaded.')
-            print('\nPlease check the PERL path in the file. If required, correct the path given in first line and save the file.')
-            subprocess.run("cd "+workdir+";"+
-                           "sudo gedit browse_extract_wget.pl", shell=True)
-            
-        #-- download and save parts of xmmmaster table --##
-        subprocess.run("cd "+workdir+";"+ \
-                       "sudo chmod +x browse_extract_wget.pl;"+ \
-                       "sudo ./browse_extract_wget.pl table=xmmmaster position='"+ ra+","+dec+ \
-                       "' coordinates=equatorial outfile=obsIDs_list.dat", shell=True)
-        
-        #-- extract obsIDs from the file --#
-        df = pd.read_csv(workdir+'/obsIDs_list.dat', sep='|', delim_whitespace=False, header=0)[:-1]  #--remove last line.
-        cols = [s.strip() for s in df.columns.to_list()]  #--remove whitespace from column names.
-        df.columns = cols
-
-        obsIDs = []
-        for i, s in enumerate(df['_Search_Offset'].fillna(0)):
-            if s!=0 and float(s.split()[0].strip())<1.0:           #--remove those which are too far off.
-                obsIDs.append( '0' + str(int(df['obsid'][i])) )    #--the database has a 0 at the start.
-       
-        self.obsIDs = obsIDs  
-
-        #-- get the objName from the file --#
-        objName = df.name.drop_duplicates().dropna().tolist()[0]
-        self.objName = objName
-        print(f'The object at (RA,DEC) = ({ra},{dec}) is {objName}')
-
-        #-- copy and append objName to the file --#
-        subprocess.run("cd "+workdir+";"+ \
-                       "cp obsIDs_list.dat obsIDs_list_"+objName+".dat;", shell=True) 
-        
-        return print('\nFound '+str(len(obsIDs))+' obsIDs for the object at given position.')
-
-
-    ##-- read the pickle file for location parameters --##
-    def readPickleFile (self):
-        """
-        Reads the already obtained pickle file containing location parameters.
-        """
-        print('\nLoading the Pickle file obtained from xmmPipeline.')
-
-        workdir, objName = self.workdir, self.objName
-        fname = workdir+'/'+'output_xmmObj_'+objName+'.pickle'
-
-        #-- check for the pickle file --#
-        if not os.path.isfile(fname):
-            return print(f'\nFile {fname} not found!')
-
-        #-- load the epicObj --#
-        epicObj = pickle.load(open(fname, 'rb'))
-
-        #-- get the location and other parameters --#
-        self.badObs = epicObj.badObs
-        self.sourceCCDs = epicObj.sourceCCDs
-        self.sourceLoc, self.backgroundLoc = epicObj.sourceLoc, epicObj.backgroundLoc
-        self.smallMode, self.otherSources = epicObj.smallMode, epicObj.otherSources
-        
-        #-- remove badObs from obsIDs list to use --#
-        obsIDs, badObs = set(self.obsIDs), set(self.badObs)
-        self.obsIDs = list(obsIDs-badObs)
-
-        return print('Read location parameters from the xmmPipeline Pickle file.')
-
+##-- the epicSpectra object class --##
+class epicSpectra (epicObj):
 
     ##-- extract the Spectra in Image Mode --##
     def extractSpectra_imageMode (self):
@@ -200,37 +83,6 @@ class spectra:
             pnCCD = str(self.sourceCCDs[obsID]['PN'])
             mos1CCD = str(self.sourceCCDs[obsID]['MOS1'])
             mos2CCD = str(self.sourceCCDs[obsID]['MOS2'])
-            
-            """
-            #-- extract MOS12 Spectra --#
-            if self.smallMode[obsID]:
-                print(f'\n{obsID} is in Small Mode. Skipping MOS12 Spectra extraction for it.')
-            else:
-                subprocess.run("cd "+workdir+";"+ \
-                               ". $HEADAS/headas-init.sh;"+ \
-                               ". $SAS_DIR/setsas.sh;"+ \
-                               '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                               #"ds9 MOS12_image.fits;"
-                               "evselect table=MOS12.evts:EVENTS withspectrumset=yes spectrumset=MOS12_spectrum_source.fits"+ \
-                                   " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
-                                   " expression='#XMMEA_EM && (PATTERN<=12) && ((X, Y) IN circle("+ \
-                                   srcX+","+srcY+","+srcR+"))';"+ \
-                               "evselect table=MOS12.evts:EVENTS withspectrumset=yes spectrumset=MOS12_spectrum_background.fits"+ \
-                                   " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
-                                   " expression='#XMMEA_EM && (PATTERN<=12) && ((X,Y) in CIRCLE("+ \
-                                   Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
-                               "backscale spectrumset=MOS12_spectrum_source.fits badpixlocation=MOS12.evts;"+ \
-                               "backscale spectrumset=MOS12_spectrum_background.fits badpixlocation=MOS12.evts;"+ \
-                               "rmfgen spectrumset=MOS12_spectrum_source.fits rmfset=MOS12.rmf;"+ \
-                               "arfgen spectrumset=MOS12_spectrum_source.fits arfset=MOS12.arf withrmfset=yes rmfset=MOS12.rmf"+ \
-                                   " badpixlocation=MOS12.evts detmaptype=psf;"+ \
-                               "specgroup spectrumset=MOS12_spectrum_source.fits mincounts=25 oversample=3 rmfset=MOS12.rmf"+ \
-                                   " arfset=MOS12.arf backgndset=MOS12_spectrum_background.fits"+ \
-                                   " groupedset=MOS12_spectrum_grouped.fits;"
-                               , shell=True)
-                #self.xspec_fitSpectra(instName='MOS12')
-                print('\nMOS12 Spectra extracted.')
-            """
 
             #-- extract MOS1 Spectra --#
             if self.smallMode[obsID]:
@@ -333,13 +185,13 @@ class spectra:
     ##-- fit Spectra to extracted group Spectra data --##
     def xspec_fitSpectra (self, instName='MOS1_CCD1'):
         """
-        Fits a model Spectra to the extracted Spectra data using xspec package.
+        Fits a model Spectra to the extracted Spectra data using `pyXspec` package.
+        Since, `pyXspec` requires HEA initialisation, a separate routine `pyXspec.py`
+        is required to run it.
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec
 
         Input: Extracted Spectra FITS file.
         Output: Spectra plots.
-
-        THIS CANNOT'T RUN THROUGH THE PYTHON PROGRAM.
         """
         print('\nStarting to fit a model Spectra to the extracted Spectra using xspec.')
         
@@ -371,7 +223,7 @@ class spectra:
 
 
     ##-- function to save the final results --##
-    def save_results (self):
+    def save_spectraResults (self):
         """
         Does one tasks
                 Copies the Spectra images from each obsID directory to a results 
