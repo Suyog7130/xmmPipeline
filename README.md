@@ -1,6 +1,6 @@
 
 
-- ***epicObj.py***, contains the main epicObj class which would be used by the rest of the programs. 
+- ***epicObj.py***, contains the main **epicObj** class which would be used by the rest of the programs. 
 
 	- This would also contain two new functions, **writeCCDcoordsPickle** and **readCCDcoordsPickle**, for saving and reading the Pickle file contains the SrcBkg coordinates. 
 	
@@ -32,7 +32,7 @@
 
 - ***epicPileup.py***, contains the **epicPileup** class which has two functions **checkPileUp** and **correctPileUp** for checking and correcting the Pile-up issue.
 
-	- The **epicPileup** class inherits the **epicObj** from ***epicObj.py*** and reads the SrcBkg circle parameters from **ccd_coords_info.pickle ** file already saved by **combineAndFind** method, using **readCCDcoordsPickle**.
+	- The **epicPileup** class inherits the **epicObj** from ***epicObj.py*** and reads the SrcBkg circle parameters from **ccd_coords_info.pickle** file already saved by **combineAndFind** method, using **readCCDcoordsPickle**.
 	
 	- If Pile-up correction is done, this routine would modify the **ccd_coords_info.pickle** file and rewrite it to the directory using **writeCCDcoordsPickle**. This rewritten pickle file would then be used by ***spectra.py*** and the ***extractProds*** method.
 	
