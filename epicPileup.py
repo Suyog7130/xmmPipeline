@@ -126,10 +126,13 @@ class epicPileup (epicObj):
                                " expression='((X,Y) in CIRCLE("+srcX+","+srcY+","+srcR+"))"+ \
                                " && gti(pnGTI.fits,TIME)';"+ \
                            "epatplot set=source_PN_filtered_"+obsID+".evts"+ \
-                               " plotfile=source_PN_filteredPattern.ps;"+ \
-                           "evince source_PN_filteredPattern.ps;"
+                               " plotfile=source_PN_filteredPattern.ps;"
                            , shell=True)
-            print(f'\Checked Pile-up for {obsID}.')
+            if self.showFig:
+                subprocess.run("cd "+workdir+";"+ \
+                            "evince source_PN_filteredPattern.ps;"
+                            , shell=True)
+            print(f'\nChecked Pile-up for {obsID}.')
 
         return print('\nPile-up checking finished.')
 
@@ -171,7 +174,14 @@ class epicPileup (epicObj):
         """
         print('\nStarting Pile-up Correction.')
         if srcRin is None:
-            return printErrorMessage('\nPlease provide a valid inner radius.')
+            return printErrorMessage('Please provide a valid inner radius.')
+        elif srcRin == 0:      
+            for obsID in self.obsIDs:
+                self.sourceLoc[obsID]['rIn'] = None
+                print('\nInner radius of the Source circle has been changed to None.')
+            return print(self.sourceLoc[obsID])
+        else:
+            srcRin = str(srcRin)
 
         #-- set the environment variables --#
         os.environ['SAS_DIR'] = self.sas_dir
@@ -186,7 +196,7 @@ class epicPileup (epicObj):
             #-- get the location parameters --#
             locParams = self.sourceLoc[obsID]
             srcX, srcY, srcR = str(locParams['x']), str(locParams['y']), str(locParams['r'])
-            #print(srcX, srcY, srcR)
+            print(f'Source X, Y and R: {srcX} {srcY} {srcR}')
 
             #-- get the CCD numbers --#
             pnCCD = str(self.sourceCCDs[obsID]['PN'])
@@ -198,8 +208,18 @@ class epicPileup (epicObj):
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                           ""
+                           "evselect table=PN_CCD"+pnCCD+".evts"+ \
+                               " withfilteredset=yes filteredset=source_PN_filteredAnnulus_"+obsID+".evts"+ \
+                               " keepfilteroutput=yes"+ \
+                               " expression='((X,Y) in ANNULUS("+srcX+","+srcY+","+srcRin+","+srcR+"))"+ \
+                               " && gti(pnGTI.fits,TIME)';"+ \
+                           "epatplot set=source_PN_filteredAnnulus_"+obsID+".evts"+ \
+                               " plotfile=source_PN_filteredAnnulus_Pattern.ps;"
                            , shell=True)
+            if self.showFig:
+                subprocess.run("cd "+workdir+";"+ \
+                            "evince source_PN_filteredAnnulus_Pattern.ps;"
+                            , shell=True)
 
             #-- save the new radius parameters --#
             self.sourceLoc[obsID]['rIn'] = srcRin
@@ -231,11 +251,15 @@ def main (args):
         obj.obsIDs = args.obsIDs
         print('Using the obsIDs passed.')
 
+    obj.showFig = args.showFig
+
     #-- run the functions --#
     obj.readCCDcoordsPickle()
-    obj.writeCCDcoordsPickle()
-    obj.checkPileUp()
-    obj.correctPileUp(args.srcRin)
+    if args.correctPileUp:
+        obj.correctPileUp(args.srcRin)
+        obj.writeCCDcoordsPickle()
+    else:
+        obj.checkPileUp()
 
     print('\nHurray! Pile-up correction ran successfully.')
     if len(obj.smallMode) != 0 and args.obsIDs is None:
@@ -278,18 +302,20 @@ if __name__=="__main__":
     parser.add_argument('--sas_ccfpath', action='store', type=str, default=SAS_CCFPATH, \
                         help='SAS_CCFPATH environment variable. (default:%(default)s)')
 
-    #-- flag for `correctPileUp` function --#
+    #-- flags for `correctPileUp` function --#
     parser.add_argument('--correctPileUp', action='store_true', default=False, \
                         help='run correctPileUp function. (default:%(default)s)')
+    parser.add_argument('--srcRin', action='store', type=int, default=None, \
+                        help='the inner radius of the Source circle, in Arcsec. (default:%(default)s)')
+    parser.add_argument('--showFig', action='store_true', default=False, \
+                        help='show the epatplot output in evince. (default:%(default)s)')
 
     #-- parse the arguments --#
-    args = parser.parse_args()   #--parse all the arguments.
+    args = parser.parse_args()   
     #print(args)
 
     #-- call the main function --#
-    #main(args)
-    if args.correctPileUp:
-        print('yes!')
+    main(args)
 
 
 
