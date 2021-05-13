@@ -98,9 +98,6 @@ def extractProds_method (args):
     #-- create an object of class xmmObj --#
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                  sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
-                 srcCircRadius=args.srcCircRadius, bkgCircRadius=bkgCircRadius, dSrcThreshold=args.dSrcThreshold, \
-                 bkgCircGap=args.bkgCircGap, esp_nsplinenodes=args.esp_nsplinenodes, \
-                 gti_indiThreshold=args.gti_indiThreshold, gti_combThreshold=args.gti_combThreshold, \
                  lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
                  saveFig=args.saveFig, showFig=args.showFig)
     
@@ -214,9 +211,9 @@ if __name__=="__main__":
         reduceData_method(args)
     elif args.method == 'combineAndFind':
         combineAndFind_method(args)
-    elif args.method == 'extratProds':
+    elif args.method == 'extractProds':
         extractProds_method(args)
-    elif args.method is None:
+    else:
         printErrorMessage('Please give which method to proceed with!')
         parser.print_help()
 

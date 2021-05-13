@@ -132,6 +132,11 @@ class epicPileup (epicObj):
         return print('\nPile-up correction finished.')
 
 
+    ##-- correct the Pile-up --##
+    def correctPileUp (self):
+        return True
+
+
 ##-------------------------------------------------------------------------------------------##
 
 ##-- the main function --##
