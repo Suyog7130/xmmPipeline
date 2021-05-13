@@ -32,6 +32,12 @@ observed-to-model singles and doubles pattern fractions ratios should both be
 consistent with 1.0 within statistical errors (1 sigma errors are given). 
 If pile-up is present, the singles ratio will be smaller than 1.0 and the 
 doubles ratio will be larger than 1.0.
+
+13 May 2021:
+---
+Adding `correctPileUp` function.
+Some late-time obsIDs 0770981001, 0810200501 and 0810200701 also appear to be Piled-up!
+Gotta get this discrepancy cleared up.
 """
 
 import os
@@ -59,35 +65,35 @@ class epicPileup (epicObj):
     ##-- check for Pile-up --##
     def checkPileUp (self):
         """
-        Uses `epatplot` to check and correct for the Pile-up issue by removing
-        some pixels from the center of the Source circle.
+        Uses `epatplot` to check for the Pile-up issue.
 
-        The observation is corrected for Pile-up by removing some pixels from 
-        the center of the Source. Now, this checking for Pile-up need be done
-        only once, for PN images, since, it will be the same for MOS, probably.
+        First a GTI filtered Source Event list is extracted out of `PN_CCD#.evts`
+        and then `epatplot` is run to check the observed Spectra with the expected
+        pattern distribution function.
 
-        So, if Pile-up is found, one has to manually check for by iteratively 
-        removing more and more center pixels and find when the Pile-up becomes 
-        negligible. Then the Source circle would be an Annulus for this region.
-        The same Annulus parameters can be repeated for MOS1&2.
+        `epatplot` calculates two diagnostic numbers which may be used to assess 
+        the presence of pile-up: In the absence of pile-up, the 0.5 - 2.0 keV (default) 
+        observed-to-model singles and doubles pattern fractions ratios should both be 
+        consistent with 1.0 within statistical errors (1 sigma errors are given). 
+        If pile-up is present, the singles ratio will be smaller than 1.0 and the 
+        doubles ratio will be larger than 1.0.
+        See: `https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epatplot`
 
         Note that `pnGTI.fits` GTI file is used instead of `combinedGTI_obsID.fits`
         because the latter results in very few useful data points.
 
-        The result of this procedure would be the radii values of the Source
-        Annulus for which Pile-up is negligible. Henceforth, this Source region
-        will have to be used for obtaing the Spectra.
+        If the obsID is found to be Piled-up then the user should run the `correctPileUp`
+        function to correct for it.
 
         Input: Concatenated and Calibrated Event list, pnGTI file, 
                `sourceCCDs` and the Source location parameters.
         Output: The Source Annulus radii together with Filtered Event List
                 `source_PN_filtered_obsID.evts` and the corresponding image 
-                `source_PN_filteredPattern.ps`, and the Annulus files 
-                `source_PN_filteredAnnulus_obsID.evts` and `source_PN_filteredPattern_Annulus.ps` 
-                showing resolution of the Pile-up issue.
+                `source_PN_filteredPattern.ps`.
 
         Note: The term `filtered` means that the GTI have been applied.
         """
+        print('\nStarting Pile-up Checking.')
 
         #-- set the environment variables --#
         os.environ['SAS_DIR'] = self.sas_dir
@@ -102,11 +108,7 @@ class epicPileup (epicObj):
             #-- get the location parameters --#
             locParams = self.sourceLoc[obsID]
             srcX, srcY, srcR = str(locParams['x']), str(locParams['y']), str(locParams['r'])
-            
-            bLocParams = self.backgroundLoc[obsID]
-            Bx1, By1, Br1 = str(bLocParams['Bx1']), str(bLocParams['By1']), str(bLocParams['Br1'])
-            Bx2, By2, Br2 = str(bLocParams['Bx2']), str(bLocParams['By2']), str(bLocParams['Br2'])
-            #print(srcX, srcY, srcR, '\n', Bx1, By1, Br1, '\n', Bx2, By2, Br2)
+            #print(srcX, srcY, srcR)
 
             #-- get the CCD numbers --#
             pnCCD = str(self.sourceCCDs[obsID]['PN'])
@@ -127,15 +129,84 @@ class epicPileup (epicObj):
                                " plotfile=source_PN_filteredPattern.ps;"+ \
                            "evince source_PN_filteredPattern.ps;"
                            , shell=True)
-            print(f'\nCorrected Pile-up for {obsID}.')
+            print(f'\Checked Pile-up for {obsID}.')
 
-        return print('\nPile-up correction finished.')
+        return print('\nPile-up checking finished.')
 
 
     ##-- correct the Pile-up --##
-    def correctPileUp (self):
-        return True
+    def correctPileUp (self, srcRin=None):
+        """
+        Uses `epatplot` to correct and check for the Pile-up issue by removing
+        some pixels from the center of the Source circle.
 
+        The observation is corrected for Pile-up by removing some pixels from 
+        the center of the Source. Now, this checking for Pile-up need be done
+        only once, for PN images, since, it will be the same for MOS, probably.
+
+        So, if Pile-up is found, one has to manually check for by iteratively 
+        removing more and more center pixels and find when the Pile-up becomes 
+        negligible. Then the Source circle would be an Annulus for this region.
+        The same Annulus parameters can be repeated for MOS1&2.
+        See: `https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epatplot`
+
+        Note that `pnGTI.fits` GTI file is used instead of `combinedGTI_obsID.fits`
+        because the latter results in very few useful data points.
+
+        The result of this procedure would be the radii values of the Source
+        Annulus for which Pile-up is negligible. These new found `rIn` and `rOut`
+        are then saved into to the `epicObj` and are written to `ccd_coords_info.pickle`
+        file. Henceforth, for these Pile-up obsIDs the Source region defined
+        from `rIn` to `rOut` will be used for obtaing the Spectra.
+
+        Input: Concatenated and Calibrated Event list, pnGTI file, 
+               `sourceCCDs` and the Source location parameters.
+        Output: The Source Annulus radii together with Filtered Event List
+                `source_PN_filtered_obsID.evts` and the corresponding image 
+                `source_PN_filteredPattern.ps`, and the Annulus files 
+                `source_PN_filteredAnnulus_obsID.evts` and `source_PN_filteredPattern_Annulus.ps` 
+                showing resolution of the Pile-up issue.
+
+        Note: The term `filtered` means that the GTI have been applied.
+        """
+        print('\nStarting Pile-up Correction.')
+        if srcRin is None:
+            return printErrorMessage('\nPlease provide a valid inner radius.')
+
+        #-- set the environment variables --#
+        os.environ['SAS_DIR'] = self.sas_dir
+        os.environ['HEADAS'] = self.headas
+        os.environ['SAS_CCFPATH'] = self.sas_ccfpath
+        
+        #-- iterating for all the obsIDs --#      
+        for obsID in self.obsIDs:
+            print('\nCorrecting Pile-up in {}.'.format(obsID))
+            workdir = self.workdir+'/'+obsID+'/work'
+            
+            #-- get the location parameters --#
+            locParams = self.sourceLoc[obsID]
+            srcX, srcY, srcR = str(locParams['x']), str(locParams['y']), str(locParams['r'])
+            #print(srcX, srcY, srcR)
+
+            #-- get the CCD numbers --#
+            pnCCD = str(self.sourceCCDs[obsID]['PN'])
+            mos1CCD = str(self.sourceCCDs[obsID]['MOS1'])
+            mos2CCD = str(self.sourceCCDs[obsID]['MOS2'])
+            
+            #-- correct the Pile-up in PN --#
+            subprocess.run("cd "+workdir+";"+ \
+                           ". $HEADAS/headas-init.sh;"+ \
+                           ". $SAS_DIR/setsas.sh;"+ \
+                           '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
+                           ""
+                           , shell=True)
+
+            #-- save the new radius parameters --#
+            self.sourceLoc[obsID]['rIn'] = srcRin
+            self.sourceLoc[obsID]['rOut'] = srcR
+            print(f'\nCorrected Pile-up for {obsID}.')
+
+        return print('\nPile-up correction finished.')
 
 ##-------------------------------------------------------------------------------------------##
 
@@ -162,8 +233,9 @@ def main (args):
 
     #-- run the functions --#
     obj.readCCDcoordsPickle()
+    obj.writeCCDcoordsPickle()
     obj.checkPileUp()
-    #obj.correctPileUp()
+    obj.correctPileUp(args.srcRin)
 
     print('\nHurray! Pile-up correction ran successfully.')
     if len(obj.smallMode) != 0 and args.obsIDs is None:
@@ -206,12 +278,18 @@ if __name__=="__main__":
     parser.add_argument('--sas_ccfpath', action='store', type=str, default=SAS_CCFPATH, \
                         help='SAS_CCFPATH environment variable. (default:%(default)s)')
 
+    #-- flag for `correctPileUp` function --#
+    parser.add_argument('--correctPileUp', action='store_true', default=False, \
+                        help='run correctPileUp function. (default:%(default)s)')
+
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
     #print(args)
 
     #-- call the main function --#
-    main(args)
+    #main(args)
+    if args.correctPileUp:
+        print('yes!')
 
 
 
