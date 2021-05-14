@@ -326,10 +326,10 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser(description=description)   #--create a ArgumentParser object.
 
     #-- general arguments --#
-    parser.add_argument('--ra', action='store', type=float, default=342.567, \
-                        help='right ascension of the object. (default:%(default)s, AT-2018fyk)')
-    parser.add_argument('--dec', action='store', type=float, default=-44.86, \
-                        help='declination of the object. (default:%(default)s, AT-2018fyk)')   
+    parser.add_argument('--ra', action='store', type=float, default=192.0625, \
+                        help='right ascension of the object. (default:%(default)s, ASASSN-14li)')
+    parser.add_argument('--dec', action='store', type=float, default=17.7739, \
+                        help='declination of the object. (default:%(default)s, ASASSN-14li)')  
     parser.add_argument('--workdir', action='store', type=str, default='/media/suyog/DATA/xmm_obs', \
                         help='directory where obsid folders will be stored. (default:%(default)s)')
     parser.add_argument('--obsIDs', nargs='+', action='store', default=None, #['0831790201'], \
