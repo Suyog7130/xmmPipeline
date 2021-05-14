@@ -1172,8 +1172,9 @@ class epicObj:
                         + glob.glob(workdir+'/*lightcurve*.png')
             jpegFiles = glob.glob(workdir+'/*.jpeg')
             csvFiles = glob.glob(workdir+'/*.csv')
+            pickleFile = glob.glob(workdir+'/*ccd*.pickle')
 
-            files = srcFiles + bkgFiles + pngFiles + jpegFiles + csvFiles
+            files = srcFiles + bkgFiles + pngFiles + jpegFiles + csvFiles + pickleFile
             for file in files:
                 fname = os.path.basename(file)         #--get file name from the glob path.
                 fname = fname.replace('_'+obsID, '')   #--remove obsID from file name, if it is already there.
