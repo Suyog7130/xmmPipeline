@@ -228,6 +228,45 @@ class epicPileup (epicObj):
 
         return print('\nPile-up correction finished.')
 
+
+    ##-- save the results --##
+    def save_pileUpResults (self):
+        """
+        Saves the `*filteredPattern.ps` and `*filteredAnnulus*.ps`
+        to the results directory.
+        """
+        print('\nSaving the Pile-up results for each obsID to a common results folder.')
+
+        maindir = self.workdir
+        #objName+".dat;"
+        #-- make the results directory --#
+        if not os.path.isdir(maindir+'/results'):
+            subprocess.run("cd "+maindir+";"+ \
+                           "mkdir results/", shell=True)
+        resultdir = maindir+'/results'
+
+        #-- iterating for all the obsIDs --#      
+        for obsID in self.obsIDs:
+            print('\nSaving results for obsID {}.'.format(obsID))
+            workdir = maindir+'/'+obsID+'/work'
+            
+            #-- copy results --#
+            file1 = glob.glob(workdir+'/*filteredAnnulus*.ps')
+            file2 = glob.glob(workdir+'/*filteredPattern.ps')
+            files = [file[0] for file in [file1, file2] if len(file) != 0]
+
+            for file in files:
+                fname = os.path.basename(file)         #--get file name from the glob path.
+                fname = fname.replace('_'+obsID, '')   #--remove obsID from file name, if it is already there.
+                fname = obsID +'_'+ fname              #--add the obsID at the start of file name.
+                
+                subprocess.run("cp "+file+" "+resultdir+"/"+fname, shell=True)
+
+            print(f'Save for obsID {obsID} done.')
+
+        return print('\nSaved the result!')
+
+
 ##-------------------------------------------------------------------------------------------##
 
 ##-- the main function --##
@@ -251,6 +290,10 @@ def main (args):
         obj.obsIDs = args.obsIDs
         print('Using the obsIDs passed.')
 
+    if args.saveResults:
+        obj.save_pileUpResults()
+        return True
+
     obj.showFig = args.showFig
 
     #-- run the functions --#
@@ -260,6 +303,7 @@ def main (args):
         obj.writeCCDcoordsPickle()
     else:
         obj.checkPileUp()
+    obj.save_pileUpResults()
 
     print('\nHurray! Pile-up correction ran successfully.')
     if len(obj.smallMode) != 0 and args.obsIDs is None:
@@ -307,8 +351,11 @@ if __name__=="__main__":
                         help='run correctPileUp function. (default:%(default)s)')
     parser.add_argument('--srcRin', action='store', type=int, default=None, \
                         help='the inner radius of the Source circle, in Arcsec. (default:%(default)s)')
+    
     parser.add_argument('--showFig', action='store_true', default=False, \
                         help='show the epatplot output in evince. (default:%(default)s)')
+    parser.add_argument('--saveResults', action='store_true', default=False, \
+                        help='run only save_pileUpResults function. (default:%(default)s)')
 
     #-- parse the arguments --#
     args = parser.parse_args()   
