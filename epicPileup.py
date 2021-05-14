@@ -240,10 +240,13 @@ class epicPileup (epicObj):
         maindir = self.workdir
         #objName+".dat;"
         #-- make the results directory --#
-        if not os.path.isdir(maindir+'/results'):
-            subprocess.run("cd "+maindir+";"+ \
-                           "mkdir results/", shell=True)
-        resultdir = maindir+'/results'
+        resultdir = maindir+'/results/pile-up'
+        if not os.path.isdir(resultdir):
+            if not os.path.isdir(maindir+'/results'):
+                subprocess.run("cd "+maindir+";"+ \
+                               "mkdir results/", shell=True)
+            subprocess.run("cd "+maindir+"/results;"
+                           "mkdir "+resultdir+";", shell=True)
 
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
