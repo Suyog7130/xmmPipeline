@@ -234,7 +234,7 @@ class epicSpectra (epicObj):
         maindir = self.workdir
         #objName+".dat;"
         #-- make the results directory --#
-        resultdir = maindir+'/results/spectra'
+        resultdir = maindir+'/results/epic-Spectra'
         if not os.path.isdir(resultdir):
             if not os.path.isdir(maindir+'/results'):
                 subprocess.run("cd "+maindir+";"+ \
@@ -272,8 +272,8 @@ class epicSpectra (epicObj):
 def main (args):
     
     #-- create an object of class spectra --#
-    obj = spectra(ra=args.ra, dec=args.dec, workdir=args.workdir, \
-                 sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath)
+    obj = epicSpectra(ra=args.ra, dec=args.dec, workdir=args.workdir, \
+                      sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath)
     
     #-- get obsIDs and the objName --#
     if args.objName == None:
@@ -288,6 +288,10 @@ def main (args):
     if args.obsIDs!=None:
         obj.obsIDs = args.obsIDs
         print('Using the obsIDs passed.')
+
+    if args.saveResults:
+        obj.save_spectraResults()
+        return True
 
     #-- run the spectra functions --#
     obj.readPickleFile()
@@ -333,6 +337,11 @@ if __name__=="__main__":
                         help='HEADAS environment variable. (default:%(default)s)')
     parser.add_argument('--sas_ccfpath', action='store', type=str, default=SAS_CCFPATH, \
                         help='SAS_CCFPATH environment variable. (default:%(default)s)')
+
+    parser.add_argument('--showFig', action='store_true', default=False, \
+                        help='show the matplotlib output plots. (default:%(default)s)')
+    parser.add_argument('--saveResults', action='store_true', default=False, \
+                        help='run only save_spectraResults function. (default:%(default)s)')
 
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.

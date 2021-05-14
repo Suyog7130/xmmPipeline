@@ -109,6 +109,10 @@ def extractProds_method (args):
             obj.findObsIDs()
         except KeyError:
             print('\nNo obsIDs found for the given location. Confirm that you are connected to the Internet!')
+
+    if args.saveResults:
+        obj.save_results()
+        return True
             
     #-- run the extract products functions --#
     obj.readCCDcoordsPickle()
@@ -195,10 +199,12 @@ if __name__=="__main__":
     group.add_argument('--binBkglc', action='store', default='no', \
                         help='whether to bin background light curve or not? (default:%(default)s)')
 
-    group.add_argument('--saveFig', action='store', default='yes', \
+    parser.add_argument('--saveFig', action='store_true', default=False, \
                         help='save the matplotlib plots or not? (default:%(default)s)')
-    group.add_argument('--showFig', action='store', default='yes', \
+    parser.add_argument('--showFig', action='store_true', default=False, \
                         help='show the matplotlib plots or not? (default:%(default)s)')
+    parser.add_argument('--saveResults', action='store_true', default=False, \
+                        help='run only save_results function. (default:%(default)s)')
     
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
@@ -212,6 +218,8 @@ if __name__=="__main__":
     elif args.method == 'combineAndFind':
         combineAndFind_method(args)
     elif args.method == 'extractProds':
+        extractProds_method(args)
+    elif args.saveResults:
         extractProds_method(args)
     else:
         printErrorMessage('Please give which method to proceed with!')
