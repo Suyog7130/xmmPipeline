@@ -99,7 +99,7 @@ def extractProds_method (args):
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                   sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
                   lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
-                  saveFig=args.saveFig, showFig=args.showFig, ignorePileup=args.ignorePileup)
+                  saveFig=args.noSaveFig, showFig=args.showFig, ignorePileup=args.ignorePileup)
     
     #-- check if obsID has been given --#
     if args.obsIDs!=None:
@@ -199,13 +199,13 @@ if __name__=="__main__":
     group.add_argument('--binBkglc', action='store', default='no', \
                         help='whether to bin background light curve or not? (default:%(default)s)')
 
-    parser.add_argument('--saveFig', action='store_true', default=False, \
-                        help='save the matplotlib plots or not? (default:%(default)s)')
+    parser.add_argument('--noSaveFig', action='store_false', default=True, \
+                        help='do not save the matplotlib plots? (default:%(default)s)')
     parser.add_argument('--showFig', action='store_true', default=False, \
                         help='show the matplotlib plots or not? (default:%(default)s)')
     parser.add_argument('--saveResults', action='store_true', default=False, \
                         help='run only save_results function. (default:%(default)s)')
-    parser.add_argument('--ignorePileup', action='store_true', defalt=False, \
+    parser.add_argument('--ignorePileup', action='store_true', default=False, \
                         help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
     
     #-- parse the arguments --#

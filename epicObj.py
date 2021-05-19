@@ -890,15 +890,15 @@ class epicObj:
             
             #-- Piled-up cases --#
             srcRin = locParams.get('rIn', None)
-            if not ignorePileup and srcRin is not None:
+            if not self.ignorePileup and srcRin is not None:
                 srcRin = str(srcRin)
                 srcRout = str(locParams['rOut'])
                 print('\nThis observation was piled-up. Using ANNULUS for Source.')
                 srcFilterSet = workdir+"/source_PNMOS12_annulus_"+obsID+".evts"
-                srcFilterExp = '((X,Y) in ANNULUS('+srcX+','+srcY+','+srcRin+','+srcRout+'))'
+                srcFilterExp = "'((X,Y) in ANNULUS("+srcX+","+srcY+","+srcRin+","+srcRout+"))'"
             else:
                 srcFilterSet = workdir+"/source_PNMOS12_"+obsID+".evts"
-                srcFilterExp = '((X,Y) in CIRCLE('+srcX+','+srcY+','+srcR+'))'
+                srcFilterExp = "'((X,Y) in CIRCLE("+srcX+","+srcY+","+srcR+"))'"
             
             #-- extract Source Event list --#
             subprocess.run("cd "+workdir+";"+ \
@@ -960,14 +960,14 @@ class epicObj:
             
         #-- Piled-up cases --#
         srcRin = locParams.get('rIn', None)
-        if not ignorePileup and srcRin is not None:
+        if not self.ignorePileup and srcRin is not None:
             srcRin = str(srcRin)
             srcRout = str(locParams['rOut'])
             srcFilterSet = workdir+"/source_PN_annulus_"+obsID+".evts"
-            srcFilterExp = '((X,Y) in ANNULUS('+srcX+','+srcY+','+srcRin+','+srcRout+'))'
+            srcFilterExp = "'((X,Y) in ANNULUS("+srcX+","+srcY+","+srcRin+","+srcRout+"))'"
         else:
             srcFilterSet = workdir+"/source_PN_"+obsID+".evts"
-            srcFilterExp = '((X,Y) in CIRCLE('+srcX+','+srcY+','+srcR+'))'
+            srcFilterExp = "'((X,Y) in CIRCLE("+srcX+","+srcY+","+srcR+"))'"
             
         #-- extract Source Event list --#
         subprocess.run("cd "+workdir+";"+ \
@@ -1054,11 +1054,12 @@ class epicObj:
             #print(locParams, bLocParams)
             
             #-- Piled-up cases --#
-            srcFilterSet = workdir+"/source_PNMOS12_annulus_"+obsID+".evts"
-            if not os.path.isfile(srcFilterSet):
-                srcFilterSet = workdir+"/source_PNMOS12_"+obsID+".evts"
-            else:
+            srcRin = locParams.get('rIn', None)
+            if not self.ignorePileup and srcRin is not None:
+                srcFilterSet = workdir+"/source_PNMOS12_annulus_"+obsID+".evts"
                 print('\nThis observation was piled-up. Using ANNULUS for Source.')
+            else:
+                srcFilterSet = workdir+"/source_PNMOS12_"+obsID+".evts"
             
             #-- extract Source and Background light curve --#
             subprocess.run("cd "+workdir+";"+ \
