@@ -35,7 +35,7 @@ def reduceData_method (args):
 
     #-- create an object of class xmmObj --#
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
-                 sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath)
+                  sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath)
                  
     #-- run the reduceData functions --#
     try:
@@ -59,12 +59,12 @@ def combineAndFind_method (args):
 
     #-- create an object of class xmmObj --#
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
-                 sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
-                 srcCircRadius=args.srcCircRadius, bkgCircRadius=bkgCircRadius, dSrcThreshold=args.dSrcThreshold, \
-                 bkgCircGap=args.bkgCircGap, esp_nsplinenodes=args.esp_nsplinenodes, \
-                 gti_indiThreshold=args.gti_indiThreshold, gti_combThreshold=args.gti_combThreshold, \
-                 lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
-                 saveFig=args.saveFig, showFig=args.showFig)
+                  sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
+                  srcCircRadius=args.srcCircRadius, bkgCircRadius=bkgCircRadius, dSrcThreshold=args.dSrcThreshold, \
+                  bkgCircGap=args.bkgCircGap, esp_nsplinenodes=args.esp_nsplinenodes, \
+                  gti_indiThreshold=args.gti_indiThreshold, gti_combThreshold=args.gti_combThreshold, \
+                  lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
+                  saveFig=args.saveFig, showFig=args.showFig)
     
     #-- check if obsID has been given --#
     if args.obsIDs!=None:
@@ -97,9 +97,9 @@ def extractProds_method (args):
 
     #-- create an object of class xmmObj --#
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
-                 sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
-                 lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
-                 saveFig=args.saveFig, showFig=args.showFig)
+                  sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
+                  lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
+                  saveFig=args.saveFig, showFig=args.showFig, ignorePileup=args.ignorePileup)
     
     #-- check if obsID has been given --#
     if args.obsIDs!=None:
@@ -205,6 +205,8 @@ if __name__=="__main__":
                         help='show the matplotlib plots or not? (default:%(default)s)')
     parser.add_argument('--saveResults', action='store_true', default=False, \
                         help='run only save_results function. (default:%(default)s)')
+    parser.add_argument('--ignorePileup', action='store_true', defalt=False, \
+                        help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
     
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.

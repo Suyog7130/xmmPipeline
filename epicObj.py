@@ -9,6 +9,10 @@
 Am making several changes to the code procedure arrangements. 
 See the GitHub repo, the Notes on Google Docs and the documentation for more information.
 For previous docstring comments, see earlier code files, namely `xmmPipeline.py`
+
+18th May 2021:
+---
+Adding options for Pile-up obsIDs.
 """
 
 import os
@@ -59,7 +63,7 @@ class epicObj:
     def __init__ (self, ra, dec, workdir, sas_dir, headas, sas_ccfpath, \
                   srcCircRadius=None, bkgCircRadius=None, dSrcThreshold=70, bkgCircGap=2.5, \
                   edetectmode='chain', esp_nsplinenodes=14, gti_indiThreshold=500, gti_combThreshold=None, \
-                  lcBinSize=25, binBkglc='no', saveFig=True, showFig=True):
+                  lcBinSize=25, binBkglc='no', saveFig=True, showFig=True, ignorePileup=False):
     
         self.ra = ra
         self.dec = dec
@@ -92,6 +96,7 @@ class epicObj:
 
         self.saveFig = strToBool(saveFig)
         self.showFig = strToBool(showFig)
+        self.ignorePileup = strToBool(ignorePileup)
 
     
     ##-- function to find the obsIDs --##
@@ -861,6 +866,8 @@ class epicObj:
         Extracts Source and Background Event list from the combined PNMOS12 data file,
         using the Source and Background location parameters given as Input.
         These Event lists will then be used for getting source images in JPEG using DS9.
+
+        18th May 2021: Added options for Pile-up obsIDs.
         
         Input: Combined PNMOS12 Event list, Source and Background X, Y in Sky coords and
                rIn, rOut, the radii of the circles.
