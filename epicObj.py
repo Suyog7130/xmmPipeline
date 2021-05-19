@@ -10,7 +10,7 @@ Am making several changes to the code procedure arrangements.
 See the GitHub repo, the Notes on Google Docs and the documentation for more information.
 For previous docstring comments, see earlier code files, namely `xmmPipeline.py`
 
-18th May 2021:
+18th and 19th May 2021:
 ---
 Adding options for Pile-up obsIDs.
 """
@@ -233,7 +233,7 @@ class epicObj:
         
         Input: SAS Summary file in the work directory, that is downloaded alongwith the data.
         Output: EPIC PN and MOS1&2 calibrated and concatenated Event lists
-                produced by SAS tasks epproc and emproc.
+                produced by SAS tasks `epproc` and `emproc`.
                 
         These event lists contain Instrumental GTI for each of the CCDs.
         See Notes and http://xmm-tools.cosmos.esa.int/external/sas/current/doc/epicproc/node17.html
@@ -867,7 +867,7 @@ class epicObj:
         using the Source and Background location parameters given as Input.
         These Event lists will then be used for getting source images in JPEG using DS9.
 
-        18th May 2021: Added options for Pile-up obsIDs.
+        19th May 2021: Added options for Pile-up obsIDs.
         
         Input: Combined PNMOS12 Event list, Source and Background X, Y in Sky coords and
                rIn, rOut, the radii of the circles.
@@ -888,9 +888,17 @@ class epicObj:
             locParams = self.sourceLoc[obsID]
             srcX, srcY, srcR = str(locParams['x']), str(locParams['y']), str(locParams['r'])
             
-            bLocParams = self.backgroundLoc[obsID]
-            Bx1, By1, Br1 = str(bLocParams['Bx1']), str(bLocParams['By1']), str(bLocParams['Br1'])
-            Bx2, By2, Br2 = str(bLocParams['Bx2']), str(bLocParams['By2']), str(bLocParams['Br2'])
+            #-- Piled-up cases --#
+            srcRin = locParams.get('rIn', None)
+            if not ignorePileup and srcRin is not None:
+                srcRin = str(srcRin)
+                srcRout = str(locParams['rOut'])
+                print('\nThis observation was piled-up. Using ANNULUS for Source.')
+                srcFilterSet = workdir+"/source_PNMOS12_annulus_"+obsID+".evts"
+                srcFilterExp = '((X,Y) in ANNULUS('+srcX+','+srcY+','+srcRin+','+srcRout+'))'
+            else:
+                srcFilterSet = workdir+"/source_PNMOS12_"+obsID+".evts"
+                srcFilterExp = '((X,Y) in CIRCLE('+srcX+','+srcY+','+srcR+'))'
             
             #-- extract Source Event list --#
             subprocess.run("cd "+workdir+";"+ \
@@ -898,11 +906,14 @@ class epicObj:
                            ". $SAS_DIR/setsas.sh;"+ \
                            #"fv PNMOS12.evts;"+ \
                            "evselect table="+workdir+"/PNMOS12.evts"+ \
-                               " withfilteredset=yes filteredset="+workdir+"/source_PNMOS12_"+obsID+".evts"+ \
-                               " keepfilteroutput=yes expression='((X,Y) in CIRCLE("+ \
-                               srcX+","+srcY+","+srcR+"))';"
+                               " withfilteredset=yes filteredset="+srcFilterSet+ \
+                               " keepfilteroutput=yes expression="+srcFilterExp+";"
                            #"fv source_PNMOS12_"+obsID+".evts;"+ \
                            , shell=True)
+            
+            bLocParams = self.backgroundLoc[obsID]
+            Bx1, By1, Br1 = str(bLocParams['Bx1']), str(bLocParams['By1']), str(bLocParams['Br1'])
+            Bx2, By2, Br2 = str(bLocParams['Bx2']), str(bLocParams['By2']), str(bLocParams['Br2'])
                            
             #-- extract the Background Event list --#
             subprocess.run("cd "+workdir+";"+ \
@@ -947,15 +958,25 @@ class epicObj:
         locParams = self.sourceLoc[obsID]
         srcX, srcY, srcR = str(locParams['x']), str(locParams['y']), str(locParams['r'])
             
+        #-- Piled-up cases --#
+        srcRin = locParams.get('rIn', None)
+        if not ignorePileup and srcRin is not None:
+            srcRin = str(srcRin)
+            srcRout = str(locParams['rOut'])
+            srcFilterSet = workdir+"/source_PN_annulus_"+obsID+".evts"
+            srcFilterExp = '((X,Y) in ANNULUS('+srcX+','+srcY+','+srcRin+','+srcRout+'))'
+        else:
+            srcFilterSet = workdir+"/source_PN_"+obsID+".evts"
+            srcFilterExp = '((X,Y) in CIRCLE('+srcX+','+srcY+','+srcR+'))'
+            
         #-- extract Source Event list --#
         subprocess.run("cd "+workdir+";"+ \
                        ". $HEADAS/headas-init.sh;"+ \
                        ". $SAS_DIR/setsas.sh;"+ \
                        #"fv PN_CCD"+pnCCD+".evts;"+ \
                        "evselect table="+workdir+"/PN_CCD"+pnCCD+".evts"+ \
-                           " withfilteredset=yes filteredset="+workdir+"/source_PN_"+obsID+".evts"+ \
-                           " keepfilteroutput=yes expression='((X,Y) in CIRCLE("+ \
-                           srcX+","+srcY+","+srcR+"))';"
+                           " withfilteredset=yes filteredset="+srcFilterSet+ \
+                           " keepfilteroutput=yes expression="+srcFilterExp+";"
                        #"fv source_PN_"+obsID+".evts;"+ \
                        "evselect table=source_PN_"+obsID+".evts withrateset=Y \
                            rateset=source_PN_rate.fits maketimecolumn=Y makeratecolumn=Y \
@@ -1032,11 +1053,18 @@ class epicObj:
             locParams, bLocParams = self.sourceLoc[obsID], self.backgroundLoc[obsID]
             #print(locParams, bLocParams)
             
+            #-- Piled-up cases --#
+            srcFilterSet = workdir+"/source_PNMOS12_annulus_"+obsID+".evts"
+            if not os.path.isfile(srcFilterSet):
+                srcFilterSet = workdir+"/source_PNMOS12_"+obsID+".evts"
+            else:
+                print('\nThis observation was piled-up. Using ANNULUS for Source.')
+            
             #-- extract Source and Background light curve --#
             subprocess.run("cd "+workdir+";"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
-                           "evselect table=source_PNMOS12_"+obsID+".evts withrateset=Y \
+                           "evselect table="+srcFilterSet+" withrateset=Y \
                                rateset=source_rate.fits maketimecolumn=Y makeratecolumn=Y \
                                expression='(TIME in gti(combinedGTI_"+obsID+".fits)) && (PI in [300:10000])';"
                            #"dsplot table=source_rate.fits x=TIME y=RATE;"+ \
