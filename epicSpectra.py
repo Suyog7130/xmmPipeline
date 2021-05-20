@@ -15,6 +15,13 @@ For previous docstring comments, see earlier code files, namely `spectra.py`
 Since model fitting for individual obsIDs has to be done manually, I don't think
 `xspec_fitSpectra` would be used now. `pyXspec.py` will have to be run manually
 for each obsIDs with the different model parameters varrying.
+
+20th May 2021:
+---
+Completing the pending work of fitting Models to the Spectra.
+Two criterions to be checked for each obsIDs:
+    - whether obsID is Piled-up?
+    - whether obsID is in Small-mode?
 """
 
 import os
@@ -47,9 +54,9 @@ class epicSpectra (epicObj):
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-mos-spectrum,
              https://www.cosmos.esa.int/web/xmm-newton/sas-thread-pn-spectrum
 
-        Input: MOS12.evts, PN_CCD##.evts, SrcBkg coordinates and SourceCCDs obtained from xmmPipeline.py
-        Output: MOS12 and PN SrcBkg Spectra in Image Mode, a Redistribution Matrix (rmf) file and
-                an Effective Area Vector (arf) file.
+        Input: `MOS12.evts`, `PN_CCD##.evts`, SrcBkg coordinates and SourceCCDs obtained from xmmPipeline.py
+        Output: MOS12 and PN SrcBkg Spectra in Image Mode, a Redistribution Matrix (`rmf`) file and
+                an Effective Area Vector (`arf`) file.
 
         Note that for Small Mode obsIDs, since the background is taken from PN image data,
         instead of the overlap region data b'cuz MOS12 region was of small size, the background
@@ -57,6 +64,10 @@ class epicSpectra (epicObj):
         extracted for Small Mode obsIDs. However, the 'specgroup' command requires both the 
         Source and the Background Spectra in order to create the grouped Spectrum. Therefore,
         as of now, I am completely skipping getting the MOS12 Spectra for Small mode obsIDs.
+
+        20th May 2021: Now works with Pile-up corrected obsIDs.
+        Separate Source Spectrum file is generated for Piled-up cases, `inst_spectrum_source_annulus_obsID.fits`
+        All the other file names, including the Grouped Spectra is not altered.
         """
         print('\nStarting Spectra extraction for MOS12 and PN in Image Mode.')
         
@@ -69,6 +80,11 @@ class epicSpectra (epicObj):
         for obsID in self.obsIDs:
             print('\nExtracting Image Mode Spectra for obsID {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
+
+            #-- get the CCD numbers --#
+            pnCCD = str(self.sourceCCDs[obsID]['PN'])
+            mos1CCD = str(self.sourceCCDs[obsID]['MOS1'])
+            mos2CCD = str(self.sourceCCDs[obsID]['MOS2'])
             
             #-- get the location parameters --#
             locParams = self.sourceLoc[obsID]
@@ -78,11 +94,18 @@ class epicSpectra (epicObj):
             Bx1, By1, Br1 = str(bLocParams['Bx1']), str(bLocParams['By1']), str(bLocParams['Br1'])
             Bx2, By2, Br2 = str(bLocParams['Bx2']), str(bLocParams['By2']), str(bLocParams['Br2'])
             #print(srcX, srcY, srcR, '\n', Bx1, By1, Br1, '\n', Bx2, By2, Br2)
-
-            #-- get the CCD numbers --#
-            pnCCD = str(self.sourceCCDs[obsID]['PN'])
-            mos1CCD = str(self.sourceCCDs[obsID]['MOS1'])
-            mos2CCD = str(self.sourceCCDs[obsID]['MOS2'])
+            
+            #-- Piled-up cases --#
+            srcRin = locParams.get('rIn', None)
+            if not self.ignorePileup and srcRin is not None:
+                srcRin = str(srcRin)
+                srcRout = str(locParams['rOut'])
+                print('\nThis observation was piled-up. Using ANNULUS for Source.')
+                srcSpectrumSet = "spectrum_source_annulus_"+obsID+".fits"
+                srcFilterExp = "((X,Y) in ANNULUS("+srcX+","+srcY+","+srcRin+","+srcRout+"))';"
+            else:
+                srcSpectrumSet = "spectrum_source_"+obsID+".fits"
+                srcFilterExp = "((X, Y) IN circle("+srcX+","+srcY+","+srcR+"))';"
 
             #-- extract MOS1 Spectra --#
             if self.smallMode[obsID]:
@@ -93,22 +116,21 @@ class epicSpectra (epicObj):
                                ". $SAS_DIR/setsas.sh;"+ \
                                '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                                "evselect table=MOS1_CCD"+mos1CCD+".evts:EVENTS"+ \
-                                   " withspectrumset=yes spectrumset=MOS1_spectrum_source_"+obsID+".fits"+ \
+                                   " withspectrumset=yes spectrumset=MOS1_"+srcSpectrumSet+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
-                                   " expression='#XMMEA_EM && (PATTERN<=12) && ((X, Y) IN circle("+ \
-                                   srcX+","+srcY+","+srcR+"))';"+ \
+                                   " expression='#XMMEA_EM && (PATTERN<=12) && "+srcFilterExp+ \
                                "evselect table=MOS1_CCD"+mos1CCD+".evts:EVENTS"+ \
                                    " withspectrumset=yes spectrumset=MOS1_spectrum_background_"+obsID+".fits"+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
                                    " expression='#XMMEA_EM && (PATTERN<=12) && ((X,Y) in CIRCLE("+ \
                                    Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
-                               "backscale spectrumset=MOS1_spectrum_source_"+obsID+".fits badpixlocation=MOS1_CCD"+mos1CCD+".evts;"+ \
+                               "backscale spectrumset=MOS1_"+srcSpectrumSet+" badpixlocation=MOS1_CCD"+mos1CCD+".evts;"+ \
                                "backscale spectrumset=MOS1_spectrum_background_"+obsID+".fits badpixlocation=MOS1_CCD"+mos1CCD+".evts;"+ \
-                               "rmfgen spectrumset=MOS1_spectrum_source_"+obsID+".fits rmfset=MOS1_"+obsID+".rmf;"+ \
-                               "arfgen spectrumset=MOS1_spectrum_source_"+obsID+".fits"+ \
+                               "rmfgen spectrumset=MOS1_"+srcSpectrumSet+" rmfset=MOS1_"+obsID+".rmf;"+ \
+                               "arfgen spectrumset=MOS1_"+srcSpectrumSet+ \
                                    " arfset=MOS1_"+obsID+".arf withrmfset=yes rmfset=MOS1_"+obsID+".rmf"+ \
                                    " badpixlocation=MOS1_CCD"+mos1CCD+".evts detmaptype=psf;"+ \
-                               "specgroup spectrumset=MOS1_spectrum_source_"+obsID+".fits"+ \
+                               "specgroup spectrumset=MOS1_"+srcSpectrumSet+ \
                                    " mincounts=20 oversample=3 rmfset=MOS1_"+obsID+".rmf"+ \
                                    " arfset=MOS1_"+obsID+".arf backgndset=MOS1_spectrum_background_"+obsID+".fits"+ \
                                    " groupedset=MOS1_spectrum_grouped_"+obsID+".fits;" 
@@ -125,22 +147,21 @@ class epicSpectra (epicObj):
                                ". $SAS_DIR/setsas.sh;"+ \
                                '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                                "evselect table=MOS2_CCD"+mos2CCD+".evts:EVENTS"+ \
-                                   " withspectrumset=yes spectrumset=MOS2_spectrum_source_"+obsID+".fits"+ \
+                                   " withspectrumset=yes spectrumset=MOS2_"+srcSpectrumSet+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
-                                   " expression='#XMMEA_EM && (PATTERN<=12) && ((X, Y) IN circle("+ \
-                                   srcX+","+srcY+","+srcR+"))';"+ \
+                                   " expression='#XMMEA_EM && (PATTERN<=12) && "+srcFilterExp+ \
                                "evselect table=MOS2_CCD"+mos2CCD+".evts:EVENTS"+ \
                                    " withspectrumset=yes spectrumset=MOS2_spectrum_background_"+obsID+".fits"+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
                                    " expression='#XMMEA_EM && (PATTERN<=12) && ((X,Y) in CIRCLE("+ \
                                    Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
-                               "backscale spectrumset=MOS2_spectrum_source_"+obsID+".fits badpixlocation=MOS2_CCD"+mos2CCD+".evts;"+ \
+                               "backscale spectrumset=MOS2_"+srcSpectrumSet+" badpixlocation=MOS2_CCD"+mos2CCD+".evts;"+ \
                                "backscale spectrumset=MOS2_spectrum_background_"+obsID+".fits badpixlocation=MOS2_CCD"+mos2CCD+".evts;"+ \
-                               "rmfgen spectrumset=MOS2_spectrum_source_"+obsID+".fits rmfset=MOS2_"+obsID+".rmf;"+ \
-                               "arfgen spectrumset=MOS2_spectrum_source_"+obsID+".fits"+ \
+                               "rmfgen spectrumset=MOS2_"+srcSpectrumSet+" rmfset=MOS2_"+obsID+".rmf;"+ \
+                               "arfgen spectrumset=MOS2_"+srcSpectrumSet+ \
                                    " arfset=MOS2_"+obsID+".arf withrmfset=yes rmfset=MOS2_"+obsID+".rmf"+ \
                                    " badpixlocation=MOS2_CCD"+mos2CCD+".evts detmaptype=psf;"+ \
-                               "specgroup spectrumset=MOS2_spectrum_source_"+obsID+".fits"+ \
+                               "specgroup spectrumset=MOS2_"+srcSpectrumSet+ \
                                    " mincounts=20 oversample=3 rmfset=MOS2_"+obsID+".rmf"+ \
                                    " arfset=MOS2_"+obsID+".arf backgndset=MOS2_spectrum_background_"+obsID+".fits"+ \
                                    " groupedset=MOS2_spectrum_grouped_"+obsID+".fits;" 
@@ -155,22 +176,21 @@ class epicSpectra (epicObj):
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                            #"ds9 PN_CCD"+pnCCD+"_image.fits -scale log;"
                            "evselect table=PN_CCD"+pnCCD+".evts:EVENTS"+ \
-                               " withspectrumset=yes spectrumset=PN_spectrum_source_"+obsID+".fits"+ \
+                               " withspectrumset=yes spectrumset=PN_"+srcSpectrumSet+ \
                                " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
-                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && ((X, Y) IN circle("+ \
-                               srcX+","+srcY+","+srcR+"))';"+ \
+                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && "+srcFilterExp+ \
                            "evselect table=PN_CCD"+pnCCD+".evts:EVENTS"+ \
                                " withspectrumset=yes spectrumset=PN_spectrum_background_"+obsID+".fits"+ \
                                " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
                                " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && ((X,Y) in CIRCLE("+ \
                                Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
-                           "backscale spectrumset=PN_spectrum_source_"+obsID+".fits badpixlocation=PN_CCD"+pnCCD+".evts;"+ \
+                           "backscale spectrumset=PN_"+srcSpectrumSet+" badpixlocation=PN_CCD"+pnCCD+".evts;"+ \
                            "backscale spectrumset=PN_spectrum_background_"+obsID+".fits badpixlocation=PN_CCD"+pnCCD+".evts;"+ \
-                           "rmfgen spectrumset=PN_spectrum_source_"+obsID+".fits rmfset=PN_"+obsID+".rmf;"+ \
-                           "arfgen spectrumset=PN_spectrum_source_"+obsID+".fits"+ \
+                           "rmfgen spectrumset=PN_"+srcSpectrumSet+" rmfset=PN_"+obsID+".rmf;"+ \
+                           "arfgen spectrumset=PN_"+srcSpectrumSet+ \
                                " arfset=PN_"+obsID+".arf withrmfset=yes rmfset=PN_"+obsID+".rmf"+ \
                                " badpixlocation=PN_CCD"+pnCCD+".evts detmaptype=psf;"+ \
-                           "specgroup spectrumset=PN_spectrum_source_"+obsID+".fits"+ \
+                           "specgroup spectrumset=PN_"+srcSpectrumSet+ \
                                " mincounts=20 oversample=3 rmfset=PN_"+obsID+".rmf"+ \
                                " arfset=PN_"+obsID+".arf backgndset=PN_spectrum_background_"+obsID+".fits"+ \
                                " groupedset=PN_spectrum_grouped_"+obsID+".fits;"
@@ -249,8 +269,10 @@ class epicSpectra (epicObj):
             
             #-- copy Event lists and other results --#
             spectraImgFiles = glob.glob(workdir+'/*spectra*.png')
+            groupedSpectra = glob.glob(workdir+'/*spectrum_grouped*.fits')
+            spectraFiles = spectraImgFiles + groupedSpectra
 
-            for file in spectraImgFiles:
+            for file in spectraFiles:
                 fname = os.path.basename(file)         #--get file name from the glob path.
                 fname = fname.replace('_'+obsID, '')   #--remove obsID from file name, if it is already there.
                 fname = obsID +'_'+ fname              #--add the obsID at the start of file name.
@@ -273,7 +295,8 @@ def main (args):
     
     #-- create an object of class spectra --#
     obj = epicSpectra(ra=args.ra, dec=args.dec, workdir=args.workdir, \
-                      sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath)
+                      sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
+                      showFig=args.showFig, ignorePileup=args.ignorePileup)
     
     #-- get obsIDs and the objName --#
     if args.objName == None:
@@ -288,21 +311,25 @@ def main (args):
     if args.obsIDs!=None:
         obj.obsIDs = args.obsIDs
         print('Using the obsIDs passed.')
-
+    
     if args.saveResults:
         obj.save_spectraResults()
         return True
 
     #-- run the spectra functions --#
-    obj.readPickleFile()
-    obj.extractSpectra_imageMode()
-    #obj.xspec_fitSpectra()
-    #obj.save_results()
+    obj.readCCDcoordsPickle()
+    if args.method == 'extractSpectra':
+        obj.extractSpectra_imageMode()
+    if args.method == 'fitSpectra':
+        obj.xspec_fitSpectra()
+    obj.save_spectraResults()
 
     print('\nHurray! The Spectra method ran successfully.')
-    if len(obj.smallMode) != 0:
-        print(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
-    if len(obj.badObs) != 0:
+    #if len(obj.smallMode) != 0:
+    #    print(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
+
+    print('\nHurray! extractProds Method Succesfully ran.')
+    if len(obj.badObs)!=0:
         print('These obsIDs were excluded from analysis: ', obj.badObs)
 
     return True
@@ -341,7 +368,13 @@ if __name__=="__main__":
     parser.add_argument('--showFig', action='store_true', default=False, \
                         help='show the matplotlib output plots. (default:%(default)s)')
     parser.add_argument('--saveResults', action='store_true', default=False, \
-                        help='run only save_spectraResults function. (default:%(default)s)')
+                        help='run only save_spectraResults function. (default:%(default)s)')   
+    parser.add_argument('--ignorePileup', action='store_true', default=False, \
+                        help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
+
+    parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
+                        choices=['extractSpectra', 'fitSpectra'], \
+                        help='what to do? `fitSpectra` calls pyXspec to fit models to the Spectra. (default:%(default)s)')
 
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
