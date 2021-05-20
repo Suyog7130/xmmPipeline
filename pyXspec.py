@@ -45,35 +45,30 @@ from plotAnal import plotAnal
 
 
 ##-- fit Spectra for all instruments together --##
-def allSpec (workdir, obsID, smallMode=False, \
-             model="tbabs*zashift*(powerlaw)", grouped=True, \
-             saveFig=True, showFig=True):
-    
-    pnName = workdir+"/PN_CCD4"
-    mos1Name = workdir+"/MOS1_CCD1"
-    mos2Name = workdir+"/MOS2_CCD1"
+def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", \
+             grouped=True, saveFig=True, showFig=True):
     
     if grouped:
-        pnS = Spectrum(pnName+"_spectrum_grouped.fits")
+        pnS = Spectrum(workdir+"/PN_spectrum_grouped_"+obsID+".fits")
         if not smallMode:
-            mos1S = Spectrum(mos1Name+"_spectrum_grouped.fits")
-            mos2S = Spectrum(mos2Name+"_spectrum_grouped.fits")
+            mos1S = Spectrum(workdir+"/MOS1_spectrum_grouped_"+obsID+".fits")
+            mos2S = Spectrum(workdir+"/MOS2_spectrum_grouped_"+obsID+".fits")
     else:
-        pnS = Spectrum(pnName+"_spectrum_source.fits")
-        pnS.background = pnName+"_spectrum_background.fits"
-        pnS.response = pnName+".rmf"
-        pnS.response.arf = pnName+".arf"
+        pnS = Spectrum(workdir+"/PN_spectrum_source_"+obsID+".fits")
+        pnS.background = workdir+"/PN_spectrum_background_"+obsID+".fits"
+        pnS.response = workdir+"/PN_"+obsID+".rmf"
+        pnS.response.arf = workdir+"/PN_"+obsID+".arf"
         
         if not smallMode:
-            mos1S = Spectrum(mos1Name+"_spectrum_source.fits")
-            mos1S.background = mos1Name+"_spectrum_background.fits"
-            mos1S.response = mos1Name+".rmf"
-            mos1S.response.arf = mos1Name+".arf"
+            mos1S = Spectrum(workdir+"/MOS1_spectrum_source_"+obsID+".fits")
+            mos1S.background = workdir+"/MOS1_spectrum_background_"+obsID+".fits"
+            mos1S.response = workdir+"/MOS1_"+obsID+".rmf"
+            mos1S.response.arf = workdir+"/MOS1_"+obsID+".arf"
             
-            mos2S = Spectrum(mos2Name+"_spectrum_source.fits")
-            mos2S.background = mos2Name+"_spectrum_background.fits"
-            mos2S.response = mos2Name+".rmf"
-            mos2S.response.arf = mos2Name+".arf"
+            mos2S = Spectrum(workdir+"/MOS2_spectrum_source_"+obsID+".fits")
+            mos2S.background = workdir+"/MOS2_spectrum_background_"+obsID+".fits"
+            mos2S.response = workdir+"/MOS2_"+obsID+".rmf"
+            mos2S.response.arf = workdir+"/MOS2_"+obsID+".arf"
     
     Plot.xAxis = "KeV"
     
@@ -189,12 +184,12 @@ def main (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=Tr
     fname = workdir+"/"+instName
     
     if grouped:
-        S = Spectrum(fname+"_spectrum_grouped.fits")
+        S = Spectrum(fname+"_spectrum_grouped_"+obsID+".fits")
     else:
-        S = Spectrum(fname+"_spectrum_source.fits")
-        S.background = fname+"_spectrum_background.fits"
-        S.response = fname+".rmf"
-        S.response.arf = fname+".arf"
+        S = Spectrum(fname+"_spectrum_source_"+obsID+".fits")
+        S.background = fname+"_spectrum_background_"+obsID+".fits"
+        S.response = fname+"_"+obsID+".rmf"
+        S.response.arf = fname+"_"+obsID+".arf"
         #Plot.setRebin(minSig=3, maxBins=1096)  #--doesn't work.
     
     Plot.xAxis = "KeV"
