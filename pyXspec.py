@@ -23,6 +23,15 @@ It works fine now. See the notes for Google Drive for more info.
 Lots of fitting to the Spectra thing remains.
 Note: Gotta make sure that only the available grouped Spectra files are looked for in `pyXspec.py`
       when `all` is passed as the `instName`, since Small-mode obsIDs do not have the MOS Spectra.
+
+20th May 2021:
+---
+Completing the pending work of fitting Models to the Spectra.
+Two criterions to be checked for each obsIDs:
+    - whether obsID is Piled-up? DONE! 
+    - whether obsID is in Small-mode? DONE!
+Piled-up cases are already taken care of by `epicSpectra.py` is `ignorePileup` flag is OFF.
+For these cases, `spectrum_grouped.fits` will contain `spectrum_source_annulus`.
 """
 
 import argparse
@@ -30,31 +39,14 @@ import subprocess
 import matplotlib.pyplot as plt
 
 from xspec import *
+
+from epicObj import strToBool, printErrorMessage
 from plotAnal import plotAnal
 
 
-##-- function to convert yes/no to bool --##
-def strToBool (s):
-    if type(s)==bool:
-        return s
-    elif s in ['yes', 'y', 'true', 'True', 'Y', 'YES', 'TRUE']:
-        return True
-    elif s in ['no', 'n', 'false', 'False', 'N', 'NO', 'FALSE']:
-        return False
-    else:
-        return print('\nPlease give bool values as yes/no.')
-
-##-- print error message --##
-def printErrorMessage (message):
-    width = len(str(message))+4
-    message = str(message).center(width, ' ')
-    print('\n\t\t'+'*'*(width+4))
-    print(f'\t\t**{message}**')
-    print('\t\t'+'*'*(width+4))
-
-
-
-def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, \
+##-- fit Spectra for all instruments together --##
+def allSpec (workdir, obsID, smallMode=False, \
+             model="tbabs*zashift*(powerlaw)", grouped=True, \
              saveFig=True, showFig=True):
     
     pnName = workdir+"/PN_CCD4"
@@ -63,23 +55,25 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, \
     
     if grouped:
         pnS = Spectrum(pnName+"_spectrum_grouped.fits")
-        mos1S = Spectrum(mos1Name+"_spectrum_grouped.fits")
-        mos2S = Spectrum(mos2Name+"_spectrum_grouped.fits")
+        if not smallMode:
+            mos1S = Spectrum(mos1Name+"_spectrum_grouped.fits")
+            mos2S = Spectrum(mos2Name+"_spectrum_grouped.fits")
     else:
         pnS = Spectrum(pnName+"_spectrum_source.fits")
         pnS.background = pnName+"_spectrum_background.fits"
         pnS.response = pnName+".rmf"
         pnS.response.arf = pnName+".arf"
         
-        mos1S = Spectrum(mos1Name+"_spectrum_source.fits")
-        mos1S.background = mos1Name+"_spectrum_background.fits"
-        mos1S.response = mos1Name+".rmf"
-        mos1S.response.arf = mos1Name+".arf"
-        
-        mos2S = Spectrum(mos2Name+"_spectrum_source.fits")
-        mos2S.background = mos2Name+"_spectrum_background.fits"
-        mos2S.response = mos2Name+".rmf"
-        mos2S.response.arf = mos2Name+".arf"
+        if not smallMode:
+            mos1S = Spectrum(mos1Name+"_spectrum_source.fits")
+            mos1S.background = mos1Name+"_spectrum_background.fits"
+            mos1S.response = mos1Name+".rmf"
+            mos1S.response.arf = mos1Name+".arf"
+            
+            mos2S = Spectrum(mos2Name+"_spectrum_source.fits")
+            mos2S.background = mos2Name+"_spectrum_background.fits"
+            mos2S.response = mos2Name+".rmf"
+            mos2S.response.arf = mos2Name+".arf"
     
     Plot.xAxis = "KeV"
     
@@ -170,7 +164,7 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, \
     return True
     
     
-
+##-- fit individual instrument Spectra --##
 def main (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, \
           saveFig=True, showFig=True):
     

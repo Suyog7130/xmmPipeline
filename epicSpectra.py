@@ -20,8 +20,8 @@ for each obsIDs with the different model parameters varrying.
 ---
 Completing the pending work of fitting Models to the Spectra.
 Two criterions to be checked for each obsIDs:
-    - whether obsID is Piled-up?
-    - whether obsID is in Small-mode?
+    - whether obsID is Piled-up? DONE!
+    - whether obsID is in Small-mode? DONE!
 """
 
 import os
@@ -210,8 +210,10 @@ class epicSpectra (epicObj):
         is required to run it.
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec
 
-        Input: Extracted Spectra FITS file.
-        Output: Spectra plots.
+        Input: Extracted Spectra FITS file and input model parameters.
+        Output: Spectra plots and `specModelParams.pickle` file.
+
+        20th May 2021: Adding feature to allow model parameter value inputs.
         """
         print('\nStarting to fit a model Spectra to the extracted Spectra using xspec.')
         
@@ -270,6 +272,7 @@ class epicSpectra (epicObj):
             #-- copy Event lists and other results --#
             spectraImgFiles = glob.glob(workdir+'/*spectra*.png')
             groupedSpectra = glob.glob(workdir+'/*spectrum_grouped*.fits')
+            paramsFile = glob.glob(workdir+'/*specModelParams*.pickle')
             spectraFiles = spectraImgFiles + groupedSpectra
 
             for file in spectraFiles:
