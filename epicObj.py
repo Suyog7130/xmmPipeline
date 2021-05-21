@@ -333,15 +333,18 @@ class epicObj:
         Runs the XMMSAS commands to remove Flare background from EPIC Event List
         and obtained cleaned event lists for each EPIC instrument.
         The Flare GTI file extracted previously using `extract_flareGTI` is used.
+        Since the Flare Background is same for all the instruments onboard, 
+        this same `flareGTI` file can be used for them all.
+
+        Note that these Flare Background filtered Event Lists are only used for 
+        Spectral Analysis, since for Light Curve extraction, `combinedGTI` file 
+        and combined `PNMOS12.evts` EPIC data is used.
         
-        Input: Unfiltered EPIC PN and MOS1&2 Events lists.
+        Input: Unfiltered EPIC PN and MOS1&2 Events lists and `flareGTI` file.
         Output: Flare Background filtered Event Lists for each EPIC instrument.
         
         This function largely follows the following SAS thread:
         https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground
-        
-        Only one of either EPIC PN or MOS Flare Background filtering is required 
-        since the Flare affects the whole telescope.
         """
         print('\nStarting EPIC data filtering to get Flare GTIs.')
         
@@ -357,27 +360,25 @@ class epicObj:
             
             #-- grab file names --#
             pnFile = glob.glob(workdir+'/*EPN*ImagingEvts*')[0]
+            mos1File = glob.glob(workdir+'/*EMOS1*ImagingEvts*')[0]
+            mos2File = glob.glob(workdir+'/*EMOS2*ImagingEvts*')[0]
             
             #-- filter EPIC PN data --#
             subprocess.run("cd "+workdir+";"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
-                           #"fv "+pnFile+";"+ \
-                           #"sasversion;"+ \
-                           "evselect table="+pnFile+ \
-                               " withrateset=Y rateset=ratePN.fits maketimecolumn=Y timebinsize=100 \
-                               makeratecolumn=Y expression='#XMMEA_EP && (PI>10000&&PI<12000) && (PATTERN==0)';"+ \
-                           #"dsplot table=ratePN.fits x=TIME y=RATE.ERROR;"+ \
-                           "tabgtigen table=ratePN.fits expression='RATE<0.4' gtiset=flareGTI.fits;"+ \
                            "evselect table="+pnFile+ \
                                " withfilteredset=Y filteredset=PNclean.ds destruct=Y keepfilteroutput=T \
                                expression='#XMMEA_EP && gti(flareGTI.fits, TIME) && (PI>150)';"+ \
                            #"fv PNclean.ds;"+ \
-                           "evselect table=PNclean.ds \
-                               withrateset=Y rateset=ratePNclean.fits maketimecolumn=Y timebinsize=100 \
-                               makeratecolumn=Y expression='#XMMEA_EP && (PI>10000&&PI<12000) && (PATTERN==0)';"
-                           #"dsplot table=ratePNclean.fits x=TIME y=RATE.ERROR;"+ \
-                           #"fv ratePNclean.fits;"
+                           "evselect table="+mos1File+ \
+                               " withfilteredset=Y filteredset=MOS1clean.ds destruct=Y keepfilteroutput=T \
+                               expression='#XMMEA_EM && gti(flareGTI.fits, TIME) && (PI>150)';"+ \
+                           #"fv PNclean.ds;"+ \
+                           "evselect table="+mos2File+ \
+                               " withfilteredset=Y filteredset=MOS2clean.ds destruct=Y keepfilteroutput=T \
+                               expression='#XMMEA_EM && gti(flareGTI.fits, TIME) && (PI>150)';"
+                           #"fv PNclean.ds;"+ \
                            , shell=True)
             print('\nFlare GTI extracted for obsID {} finished.'.format(obsID))
 
