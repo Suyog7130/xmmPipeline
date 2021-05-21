@@ -24,7 +24,7 @@ Lots of fitting to the Spectra thing remains.
 Note: Gotta make sure that only the available grouped Spectra files are looked for in `pyXspec.py`
       when `all` is passed as the `instName`, since Small-mode obsIDs do not have the MOS Spectra.
 
-20th May 2021:
+20&21 May 2021:
 ---
 Completing the pending work of fitting Models to the Spectra.
 Two criterions to be checked for each obsIDs:
@@ -103,7 +103,8 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     #Plot.xLog = True
     #Plot("model")
     #Plot("data", "model", "residuals")
-    Plot("ldata", "residuals", "background")
+    #Plot("ldata", "residuals", "background")
+    Plot("ldata", "del", "background")
     
     #-- make the matplotlib plot --#
     fig, ax = plt.subplots(3, 1, figsize=(10, 10))
@@ -130,8 +131,11 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
         ax[2].errorbar(x=Bx, y=By, xerr=BxErr, yerr=ByErr, \
                        marker='.', markersize=3, label=label, \
                        ls='none', color=color, linewidth=1.0)
-        ax[2].plot(Bx, foldedS, drawstyle='steps-pre', color=color, \
-                   linewidth=0.5, alpha=0.75)
+        #ax[2].plot(Bx, foldedS, drawstyle='steps-pre', color=color, \
+        #           linewidth=0.5, alpha=0.75)
+        ax[2].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
+                       marker='.', markersize=3, label=label, \
+                       ls='none', color=color, linewidth=0.5, alpha=0.5)
         
     for i in range(3):
         ax[i].set_xscale('log')
@@ -140,7 +144,7 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     ax[2].set_yscale('log')
     
     ax[0].set_title('data and folded model')
-    ax[1].set_title('residuals')
+    ax[1].set_title('del')
     ax[2].set_title('background')
     
     ax[0].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
@@ -160,8 +164,8 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     
     
 ##-- fit individual instrument Spectra --##
-def main (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, \
-          saveFig=True, showFig=True):
+def indiSpec (instName, workdir, obsID, model="tbabs*zashift*(powerlaw)", grouped=True, \
+              saveFig=True, showFig=True):
     
     """
     subprocess.run("cd "+workdir+";"+ \
@@ -291,10 +295,11 @@ if __name__=="__main__":
                         help='what model to use for fitting. (default:%(default)s)')
     parser.add_argument('--grouped', action='store', default='yes', \
                         help='whether to use grouped spectra data or not? (default:%(default)s)')
-    parser.add_argument('--saveFig', action='store', default='yes', \
-                        help='want to save the plot? (default:%(default)s)')
-    parser.add_argument('--showFig', action='store', default='yes', \
-                        help='want to see the plot? (default:%(default)s)')
+
+    parser.add_argument('--noSaveFig', action='store_false', default=True, \
+                        help='do not save the matplotlib plots? (default:%(default)s)')
+    parser.add_argument('--showFig', action='store_true', default=False, \
+                        help='show the matplotlib plots or not? (default:%(default)s)')
     
     #-- location paths arguments --#
     SAS_DIR = '/usr/local/xmmsas_20201028_0905'  
@@ -313,15 +318,14 @@ if __name__=="__main__":
     obsID = args.obsID
     workdir = '/media/suyog/DATA/xmm_obs/'+obsID+'/work'
     instName, model = args.instName, args.model
-    grouped = strToBool(args.grouped), 
-    saveFig, showFig = strToBool(args.saveFig), strToBool(args.showFig)
+    grouped = strToBool(args.grouped)
     
     if instName == 'all':
         allSpec(workdir, obsID=obsID, model=model, grouped=grouped, \
-                saveFig=saveFig, showFig=showFig)
+                saveFig=args.noSaveFig, showFig=args.showFig)
     else:
-        main(instName=instName, workdir=workdir, obsID=obsID, model=model, \
-             grouped=grouped, saveFig=saveFig, showFig=showFig)
+        indiSpec(instName=instName, workdir=workdir, obsID=obsID, model=model, \
+             grouped=grouped, saveFig=args.noSaveFig, showFig=args.showFig)
     
     
 #################### End of Program #########################

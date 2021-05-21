@@ -202,7 +202,7 @@ class epicSpectra (epicObj):
 
 
     ##-- fit Spectra to extracted group Spectra data --##
-    def xspec_fitSpectra (self, instName='MOS1_CCD1'):
+    def xspec_fitSpectra (self, instName='PN'):
         """
         Fits a model Spectra to the extracted Spectra data using `pyXspec` package.
         Since, `pyXspec` requires HEA initialisation, a separate routine `pyXspec.py`
@@ -226,9 +226,7 @@ class epicSpectra (epicObj):
             print('\nFitting Spectra for obsID {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
 
-            models = ['zashift*powerlaw', 'zashift*bbody',
-                      'tbabs*zashift*powerlaw', 'tbabs*zashift*bbody',
-                      'zashift*\(powerlaw+bbody\)', 'tbabs*zashift*\(powerlaw+bbody\)']
+            models = ['tbabs*zashift*\(powerlaw+bbody\)']
 
             for model in models:
                 subprocess.run("cd "+workdir+";"+ \
@@ -236,7 +234,7 @@ class epicSpectra (epicObj):
                                ". $SAS_DIR/setsas.sh;"+ \
                                #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                                "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+" --instName all " \
-                                    +"--model "+model+" --showFig=no;"
+                                    +"--model "+model+" --showFig;"
                                , shell=True)
             print('\nSpectra fitting for obsID {} finished.'.format(obsID))
             
@@ -298,7 +296,7 @@ def main (args):
     #-- create an object of class spectra --#
     obj = epicSpectra(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                       sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
-                      showFig=args.showFig, ignorePileup=args.ignorePileup)
+                      saveFig=args.noSaveFig, showFig=args.showFig, ignorePileup=args.ignorePileup)
     
     #-- get obsIDs and the objName --#
     if args.objName == None:
@@ -329,8 +327,6 @@ def main (args):
     print('\nHurray! The Spectra method ran successfully.')
     #if len(obj.smallMode) != 0:
     #    print(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
-
-    print('\nHurray! extractProds Method Succesfully ran.')
     if len(obj.badObs)!=0:
         print('These obsIDs were excluded from analysis: ', obj.badObs)
 
@@ -367,8 +363,10 @@ if __name__=="__main__":
     parser.add_argument('--sas_ccfpath', action='store', type=str, default=SAS_CCFPATH, \
                         help='SAS_CCFPATH environment variable. (default:%(default)s)')
 
+    parser.add_argument('--noSaveFig', action='store_false', default=True, \
+                        help='do not save the matplotlib plots? (default:%(default)s)')
     parser.add_argument('--showFig', action='store_true', default=False, \
-                        help='show the matplotlib output plots. (default:%(default)s)')
+                        help='show the matplotlib plots or not? (default:%(default)s)')
     parser.add_argument('--saveResults', action='store_true', default=False, \
                         help='run only save_spectraResults function. (default:%(default)s)')   
     parser.add_argument('--ignorePileup', action='store_true', default=False, \
