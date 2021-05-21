@@ -73,9 +73,9 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     Plot.xAxis = "KeV"
     
     AllData.ignore("bad")
-    pnS.ignore("**-0.3 10.0-**")
-    mos1S.ignore("**-0.3 10.0-**")
-    mos2S.ignore("**-0.3 10.0-**")
+    pnS.ignore("**-0.3 1.5-**")
+    mos1S.ignore("**-0.3 1.5-**")
+    mos2S.ignore("**-0.3 1.5-**")
     
     #m1 = Model("tbabs*zashift*(powerlaw+bbody)")
     m1 = Model(model)
