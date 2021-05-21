@@ -285,22 +285,6 @@ if __name__=="__main__":
     
     parser = argparse.ArgumentParser(description=description)   
     
-    parser.add_argument('--workdir', action='store', type=str, default='/media/suyog/DATA/xmm_obs', \
-                        help='directory where obsid folders will be stored. (default:%(default)s)')
-    parser.add_argument('--obsID', action='store', default=None, #['0810200701'], \
-                        help='obsID to fit the Spectra for. (default:%(default)s)')
-    parser.add_argument('--instName', action='store', default='MOS1_CCD1', \
-                        help='the instrument to use. (default:%(default)s)')
-    parser.add_argument('--model', action='store', default="tbabs*zashift*(powerlaw)", \
-                        help='what model to use for fitting. (default:%(default)s)')
-    parser.add_argument('--grouped', action='store', default='yes', \
-                        help='whether to use grouped spectra data or not? (default:%(default)s)')
-
-    parser.add_argument('--noSaveFig', action='store_false', default=True, \
-                        help='do not save the matplotlib plots? (default:%(default)s)')
-    parser.add_argument('--showFig', action='store_true', default=False, \
-                        help='show the matplotlib plots or not? (default:%(default)s)')
-    
     #-- location paths arguments --#
     SAS_DIR = '/usr/local/xmmsas_20201028_0905'  
     HEADAS = '/usr/local/heasoft-6.28/x86_64-pc-linux-gnu-libc2.27'
@@ -311,6 +295,26 @@ if __name__=="__main__":
                         help='HEADAS environment variable. (default:%(default)s)')
     parser.add_argument('--sas_ccfpath', action='store', type=str, default=SAS_CCFPATH, \
                         help='SAS_CCFPATH environment variable. (default:%(default)s)')
+    
+    #-- general arguments --#
+    parser.add_argument('--workdir', action='store', type=str, default='/media/suyog/DATA/xmm_obs', \
+                        help='directory where obsid folders will be stored. (default:%(default)s)')
+    parser.add_argument('--obsID', action='store', default=None, #['0810200701'], \
+                        help='obsID to fit the Spectra for. (default:%(default)s)')
+    parser.add_argument('--instName', action='store', default='PN', \
+                        help='the instrument to use. (default:%(default)s)')
+    parser.add_argument('--model', action='store', default="tbabs*zashift*(powerlaw)", \
+                        help='what model to use for fitting. (default:%(default)s)')
+    parser.add_argument('--grouped', action='store', default='yes', \
+                        help='whether to use grouped spectra data or not? (default:%(default)s)')
+
+    parser.add_argument('--smallMode', action='store', default='no', \
+                        help='is the obsID in Small-mode? (default:%(default)s)')
+
+    parser.add_argument('--noSaveFig', action='store_false', default=True, \
+                        help='do not save the matplotlib plots? (default:%(default)s)')
+    parser.add_argument('--showFig', action='store_true', default=False, \
+                        help='show the matplotlib plots or not? (default:%(default)s)')
 
     #-- parse the arguments --#
     args = parser.parse_args()
@@ -318,14 +322,14 @@ if __name__=="__main__":
     obsID = args.obsID
     workdir = '/media/suyog/DATA/xmm_obs/'+obsID+'/work'
     instName, model = args.instName, args.model
-    grouped = strToBool(args.grouped)
+    grouped, smallMode = strToBool(args.grouped), strToBool(args.smallMode)
     
     if instName == 'all':
         allSpec(workdir, obsID=obsID, model=model, grouped=grouped, \
-                saveFig=args.noSaveFig, showFig=args.showFig)
+                saveFig=args.noSaveFig, showFig=args.showFig, smallMode=smallMode)
     else:
         indiSpec(instName=instName, workdir=workdir, obsID=obsID, model=model, \
-             grouped=grouped, saveFig=args.noSaveFig, showFig=args.showFig)
+                 grouped=grouped, saveFig=args.noSaveFig, showFig=args.showFig)
     
     
 #################### End of Program #########################

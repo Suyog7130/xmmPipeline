@@ -225,6 +225,7 @@ class epicSpectra (epicObj):
         for obsID in self.obsIDs:
             print('\nFitting Spectra for obsID {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
+            smallMode = self.smallMode[obsID]
 
             models = ['tbabs*zashift*\(powerlaw+bbody\)']
 
@@ -234,7 +235,7 @@ class epicSpectra (epicObj):
                                ". $SAS_DIR/setsas.sh;"+ \
                                #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                                "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+" --instName all " \
-                                    +"--model "+model+" --showFig;"
+                                    +"--model "+model+" --showFig --smallMode "+smallMode+";"
                                , shell=True)
             print('\nSpectra fitting for obsID {} finished.'.format(obsID))
             
@@ -375,6 +376,10 @@ if __name__=="__main__":
     parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
                         choices=['extractSpectra', 'fitSpectra'], \
                         help='what to do? `fitSpectra` calls pyXspec to fit models to the Spectra. (default:%(default)s)')
+
+    #-- fitSpectra arguments --#
+    parser.add_argument('--instName', action='store', default='PN', \
+                        help='the instrument to use. (default:%(default)s)')
 
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
