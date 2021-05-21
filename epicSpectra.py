@@ -33,6 +33,7 @@ import subprocess
 import requests
 import wget
 
+import json
 import glob
 import pickle
 import argparse
@@ -210,7 +211,7 @@ class epicSpectra (epicObj):
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec
 
         Input: Extracted Spectra FITS file and input model parameters.
-        Output: Spectra plots and `specModelParams.pickle` file.
+        Output: Spectra plots and `specModelParams.json` file.
 
         20th May 2021: Adding feature to allow model parameter value inputs.
         """
@@ -225,18 +226,33 @@ class epicSpectra (epicObj):
         for obsID in self.obsIDs:
             print('\nFitting Spectra for obsID {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
+
             smallMode = self.smallMode[obsID]
+            if smallMode:
+                smallMode = 'yes'
+            else:
+                smallMode = 'no'
 
-            models = ['tbabs*zashift*\(powerlaw+bbody\)']
+            #-- write a `specModelParams.json` file --#
+            print('\nPlease give the model to use and check the model fit parameters.')
+            fname = workdir+'/specModelParams.json'
+            subprocess.run("cd "+workdir+";"+ \
+                           "sudo gedit specModelParams.json;"
+                           , shell=True)
 
-            for model in models:
-                subprocess.run("cd "+workdir+";"+ \
-                               ". $HEADAS/headas-init.sh;"+ \
-                               ". $SAS_DIR/setsas.sh;"+ \
-                               #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                               "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+" --instName all " \
-                                    +"--model "+model+" --showFig --smallMode "+smallMode+";"
-                               , shell=True)
+            #-- load parameters from the JSON file --#               
+            params = json.load(open(fname, 'r'))
+            model = params['modelToUse']
+            model = model.replace(')', '\)').replace('(', '\(')
+
+            #-- run `pyXspec.py` routine --#
+            subprocess.run("cd "+workdir+";"+ \
+                            ". $HEADAS/headas-init.sh;"+ \
+                            ". $SAS_DIR/setsas.sh;"+ \
+                            #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
+                            "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+" --instName all " \
+                                +"--model "+model+" --showFig --smallMode "+smallMode+";"
+                            , shell=True)
             print('\nSpectra fitting for obsID {} finished.'.format(obsID))
             
         return print('Fitted model Spectra to the extracted Spectra.')
@@ -270,7 +286,7 @@ class epicSpectra (epicObj):
             #-- copy Event lists and other results --#
             spectraImgFiles = glob.glob(workdir+'/*spectra*.png')
             groupedSpectra = glob.glob(workdir+'/*spectrum_grouped*.fits')
-            paramsFile = glob.glob(workdir+'/*specModelParams*.pickle')
+            paramsFile = glob.glob(workdir+'/*specModelParams*.json')
             spectraFiles = spectraImgFiles + groupedSpectra
 
             for file in spectraFiles:

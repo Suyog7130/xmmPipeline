@@ -32,6 +32,9 @@ Two criterions to be checked for each obsIDs:
     - whether obsID is in Small-mode? DONE!
 Piled-up cases are already taken care of by `epicSpectra.py` is `ignorePileup` flag is OFF.
 For these cases, `spectrum_grouped.fits` will contain `spectrum_source_annulus`.
+
+NOTE: The xspec Model object cannot be pickled or dumped into a JSON file.
+So, I think this automation can be done later and for now I can manually do the specModel fitting.
 """
 
 import argparse
@@ -159,6 +162,9 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     if showFig:
         plt.show()
     plt.close()
+
+    modelFile = open('model.pickle', 'wb')
+    pickle.dump(m1, modelFile)
     
     return True
     
