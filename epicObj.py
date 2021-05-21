@@ -848,6 +848,9 @@ class epicObj:
     def writeCCDcoordsPickle (self):
         """
         Writes the location parameters to `ccd_coords_info.pickle` file.
+
+        21st May 2021: Added loading `ccd_coords_info.pickle` file if it is already
+                       present in the directory.
         """
         maindir = self.workdir
         print('\nWriting the location parameters to ccd_coords_info.pickle file.\n')
@@ -856,9 +859,19 @@ class epicObj:
         for obsID in self.obsIDs:
             print('Saving pickle for obsID {}.'.format(obsID))
             workdir = maindir+'/'+obsID+'/work'
+            fname = workdir+'/'+'ccd_coords_info.pickle'
+
+            #-- load the `ccd_coords_info.pickle` if already present --#
+            if os.path.isfile(fname):
+                result = pickle.load(open(fname, 'rb'))
+                    #-- create a backup file --#
+                subprocess.run("cd "+workdir+";"+ \
+                               "cp ccd_coords_info.pickle ccd_coords_info.bak;"
+                               , shell=True)
+            else:
+                result = {}
             
             #-- save the CCD and coords info in a pickle file --#
-            result = {}
             result['sourceCCDs'] = self.sourceCCDs[obsID]
             result['sourceLoc'] = self.sourceLoc[obsID]
             result['backgroundLoc'] = self.backgroundLoc[obsID]
@@ -869,7 +882,7 @@ class epicObj:
             else:
                 result['badObs'] = False
 
-            outfile = open(workdir+'/'+'ccd_coords_info.pickle', 'wb')
+            outfile = open(fname, 'wb')
             pickle.dump(result, outfile)
             outfile.close()
 
