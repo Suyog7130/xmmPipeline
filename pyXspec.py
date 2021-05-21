@@ -16,7 +16,7 @@ Nope. This doesn't actually work.
 
 20th April 2021:
 ---
-It works fine now. See the notes for Google Drive for more info.
+It works fine now. See the notes for Google Docs for more info.
 
 08 May 2021:
 ---
