@@ -848,6 +848,8 @@ class epicObj:
     def writeCCDcoordsPickle (self):
         """
         Writes the location parameters to `ccd_coords_info.pickle` file.
+        If the file is already present in the directory, then the values for the 
+        corresponding keys will be updated.
 
         21st May 2021: Added loading `ccd_coords_info.pickle` file if it is already
                        present in the directory.

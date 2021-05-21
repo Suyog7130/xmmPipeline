@@ -64,7 +64,7 @@ def combineAndFind_method (args):
                   bkgCircGap=args.bkgCircGap, esp_nsplinenodes=args.esp_nsplinenodes, \
                   gti_indiThreshold=args.gti_indiThreshold, gti_combThreshold=args.gti_combThreshold, \
                   lcBinSize=args.lcBinSize, binBkglc=args.binBkglc, \
-                  saveFig=args.saveFig, showFig=args.showFig)
+                  saveFig=args.noSaveFig, showFig=args.showFig)
     
     #-- check if obsID has been given --#
     if args.obsIDs!=None:
