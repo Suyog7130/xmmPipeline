@@ -13,6 +13,11 @@ For previous docstring comments, see earlier code files, namely `xmmPipeline.py`
 18th and 19th May 2021:
 ---
 Adding options for Pile-up obsIDs.
+
+21st May 2021:
+---
+Editing the `removeFlareBackground` function.
+A seperate function `extract_flareGTI` will also be added.
 """
 
 import os
@@ -275,14 +280,62 @@ class epicObj:
         return print('\nCompleted reducing the data and created EPIC Event lists!')
 
 
+    ##-- function to extract Flare GTI --##
+    def extract_flareGTI (self):
+        """
+        Runs the XMMSAS commands to extract Flare GTI from PN Event List.
+        
+        Input: Unfiltered EPIC PN and MOS1&2 Events lists.
+        Output: `flareGTI` file for the obsIDs.
+        
+        This function largely follows the following SAS thread:
+        https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground
+        
+        Only one of either EPIC PN or MOS Flare Background filtering is required 
+        since the Flare affects the whole telescope.
+        """
+        print('\nStarting EPIC data filtering to extract Flare GTIs.')
+        
+        #-- set the environment variables --#
+        os.environ['SAS_DIR'] = self.sas_dir
+        os.environ['HEADAS'] = self.headas
+        os.environ['SAS_CCFPATH'] = self.sas_ccfpath
+        
+        #-- iterating for all the obsIDs --#
+        for obsID in self.obsIDs:
+            print('\nRunning commands for obsID {}.'.format(obsID))
+            workdir = self.workdir+'/'+obsID+'/work'
+            
+            #-- grab file names --#
+            pnFile = glob.glob(workdir+'/*EPN*ImagingEvts*')[0]
+            
+            #-- filter EPIC PN data --#
+            subprocess.run("cd "+workdir+";"+ \
+                           ". $HEADAS/headas-init.sh;"+ \
+                           ". $SAS_DIR/setsas.sh;"+ \
+                           #"fv "+pnFile+";"+ \
+                           #"sasversion;"+ \
+                           "evselect table="+pnFile+ \
+                               " withrateset=Y rateset=ratePN.fits maketimecolumn=Y timebinsize=100 \
+                               makeratecolumn=Y expression='#XMMEA_EP && (PI>10000&&PI<12000) && (PATTERN==0)';"+ \
+                           #"dsplot table=ratePN.fits x=TIME y=RATE.ERROR;"+ \
+                           "tabgtigen table=ratePN.fits expression='RATE<0.4' gtiset=flareGTI.fits;"
+                           #"fv flareGTI.fits;"
+                           , shell=True)
+            print('\nFlare GTI extracted for obsID {} finished.'.format(obsID))
+
+        return print('\nExtracted the Flare GTIs!')
+        
+
     ##-- function to remove Flare background --##
     def removeFlareBackground (self):
         """
-        Runs the XMMSAS commands to remove Flare background from EPIC event list and
-        obtain a light curve and corresponding Good Time Intervals (GTIs).
+        Runs the XMMSAS commands to remove Flare background from EPIC Event List
+        and obtained cleaned event lists for each EPIC instrument.
+        The Flare GTI file extracted previously using `extract_flareGTI` is used.
         
         Input: Unfiltered EPIC PN and MOS1&2 Events lists.
-        Output: Filtered Event lists, with Flare background removed and GTI files for each CCD.
+        Output: Flare Background filtered Event Lists for each EPIC instrument.
         
         This function largely follows the following SAS thread:
         https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground

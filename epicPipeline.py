@@ -76,6 +76,7 @@ def combineAndFind_method (args):
             print('\nNo obsIDs found for the given location. Confirm that you are connected to the Internet!')
             
     #-- run the extract products functions --#
+    obj.extract_flareGTI()
     obj.removeFlareBackground()
     obj.findSourceCCD()
     obj.extract_InstrumentalGTIs()
