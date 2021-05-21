@@ -35,6 +35,9 @@ For these cases, `spectrum_grouped.fits` will contain `spectrum_source_annulus`.
 
 NOTE: The xspec Model object cannot be pickled or dumped into a JSON file.
 So, I think this automation can be done later and for now I can manually do the specModel fitting.
+
+FOUND Out how the output can be accessed, logged, saved and used otherwise!
+Bingo!
 """
 
 import argparse
@@ -50,6 +53,10 @@ from plotAnal import plotAnal
 ##-- fit Spectra for all instruments together --##
 def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", \
              grouped=True, saveFig=True, showFig=True):
+
+    #-- starting log --#
+    logFile = Xset.openLog('xspeclog.txt')
+    logFile = Xset.log
     
     if grouped:
         pnS = Spectrum(workdir+"/PN_spectrum_grouped_"+obsID+".fits")
@@ -101,6 +108,16 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     Fit.nIterations = 100
     Fit.criticalDelta = 1e-1
     Fit.perform()
+
+    AllModels.calcFlux("0.3 1.5 0.02")
+    AllModels.calcLumin("0.3 1.5 0.02")
+    print(pnS.flux, pnS.lumin)
+    if not smallMode:
+        print(mos1S.flux, mos1S.lumin)
+        print(mos2S.flux, mos2S.lumin)
+
+    print(Fit.statistic, Fit.testStatistic, Fit.dof)
+    print(m1.bbody.kT.values[0], m1.bbody.kT.sigma)
     
     Plot.device = "/xs"
     #Plot.xLog = True
@@ -163,8 +180,10 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
         plt.show()
     plt.close()
 
-    modelFile = open('model.pickle', 'wb')
-    pickle.dump(m1, modelFile)
+    #modelFile = open('model.pickle', 'wb')
+    #pickle.dump(m1, modelFile)
+
+    Xset.closeLog()   #--close the log.
     
     return True
     
