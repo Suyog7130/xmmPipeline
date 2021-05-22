@@ -51,8 +51,9 @@ from plotAnal import plotAnal
 
 
 ##-- fit Spectra for all instruments together --##
-def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", \
-             grouped=True, saveFig=True, showFig=True):
+def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", \
+             modelParams=None, smallMode=False, grouped=True, \
+             saveFig=True, showFig=True):
 
     #-- starting log --#
     logFile = Xset.openLog('xspeclog.txt')
@@ -95,7 +96,7 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     #m1 = Model("tbabs*zashift*(powerlaw+bbody)")
     m1 = Model(model)
     
-    print(model)
+    print(model, modelParams)
     #print(AllModels.sources)
     #print(m1.componentNames)
     #print(m1.zashift.parameterNames)
@@ -126,7 +127,9 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
         print(mos2S.flux, mos2S.lumin)
 
     print(Fit.statistic, Fit.testStatistic, Fit.dof)
-    print(m1.bbody.kT.values[0], m1.bbody.kT.sigma)
+    #print(m1.bbody.kT.values[0], m1.bbody.kT.sigma)
+    param1 = m1(1)
+    print(param1, param1.values[0])
     
     #-- plotting --#
     Plot.device = "/xs"
@@ -138,8 +141,14 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     
     #-- make the matplotlib plot --#
     fig, ax = plt.subplots(3, 1, figsize=(10, 10))
+
+    if smallMode:
+        plotGroups, colors, labels = [1], ['black'], ['PN']
+    else:
+        plotGroups, colors = [1, 2, 3], ['black', 'red', 'green']
+        labels = ['PN', 'MOS1', 'MOS2']
     
-    for pG, color, label in zip([1, 2, 3], ['black', 'red', 'green'], ['PN', 'MOS1', 'MOS2']):
+    for pG, color, label in zip(plotGroups, colors, labels):
         Sx, Sy = Plot.x(plotWindow=1, plotGroup=pG), Plot.y(plotWindow=1, plotGroup=pG)
         SxErr, SyErr = Plot.xErr(plotWindow=1, plotGroup=pG), Plot.yErr(plotWindow=1, plotGroup=pG)
         foldedS = Plot.model(plotWindow=1, plotGroup=pG)
@@ -164,7 +173,7 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
         #ax[2].plot(Bx, foldedS, drawstyle='steps-pre', color=color, \
         #           linewidth=0.5, alpha=0.75)
         ax[2].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
-                       marker='.', markersize=3, label=label, \
+                       marker='.', markersize=3, label=label+' ldata', \
                        ls='none', color=color, linewidth=0.5, alpha=0.5)
         
     for i in range(3):
@@ -360,10 +369,12 @@ if __name__=="__main__":
     workdir = '/media/suyog/DATA/xmm_obs/'+obsID+'/work'
     instName, model = args.instName, args.model
     grouped, smallMode = strToBool(args.grouped), strToBool(args.smallMode)
+    modelParams = args.modelParams #eval(args.modelParams)
     
     if instName == 'all':
-        allSpec(workdir, obsID=obsID, model=model, grouped=grouped, \
-                saveFig=args.noSaveFig, showFig=args.showFig, smallMode=smallMode)
+        allSpec(workdir, obsID=obsID, model=model, modelParams=modelParams,
+                grouped=grouped, smallMode=smallMode, \
+                saveFig=args.noSaveFig, showFig=args.showFig)
     else:
         indiSpec(instName=instName, workdir=workdir, obsID=obsID, model=model, \
                  grouped=grouped, saveFig=args.noSaveFig, showFig=args.showFig)

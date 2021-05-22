@@ -237,7 +237,9 @@ class epicSpectra (epicObj):
 
             #-- read a modelParams dict --#
             model = self.model.replace(')', '\)').replace('(', '\(')
-            modelParams = self.modelParams
+            #print(self.modelParams, type(self.modelParams))
+            #print(self.modelParams+"hellos")
+            modelParams = "'" + str(self.modelParams).replace("'", '"') + "'"
             print(model, modelParams)
 
             #-- run `pyXspec.py` routine --#
@@ -245,8 +247,9 @@ class epicSpectra (epicObj):
                             ". $HEADAS/headas-init.sh;"+ \
                             ". $SAS_DIR/setsas.sh;"+ \
                             #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                            "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+" --instName all " \
-                                +"--model "+model+" --showFig --smallMode "+smallMode+";"
+                            "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+ \
+                                " --instName all --showFig --smallMode "+smallMode+ \
+                                " --model "+model+" --modelParams "+modelParams+";"
                             , shell=True)
             print('\nSpectra fitting for obsID {} finished.'.format(obsID))
             
