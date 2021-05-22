@@ -38,6 +38,15 @@ So, I think this automation can be done later and for now I can manually do the 
 
 FOUND Out how the output can be accessed, logged, saved and used otherwise!
 Bingo!
+
+22nd May 2021:
+---
+See: `https://heasarc.gsfc.nasa.gov/docs/xanadu/xspec/manual/node98.html` for `flux`
+      calculation in `xspec`
+the Sigma values of the parameters should be the Errors in them, isn't it?
+
+See: `https://heasarc.gsfc.nasa.gov/docs/xanadu/xspec/python/html/spectrum.html#xspec.Spectrum`
+for the units in which the Flux and Lumin tuples are returned.
 """
 
 import os
@@ -115,40 +124,58 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     Fit.nIterations = 100
     Fit.criticalDelta = 1e-1
     Fit.perform()
+    #Fit.error("2.706 4")          #--doesn't work.
 
     #-- `xspec lumin, flux` --#
-    AllModels.calcFlux("0.3 1.5 0.02")
-    AllModels.calcLumin("0.3 1.5 0.02")
+    AllModels.calcFlux("0.3 1.5")                 #--("0.3 1.5 err")
+    AllModels.calcLumin("0.3 1.5 0.02")           #--("0.3 1.5 0.02 err")
     #print(pnS.flux, pnS.lumin)
 
     #-- load the JSON file if already present --#
     outputFname = 'specModelParams.json'
     if os.path.isfile(outputFname):
         resultDict = json.load( open(outputFname, 'r') )
+        subprocess.run("cp "+outputFname+" specModelParams-bak.json;", shell=True)
     else:
         resultDict = {}
 
+    if freeze is not None:
+        mName = model +'_'+ 'p'.join( [str(i) for i in freeze] ) + 'frozen'
+    else:
+        mName = model
+    resultDict[mName] = {}
+
     #-- save model fit parameters to the JSON file --#
-    resultDict[model] = {}
     for cName in m1.componentNames:
         comp = getattr(m1, cName)
-        print(comp.parameterNames)
+        resultDict[mName][cName] = {}
         for pName in comp.parameterNames:
             newParam = getattr(comp, pName)
-            if pName in resultDict[model].keys():
-                pName = pName + '_1'
-            resultDict[model][pName] = {}
-            resultDict[model][pName]['value'] = newParam.values[0] 
-            resultDict[model][pName]['error'] = newParam.sigma
+            resultDict[mName][cName][pName] = {}
+            resultDict[mName][cName][pName]['value'] = newParam.values[0] 
+            resultDict[mName][cName][pName]['error'] = newParam.sigma
 
     #-- save output result parameters to the JSON file --#
-    """ print(Fit.statistic, Fit.testStatistic, Fit.dof)
-    #print(m1.bbody.kT.values[0], m1.bbody.kT.sigma)
-    param1 = m1(1)
-    print(param1, param1.values[0])
+    #print(Fit.statistic, Fit.testStatistic, Fit.nullhyp, Fit.dof)
+    #print(pnS.flux, pnS.lumin)
+    resultDict[mName]['results'] = {'chiSq': Fit.statistic, 
+                                    'test-chiSq': Fit.testStatistic,
+                                    'nullHyp': Fit.nullhyp,
+                                    'dof': Fit.dof}
+
+    names = ['pnFlux', 'pnLumin']*2
+    units = ['eUnit', 'photons', 'eUnit_Ine44', 'photons']
+    vals = [pnS.flux[0], pnS.flux[3], pnS.lumin[0], pnS.lumin[3]]
     if not smallMode:
-        print(mos1S.flux, mos1S.lumin)
-        print(mos2S.flux, mos2S.lumin) """
+        names = names + ['mos1Flux', 'mos1lumin']*2 + ['mos2Flux', 'mos2lumin']*2
+        units = units*3
+        vals = vals + [mos1S.flux[0], mos1S.flux[3], mos1S.lumin[0], mos1S.lumin[3]] \
+                    + [mos2S.flux[0], mos2S.flux[3], mos2S.lumin[0], mos2S.lumin[3]]
+
+    for name in list(set(names)):
+        resultDict[mName]['results'][name] = {}
+    for name, unit, val in zip(names, units, vals):
+        resultDict[mName]['results'][name][unit] = val
 
     #-- save the JSON file to disk --#
     json.dump(resultDict, open(outputFname, 'w'))
@@ -167,8 +194,7 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     if smallMode:
         plotGroups, colors, labels = [1], ['black'], ['PN']
     else:
-        plotGroups, colors = [1, 2, 3], ['black', 'red', 'green']
-        labels = ['PN', 'MOS1', 'MOS2']
+        plotGroups, colors, labels = [1, 2, 3], ['black', 'red', 'green'], ['PN', 'MOS1', 'MOS2']
     
     for pG, color, label in zip(plotGroups, colors, labels):
         Sx, Sy = Plot.x(plotWindow=1, plotGroup=pG), Plot.y(plotWindow=1, plotGroup=pG)
