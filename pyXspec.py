@@ -154,6 +154,7 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
             resultDict[mName][cName][pName] = {}
             resultDict[mName][cName][pName]['value'] = newParam.values[0] 
             resultDict[mName][cName][pName]['sigma'] = newParam.sigma
+            resultDict[mName][cName][pName]['unit'] = newParam.unit
 
     #-- save output result parameters to the JSON file --#
     #print(Fit.statistic, Fit.testStatistic, Fit.nullhyp, Fit.dof)
@@ -223,7 +224,7 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
         #ax[2].plot(Bx, foldedS, drawstyle='steps-pre', color=color, \
         #           linewidth=0.5, alpha=0.75)
         ax[2].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
-                       marker='.', markersize=3, label=label+' ldata', \
+                       marker='.', markersize=3, label=label+' data', \
                        ls='none', color=color, linewidth=0.5, alpha=0.5)
         
     #-- annotations to the plot --#
