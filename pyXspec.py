@@ -153,7 +153,7 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
             newParam = getattr(comp, pName)
             resultDict[mName][cName][pName] = {}
             resultDict[mName][cName][pName]['value'] = newParam.values[0] 
-            resultDict[mName][cName][pName]['error'] = newParam.sigma
+            resultDict[mName][cName][pName]['sigma'] = newParam.sigma
 
     #-- save output result parameters to the JSON file --#
     #print(Fit.statistic, Fit.testStatistic, Fit.nullhyp, Fit.dof)
@@ -163,11 +163,11 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
                                     'nullHyp': Fit.nullhyp,
                                     'dof': Fit.dof}
 
-    names = ['pnFlux', 'pnLumin']*2
+    names = ['pnFlux', 'pnFlux', 'pnLumin', 'pnLumin']
     units = ['eUnit', 'photons', 'eUnit_Ine44', 'photons']
     vals = [pnS.flux[0], pnS.flux[3], pnS.lumin[0], pnS.lumin[3]]
     if not smallMode:
-        names = names + ['mos1Flux', 'mos1lumin']*2 + ['mos2Flux', 'mos2lumin']*2
+        names = names + ['mos1Flux']*2 + ['mos1lumin']*2 + ['mos2Flux']*2 + ['mos2lumin']*2
         units = units*3
         vals = vals + [mos1S.flux[0], mos1S.flux[3], mos1S.lumin[0], mos1S.lumin[3]] \
                     + [mos2S.flux[0], mos2S.flux[3], mos2S.lumin[0], mos2S.lumin[3]]
@@ -175,10 +175,13 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     for name in list(set(names)):
         resultDict[mName]['results'][name] = {}
     for name, unit, val in zip(names, units, vals):
+        print(name, unit, val)
         resultDict[mName]['results'][name][unit] = val
 
     #-- save the JSON file to disk --#
-    json.dump(resultDict, open(outputFname, 'w'))
+    #json.dump(resultDict, open(outputFname, 'w'))
+    outfile = open(outputFname, 'w')
+    outfile.write(json.dumps(resultDict, indent=4, sort_keys=False))
     
     #-- plotting --#
     Plot.device = "/xs"
