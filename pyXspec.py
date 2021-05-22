@@ -58,6 +58,7 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     logFile = Xset.openLog('xspeclog.txt')
     logFile = Xset.log
     
+    #-- `xspec data` --#
     if grouped:
         pnS = Spectrum(workdir+"/PN_spectrum_grouped_"+obsID+".fits")
         if not smallMode:
@@ -80,16 +81,21 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
             mos2S.response = workdir+"/MOS2_"+obsID+".rmf"
             mos2S.response.arf = workdir+"/MOS2_"+obsID+".arf"
     
+    #-- `xspec setplot energy` --#
     Plot.xAxis = "KeV"
     
+    #-- `xspec ignore` --#
     AllData.ignore("bad")
     pnS.ignore("**-0.3 1.5-**")
-    mos1S.ignore("**-0.3 1.5-**")
-    mos2S.ignore("**-0.3 1.5-**")
+    if not smallMode:
+        mos1S.ignore("**-0.3 1.5-**")
+        mos2S.ignore("**-0.3 1.5-**")
     
+    #-- `xspec model` --#
     #m1 = Model("tbabs*zashift*(powerlaw+bbody)")
     m1 = Model(model)
     
+    print(model)
     #print(AllModels.sources)
     #print(m1.componentNames)
     #print(m1.zashift.parameterNames)
@@ -103,12 +109,15 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
         if modelPart == "bbody":
             m1.bbody.kT = 0.05
     
+    #-- `xspec abund` --#
     Xset.abund = "wilm"
     
+    #-- `xspec fit` --#
     Fit.nIterations = 100
     Fit.criticalDelta = 1e-1
     Fit.perform()
 
+    #-- `xspec lumin, flux` --#
     AllModels.calcFlux("0.3 1.5 0.02")
     AllModels.calcLumin("0.3 1.5 0.02")
     print(pnS.flux, pnS.lumin)
@@ -119,6 +128,7 @@ def allSpec (workdir, obsID, smallMode=False, model="tbabs*zashift*(powerlaw)", 
     print(Fit.statistic, Fit.testStatistic, Fit.dof)
     print(m1.bbody.kT.values[0], m1.bbody.kT.sigma)
     
+    #-- plotting --#
     Plot.device = "/xs"
     #Plot.xLog = True
     #Plot("model")
@@ -330,9 +340,11 @@ if __name__=="__main__":
                         help='the instrument to use. (default:%(default)s)')
     parser.add_argument('--model', action='store', default="tbabs*zashift*(powerlaw)", \
                         help='what model to use for fitting. (default:%(default)s)')
+    parser.add_argument('--modelParams', action='store', type=eval, \
+                        help='give a dictionary of model parameter values to use.')
+
     parser.add_argument('--grouped', action='store', default='yes', \
                         help='whether to use grouped spectra data or not? (default:%(default)s)')
-
     parser.add_argument('--smallMode', action='store', default='no', \
                         help='is the obsID in Small-mode? (default:%(default)s)')
 

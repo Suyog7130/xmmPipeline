@@ -26,6 +26,8 @@ Two criterions to be checked for each obsIDs:
 21st May 2021:
 ---
 Changed to using Flare Background filtered Event Lists for Spectra extraction.
+Found a way to save the output parameter values from `pyXspec.py`.
+Completing the SpecModel fitting now.
 """
 
 import os
@@ -233,17 +235,10 @@ class epicSpectra (epicObj):
             else:
                 smallMode = 'no'
 
-            #-- write a `specModelParams.json` file --#
-            print('\nPlease give the model to use and check the model fit parameters.')
-            fname = workdir+'/specModelParams.json'
-            subprocess.run("cd "+workdir+";"+ \
-                           "sudo gedit specModelParams.json;"
-                           , shell=True)
-
-            #-- load parameters from the JSON file --#               
-            params = json.load(open(fname, 'r'))
-            model = params['modelToUse']
-            model = model.replace(')', '\)').replace('(', '\(')
+            #-- read a modelParams dict --#
+            model = self.model.replace(')', '\)').replace('(', '\(')
+            modelParams = self.modelParams
+            print(model, modelParams)
 
             #-- run `pyXspec.py` routine --#
             subprocess.run("cd "+workdir+";"+ \
@@ -338,6 +333,8 @@ def main (args):
     if args.method == 'extractSpectra':
         obj.extractSpectra_imageMode()
     if args.method == 'fitSpectra':
+        obj.model, obj.modelParams = args.model, args.modelParams
+        #print(obj.__dict__)
         obj.xspec_fitSpectra()
     obj.save_spectraResults()
 
@@ -380,6 +377,7 @@ if __name__=="__main__":
     parser.add_argument('--sas_ccfpath', action='store', type=str, default=SAS_CCFPATH, \
                         help='SAS_CCFPATH environment variable. (default:%(default)s)')
 
+    #-- flags --#
     parser.add_argument('--noSaveFig', action='store_false', default=True, \
                         help='do not save the matplotlib plots? (default:%(default)s)')
     parser.add_argument('--showFig', action='store_true', default=False, \
@@ -389,17 +387,23 @@ if __name__=="__main__":
     parser.add_argument('--ignorePileup', action='store_true', default=False, \
                         help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
 
+    #-- methods --#
     parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
                         choices=['extractSpectra', 'fitSpectra'], \
-                        help='what to do? `fitSpectra` calls pyXspec to fit models to the Spectra. (default:%(default)s)')
+                        help='what to do? `fitSpectra` calls pyXspec to fit models to \
+                              the Spectra. (default:%(default)s)')
 
     #-- fitSpectra arguments --#
     parser.add_argument('--instName', action='store', default='PN', \
                         help='the instrument to use. (default:%(default)s)')
+    parser.add_argument('--model', action='store', default='tbabs*zashift*(powerlaw)', \
+                        help='name of the model to be used. (default:%(default)s)')
+    parser.add_argument('--modelParams', action='store', type=eval, \
+                        help='give a dictionary of model parameter values to use.')
 
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
-    #print(args)
+    #print('{}\n{}'.format(args, args.modelParams))
 
     #-- call the main function --#
     main(args)
