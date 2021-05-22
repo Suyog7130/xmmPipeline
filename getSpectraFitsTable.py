@@ -45,10 +45,11 @@ def main (args):
         df = obj.sortObsIDs(objName=args.objName)
 
     #-- get sorted obsIDs --#
-    df.time = [t.date() for t in df.time]
+    df.time = [str(t.date()) for t in df.time]
     df.columns = ['obsIDs', 'date']
     sortedObsIDs = df.obsIDs.tolist()
     df = df.set_index('obsIDs')
+    #df['date'].astype(str)
 
     #-- the models to use --#
     models = ['tbabs*clumin*zashift*(bbobyrad+bbodyrad)', 'tbabs*clumin*zashift*bbodyrad', \
@@ -85,22 +86,16 @@ def main (args):
                 continue
 
             #-- add columns for useful model parameters --#
+            df = df.fillna('None')
             paramCols = ['kT', 'norm', 'lg10Lum', 'flux']
             mComps = [k for k in modelDict.keys() if k != 'results']
-            print(df.loc[obsID].isnull())
+
             for comp in mComps:
                 mParams = modelDict[comp].keys()
                 for param in mParams:
                     if param in paramCols:
-                        nullVals = df.loc[obsID].isnull().index.tolist()
-                        print(nullVals)
-                        if param in nullVals: # and \
-                            #or len(nullVals) == len(paramCols)*2:
-                            """ print(already)
-                        if param in df.columns.tolist():
-                            #if not df.loc[obsID].isnull()[param]: """
-                            pCol = param
-                        else:
+                        pCol = param
+                        if param in df.columns.tolist() and df.loc[obsID, param] != 'None':
                             pCol = param + '_1'
                         pErrorCol = pCol + '_sigma'
                         df.loc[obsID, pCol] = modelDict[comp][param]['value']
