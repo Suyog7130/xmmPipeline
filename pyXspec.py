@@ -40,6 +40,8 @@ FOUND Out how the output can be accessed, logged, saved and used otherwise!
 Bingo!
 """
 
+import os
+import json
 import argparse
 import subprocess
 import matplotlib.pyplot as plt
@@ -96,24 +98,14 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     m1 = Model(model)
 
     #-- input model parameters --#
-    """ print(model, modelParams)
-    #print(AllModels.sources)
-    print(m1.componentNames)
-    #print(m1.zashift.parameterNames)
-    for cName in m1.componentNames:
-        comp = getattr(m1, cName)
-        print(comp)
-        print(comp.parameterNames) """
     freeze = modelParams.get('freeze', None)
     #m1.setPars(modelParams)
     for i in modelParams.keys():
         if type(i) == int:
-            printErrorMessage(i)
             param = m1(i)                   #--find the `i`th parameter object.
             param.values = modelParams[i]   #--assign value from the modelParams dict.
             #print(param.values)
             if freeze is not None and i in freeze:
-                printErrorMessage(i)
                 param.frozen = True
     
     #-- `xspec abund` --#
@@ -127,15 +119,39 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     #-- `xspec lumin, flux` --#
     AllModels.calcFlux("0.3 1.5 0.02")
     AllModels.calcLumin("0.3 1.5 0.02")
-    print(pnS.flux, pnS.lumin)
-    if not smallMode:
-        print(mos1S.flux, mos1S.lumin)
-        print(mos2S.flux, mos2S.lumin)
+    #print(pnS.flux, pnS.lumin)
 
-    print(Fit.statistic, Fit.testStatistic, Fit.dof)
+    #-- load the JSON file if already present --#
+    outputFname = 'specModelParams.json'
+    if os.path.isfile(outputFname):
+        resultDict = json.load( open(outputFname, 'r') )
+    else:
+        resultDict = {}
+
+    #-- save model fit parameters to the JSON file --#
+    resultDict[model] = {}
+    for cName in m1.componentNames:
+        comp = getattr(m1, cName)
+        print(comp.parameterNames)
+        for pName in comp.parameterNames:
+            newParam = getattr(comp, pName)
+            if pName in resultDict[model].keys():
+                pName = pName + '_1'
+            resultDict[model][pName] = {}
+            resultDict[model][pName]['value'] = newParam.values[0] 
+            resultDict[model][pName]['error'] = newParam.sigma
+
+    #-- save output result parameters to the JSON file --#
+    """ print(Fit.statistic, Fit.testStatistic, Fit.dof)
     #print(m1.bbody.kT.values[0], m1.bbody.kT.sigma)
     param1 = m1(1)
     print(param1, param1.values[0])
+    if not smallMode:
+        print(mos1S.flux, mos1S.lumin)
+        print(mos2S.flux, mos2S.lumin) """
+
+    #-- save the JSON file to disk --#
+    json.dump(resultDict, open(outputFname, 'w'))
     
     #-- plotting --#
     Plot.device = "/xs"
@@ -214,9 +230,6 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     if showFig:
         plt.show()
     plt.close()
-
-    #modelFile = open('model.pickle', 'wb')
-    #pickle.dump(m1, modelFile)
 
     Xset.closeLog()   #--close the log.
     
