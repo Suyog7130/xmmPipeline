@@ -234,10 +234,12 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     ax[2].set_yscale('log')
     
     ax[0].set_title('data and folded model')
-    ax[1].set_title('del')
+    #ax[1].set_title('residual')
+    ax[1].set_title('square root of chiSq for each channel (del)')
     ax[2].set_title('background')
     
     ax[0].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
+    ax[1].set_ylabel('(data-model)/error')
     ax[2].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
     ax[2].set_xlabel('Energy (KeV)')
     
