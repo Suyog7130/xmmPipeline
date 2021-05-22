@@ -279,9 +279,15 @@ class epicSpectra (epicObj):
             
             #-- copy Event lists and other results --#
             spectraImgFiles = glob.glob(workdir+'/*spectra*.png')
+            srcSpectra = glob.glob(workdir+'/*spectrum_source*.fits')
+            bkgSpectra = glob.glob(workdir+'/*spectrum_background*.fits')
+            rmfFiles = glob.glob(workdir+'/*.rmf')
+            arfFiles = glob.glob(workdir+'/*.arf')
             groupedSpectra = glob.glob(workdir+'/*spectrum_grouped*.fits')
-            paramsFile = glob.glob(workdir+'/*specModelParams*.json')
-            spectraFiles = spectraImgFiles + groupedSpectra
+            paramsFile = glob.glob(workdir+'/*specModelParams.json')
+
+            spectraFiles = spectraImgFiles + srcSpectra + bkgSpectra + rmfFiles + \
+                           arfFiles + groupedSpectra + paramsFile
 
             for file in spectraFiles:
                 fname = os.path.basename(file)         #--get file name from the glob path.
