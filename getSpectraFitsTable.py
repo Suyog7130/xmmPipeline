@@ -85,27 +85,40 @@ def main (args):
                 continue
 
             #-- add columns for useful model parameters --#
+            paramCols = ['kT', 'norm', 'lg10Lum', 'flux']
             mComps = [k for k in modelDict.keys() if k != 'results']
+            print(df.loc[obsID].isnull())
             for comp in mComps:
                 mParams = modelDict[comp].keys()
                 for param in mParams:
-                    if param in ['kT', 'norm', 'lg10Lum']:
+                    if param in paramCols:
+                        nullVals = df.loc[obsID].isnull().index.tolist()
+                        print(nullVals)
+                        if param in nullVals: # and \
+                            #or len(nullVals) == len(paramCols)*2:
+                            """ print(already)
                         if param in df.columns.tolist():
-                            pCol = param + '_1'
-                        else:
+                            #if not df.loc[obsID].isnull()[param]: """
                             pCol = param
+                        else:
+                            pCol = param + '_1'
+                        pErrorCol = pCol + '_sigma'
                         df.loc[obsID, pCol] = modelDict[comp][param]['value']
+                        df.loc[obsID, pErrorCol] = modelDict[comp][param]['sigma']
 
             #-- add result metric columns --#
-            
 
-    #-- if only some obsIDs have to be included --#
-    if args.obsIDs is not None:
-        toDrop = list( set(df.index.tolist()) - set(args.obsIDs) )
-        df = df.drop(toDrop)
-        print('Using the obsIDs passed.')
 
-    print(df)  #, df.columns.tolist())
+        #-- if only some obsIDs have to be included --#
+        if args.obsIDs is not None:
+            toDrop = list( set(df.index.tolist()) - set(args.obsIDs) )
+            df = df.drop(toDrop)
+            print('Using the obsIDs passed.')
+
+        print('\nThe final specResultsTable is:\n', df)  
+        print(df.info())   #, df.columns.tolist())
+        df.to_csv('specResultsTable_'+model+'.csv')
+
     return print('\nSuccessfully created the specResultsTable!')
 
 
