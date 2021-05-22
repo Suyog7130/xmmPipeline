@@ -29,6 +29,8 @@ from epicObj import epicObj
 from epicObj import strToBool, printErrorMessage
 from plotAnal import plotAnal
 
+pd.set_option('display.expand_frame_repr', False)
+
 
 ##-- the main function --##
 def main (args):
@@ -87,13 +89,13 @@ def main (args):
 
             #-- add columns for useful model parameters --#
             df = df.fillna('None')
-            paramCols = ['kT', 'norm', 'lg10Lum', 'flux']
+            tableCols = ['kT', 'norm', 'lg10Lum', 'flux', 'chiSq']
             mComps = [k for k in modelDict.keys() if k != 'results']
 
             for comp in mComps:
                 mParams = modelDict[comp].keys()
                 for param in mParams:
-                    if param in paramCols:
+                    if param in tableCols:
                         pCol = param
                         if param in df.columns.tolist() and df.loc[obsID, param] != 'None':
                             pCol = param + '_1'
@@ -102,13 +104,18 @@ def main (args):
                         df.loc[obsID, pErrorCol] = modelDict[comp][param]['sigma']
 
             #-- add result metric columns --#
-
+            metricDict = modelDict['results']
+            for metric in metricDict.keys():
+                if metric in tableCols:
+                    df.loc[obsID, metric] = metricDict[metric]
 
         #-- if only some obsIDs have to be included --#
         if args.obsIDs is not None:
             toDrop = list( set(df.index.tolist()) - set(args.obsIDs) )
             df = df.drop(toDrop)
             print('Using the obsIDs passed.')
+
+        df = df.replace('None', 0.0)  #--convert empty values to float64.
 
         print('\nThe final specResultsTable is:\n', df)  
         print(df.info())   #, df.columns.tolist())
