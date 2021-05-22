@@ -237,10 +237,8 @@ class epicSpectra (epicObj):
 
             #-- read a modelParams dict --#
             model = self.model.replace(')', '\)').replace('(', '\(')
-            #print(self.modelParams, type(self.modelParams))
-            #print(self.modelParams+"hellos")
             modelParams = "'" + str(self.modelParams).replace("'", '"') + "'"
-            print(model, modelParams)
+            #print(model, modelParams)
 
             #-- run `pyXspec.py` routine --#
             subprocess.run("cd "+workdir+";"+ \

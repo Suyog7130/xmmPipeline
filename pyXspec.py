@@ -95,20 +95,38 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", \
     #-- `xspec model` --#
     #m1 = Model("tbabs*zashift*(powerlaw+bbody)")
     m1 = Model(model)
-    
-    print(model, modelParams)
+
+    #-- input model parameters --#
+    """ print(model, modelParams)
     #print(AllModels.sources)
-    #print(m1.componentNames)
+    print(m1.componentNames)
     #print(m1.zashift.parameterNames)
+    for cName in m1.componentNames:
+        comp = getattr(m1, cName)
+        print(comp)
+        print(comp.parameterNames) """
+    for i in modelParams.keys():
+        if type(i) == int:
+            printErrorMessage(i)
+            param = m1(i)            #--find the `i`th parameter object.
+            param.values = modelParams[i]   #--assign value from the modelParams dict.
+            #print(param.values)
+            freeze = modelParams.get('freeze', None)
+            if freeze is not None and i in freeze:
+                printErrorMessage(i)
+                param.frozen = True
+
     
-    for modelPart in model.split('*'):
+    #m1.setPars(modelParams)
+    
+    """ for modelPart in model.split('*'):
         #if modelPart == 'powerlaw':
         #    m1.powerlaw.norm = 0.4
         if modelPart == "zashift":
             #m1.zashift.Redshift = 2.0
             m1.zashift.Redshift.frozen = False
         if modelPart == "bbody":
-            m1.bbody.kT = 0.05
+            m1.bbody.kT = 0.05 """
     
     #-- `xspec abund` --#
     Xset.abund = "wilm"
