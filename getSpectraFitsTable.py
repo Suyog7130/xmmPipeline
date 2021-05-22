@@ -50,13 +50,6 @@ def main (args):
     sortedObsIDs = df.obsIDs.tolist()
     df = df.set_index('obsIDs')
 
-    #-- if only some obsIDs have to be included --#
-    if args.obsIDs is not None:
-        toDrop = list( set(df.index.tolist()) - set(args.obsIDs) )
-        for i in toDrop:
-            df.drop(i, axis=0)
-        print('Using the obsIDs passed.')
-
     #-- the models to use --#
     models = ['tbabs*clumin*zashift*(bbobyrad+bbodyrad)', 'tbabs*clumin*zashift*bbodyrad', \
               'tbabs*clumin*zashift*(bbodyrad+powerlaw)', 'tbabs*clumin*zashift*powerlaw', \
@@ -91,17 +84,26 @@ def main (args):
                 print('\nPresent model is not saved in the JSON file.')
                 continue
 
-            #-- read the data --#
+            #-- add columns for useful model parameters --#
             mComps = [k for k in modelDict.keys() if k != 'results']
             for comp in mComps:
                 mParams = modelDict[comp].keys()
                 for param in mParams:
-                    if param == 'kT':
+                    if param in ['kT', 'norm', 'lg10Lum']:
                         if param in df.columns.tolist():
                             pCol = param + '_1'
                         else:
                             pCol = param
                         df.loc[obsID, pCol] = modelDict[comp][param]['value']
+
+            #-- add result metric columns --#
+            
+
+    #-- if only some obsIDs have to be included --#
+    if args.obsIDs is not None:
+        toDrop = list( set(df.index.tolist()) - set(args.obsIDs) )
+        df = df.drop(toDrop)
+        print('Using the obsIDs passed.')
 
     print(df)  #, df.columns.tolist())
     return print('\nSuccessfully created the specResultsTable!')
