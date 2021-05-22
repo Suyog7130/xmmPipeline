@@ -51,12 +51,12 @@ from plotAnal import plotAnal
 
 
 ##-- fit Spectra for all instruments together --##
-def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", \
+def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
              modelParams=None, smallMode=False, grouped=True, \
              saveFig=True, showFig=True):
 
     #-- starting log --#
-    logFile = Xset.openLog('xspeclog.txt')
+    logFile = Xset.openLog('pyXspec.log')
     logFile = Xset.log
     
     #-- `xspec data` --#
@@ -93,7 +93,6 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", \
         mos2S.ignore("**-0.3 1.5-**")
     
     #-- `xspec model` --#
-    #m1 = Model("tbabs*zashift*(powerlaw+bbody)")
     m1 = Model(model)
 
     #-- input model parameters --#
@@ -105,28 +104,17 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", \
         comp = getattr(m1, cName)
         print(comp)
         print(comp.parameterNames) """
+    freeze = modelParams.get('freeze', None)
+    #m1.setPars(modelParams)
     for i in modelParams.keys():
         if type(i) == int:
             printErrorMessage(i)
-            param = m1(i)            #--find the `i`th parameter object.
+            param = m1(i)                   #--find the `i`th parameter object.
             param.values = modelParams[i]   #--assign value from the modelParams dict.
             #print(param.values)
-            freeze = modelParams.get('freeze', None)
             if freeze is not None and i in freeze:
                 printErrorMessage(i)
                 param.frozen = True
-
-    
-    #m1.setPars(modelParams)
-    
-    """ for modelPart in model.split('*'):
-        #if modelPart == 'powerlaw':
-        #    m1.powerlaw.norm = 0.4
-        if modelPart == "zashift":
-            #m1.zashift.Redshift = 2.0
-            m1.zashift.Redshift.frozen = False
-        if modelPart == "bbody":
-            m1.bbody.kT = 0.05 """
     
     #-- `xspec abund` --#
     Xset.abund = "wilm"
@@ -194,6 +182,7 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", \
                        marker='.', markersize=3, label=label+' ldata', \
                        ls='none', color=color, linewidth=0.5, alpha=0.5)
         
+    #-- annotations to the plot --#
     for i in range(3):
         ax[i].set_xscale('log')
         ax[i].legend(loc='upper right')
@@ -211,8 +200,17 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(powerlaw)", \
     plt.suptitle(f'{obsID}\n{model}', x=0.05, y=0.98, horizontalalignment='left')
     plotAnal.beautifyPlot(ax, minor=True, logXformat='scalar', logXminorLabel=True)
     plt.tight_layout()
+
+    #-- savefile names --#
     if saveFig:
-        plt.savefig('EPIC_spectra_'+model.replace('*','-')+'.png', dpi=300)
+        if smallMode:
+            savename = 'PN_spectra_'+model.replace('*','-')
+        else:
+            savename = 'EPIC_spectra_'+model.replace('*','-')
+        if freeze is not None:
+            savename = savename +'_'+ 'p'.join( [str(i) for i in freeze] ) + 'frozen'
+        plt.savefig(savename+'.png', dpi=300)
+
     if showFig:
         plt.show()
     plt.close()
