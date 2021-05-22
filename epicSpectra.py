@@ -54,6 +54,10 @@ from plotAnal import plotAnal
 ##-- the epicSpectra object class --##
 class epicSpectra (epicObj):
 
+    def __init__ (self, doNotOverwriteModel=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.doNotOverwriteModel = doNotOverwriteModel
+
     ##-- extract the Spectra in Image Mode --##
     def extractSpectra_imageMode (self):
         """
@@ -232,6 +236,7 @@ class epicSpectra (epicObj):
             smallMode = self.smallMode[obsID]
             smallMode = strToBool(smallMode, inverse=True)
             showFig = strToBool(self.showFig, inverse=True)
+            doNotOverwriteModel = strToBool(self.doNotOverwriteModel, inverse=True)
 
             #-- read a modelParams dict --#
             model = self.model.replace(')', '\)').replace('(', '\(')
@@ -245,7 +250,8 @@ class epicSpectra (epicObj):
                             #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                             "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+ \
                                 " --instName all --showFig "+showFig+" --smallMode "+smallMode+ \
-                                " --model "+model+" --modelParams "+modelParams+";"
+                                " --model "+model+" --modelParams "+modelParams+ \
+                                " --doNotOverwriteModel "+doNotOverwriteModel+";"
                             , shell=True)
             print('\nSpectra fitting for obsID {} finished.'.format(obsID))
             
@@ -313,7 +319,8 @@ def main (args):
     #-- create an object of class spectra --#
     obj = epicSpectra(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                       sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
-                      saveFig=args.noSaveFig, showFig=args.showFig, ignorePileup=args.ignorePileup)
+                      saveFig=args.noSaveFig, showFig=args.showFig, \
+                      ignorePileup=args.ignorePileup, doNotOverwriteModel=args.doNotOverwriteModel)
     
     #-- get obsIDs and the objName --#
     if args.objName == None:
@@ -391,6 +398,12 @@ if __name__=="__main__":
                         help='run only save_spectraResults function. (default:%(default)s)')   
     parser.add_argument('--ignorePileup', action='store_true', default=False, \
                         help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
+    parser.add_argument('--doNotOverwriteModel', action='store_true', default=False, \
+                        help='save the specModelParams for the current model as a new \
+                              dictionary in specModelParams.json. \
+                              If the model is already present in the file, it is not \
+                              overwritten by appending 1 to the new model name. \
+                              (default:%(default)s)')
 
     #-- methods --#
     parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
@@ -404,7 +417,9 @@ if __name__=="__main__":
     parser.add_argument('--model', action='store', default='tbabs*zashift*(powerlaw)', \
                         help='name of the model to be used. (default:%(default)s)')
     parser.add_argument('--modelParams', action='store', type=eval, \
-                        help='give a dictionary of model parameter values to use.')
+                        help='give a dictionary of model parameter values to use. \
+                              Put double quotes for str values and enclose the dict \
+                              within single quotes at the end.')
 
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.

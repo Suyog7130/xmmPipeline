@@ -64,7 +64,7 @@ from plotAnal import plotAnal
 ##-- fit Spectra for all instruments together --##
 def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
              modelParams=None, smallMode=False, grouped=True, \
-             saveFig=True, showFig=True):
+             saveFig=True, showFig=True, doNotOverwriteModel=False):
 
     #-- starting log --#
     logFile = Xset.openLog('pyXspec.log')
@@ -143,6 +143,9 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
         mName = model +'_'+ 'p'.join( [str(i) for i in freeze] ) + 'frozen'
     else:
         mName = model
+    if doNotOverwriteModel:
+        mName = mName + '_1'
+        print(f'\n--doNotOverwriteModel flag is ON\nmodel name is {mName}')
     resultDict[mName] = {}
 
     #-- save model fit parameters to the JSON file --#
@@ -410,7 +413,9 @@ if __name__=="__main__":
     parser.add_argument('--model', action='store', default="tbabs*zashift*(powerlaw)", \
                         help='what model to use for fitting. (default:%(default)s)')
     parser.add_argument('--modelParams', action='store', type=eval, \
-                        help='give a dictionary of model parameter values to use.')
+                        help='give a dictionary of model parameter values to use. \
+                              Put double quotes for str values and enclose the dict \
+                              within single quotes at the end.')
 
     parser.add_argument('--grouped', action='store', default='yes', \
                         help='whether to use grouped spectra data or not? (default:%(default)s)')
@@ -421,21 +426,28 @@ if __name__=="__main__":
                         help='show the matplotlib plots or not? (default:%(default)s)')
     parser.add_argument('--saveFig', action='store', default='yes', \
                         help='do not save the matplotlib plots? (default:%(default)s)')
+    parser.add_argument('--doNotOverwriteModel', action='store', default='no', \
+                        help='save the specModelParams for the current model as a new \
+                              dictionary in specModelParams.json. \
+                              If the model is already present in the file, it is not \
+                              overwritten by appending 1 to the new model name. \
+                              (default:%(default)s)')
 
     #-- parse the arguments --#
     args = parser.parse_args()
     
     obsID = args.obsID
     workdir = '/media/suyog/DATA/xmm_obs/'+obsID+'/work'
-    instName, model = args.instName, args.model
+    instName, model, modelParams = args.instName, args.model, args.modelParams
+
     grouped, smallMode = strToBool(args.grouped), strToBool(args.smallMode)
     showFig, saveFig = strToBool(args.showFig), strToBool(args.saveFig)
-    modelParams = args.modelParams #eval(args.modelParams)
+    doNotOverwriteModel = strToBool(args.doNotOverwriteModel)
     
     if instName == 'all':
         allSpec(workdir, obsID=obsID, model=model, modelParams=modelParams,
                 grouped=grouped, smallMode=smallMode, \
-                saveFig=saveFig, showFig=showFig)
+                saveFig=saveFig, showFig=showFig, doNotOverwriteModel=doNotOverwriteModel)
     else:
         indiSpec(instName=instName, workdir=workdir, obsID=obsID, model=model, \
                  grouped=grouped, saveFig=args.noSaveFig, showFig=args.showFig)
