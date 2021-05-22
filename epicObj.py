@@ -164,15 +164,21 @@ class epicObj:
         
 
     ##-- function to sort the obsIDs_list.dat --##
-    def sortObsIDs (self):
+    def sortObsIDs (self, objName=None):
         """
         To sort the obsIDs in `obsIDs_list.dat` by reading it into a pandas dataframe.
         """
         ra, dec, workdir = str(self.ra), str(self.dec), self.workdir
         print('\nReading the obsIDs to a dataframe and Sorting.')
+
+        #-- offline usage --#
+        if objName is not None:
+            fname = workdir+'/obsIDs_list_'+objName+'.dat'
+        else:
+            fname = workdir+'/obsIDs_list.dat'
         
         #-- extract obsIDs from the file --#
-        df = pd.read_csv(workdir+'/obsIDs_list.dat', sep='|', delim_whitespace=False, header=0)[:-1]  #--remove last line.
+        df = pd.read_csv(fname, sep='|', delim_whitespace=False, header=0)[:-1]  #--remove last line.
         cols = [s.strip() for s in df.columns.to_list()]  #--remove whitespace from column names.
         df.columns = cols
         

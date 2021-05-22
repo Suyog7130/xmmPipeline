@@ -9,6 +9,10 @@
 Have completed much of the pending work regarding Spectral Analysis
 of ASASSN-14li. This Python routine is to read the `specModelParams.json`
 files for each of the obsIDs and create a `specResultsTable` using them.
+
+I don't the obsIDs thing will be valid here.
+Why would one not wanna include some obsIDs in the final table?
+Anyway.
 """
 
 import os
@@ -22,6 +26,7 @@ from datetime import datetime
 from astropy.table import Table
 
 from epicObj import epicObj
+from epicObj import strToBool, printErrorMessage
 from plotAnal import plotAnal
 
 
@@ -32,17 +37,25 @@ def main (args):
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                   sas_dir=None, headas=None, sas_ccfpath=None)
 
-    #-- check if obsID has been passed --#
-    if args.obsIDs != None:
-        obsIDs = args.obsIDs
-        print('Using the obsIDs passed.')
-    else:
+    #-- check if objName has been passed --#
+    if args.objName is None:
         obj.findObsIDs()
-        obsIDs = obj.obsIDs
+        df = obj.sortObsIDs()
+    else:
+        df = obj.sortObsIDs(objName=args.objName)
 
     #-- get sorted obsIDs --#
-    df = obj.sortObsIDs()
     df.time = [t.date() for t in df.time]
+    df.columns = ['obsIDs', 'date']
+    sortedObsIDs = df.obsIDs.tolist()
+    df = df.set_index('obsIDs')
+
+    #-- if only some obsIDs have to be included --#
+    if args.obsIDs is not None:
+        toDrop = list( set(df.index.tolist()) - set(args.obsIDs) )
+        for i in toDrop:
+            df.drop(i, axis=0)
+        print('Using the obsIDs passed.')
 
     #-- the models to use --#
     models = ['tbabs*clumin*zashift*(bbobyrad+bbodyrad)', 'tbabs*clumin*zashift*bbodyrad', \
@@ -54,10 +67,43 @@ def main (args):
         models = [args.model]
     
     #-- iterate for all the models --#
-    #for model in models:
-        
+    for model in models:
+        print(f'\nCreating specResultsTable for model\n{model}')
 
-    print(df)
+        #-- iterate for each obsIDs --#
+        for obsID in sortedObsIDs:
+            print(f'\nLoading specModelParams.json for {obsID}')
+            workdir = args.workdir +'/'+ obsID +'/work'
+            
+            #-- load the `specModelParams.json` file --#
+            fname = workdir+'/specModelParams.json'
+            if os.path.isfile(fname):
+                resultDict = json.load( open(fname, 'r') )
+                #print(resultDict)
+            else:
+                printErrorMessage('file not found!')
+                print(f'\nRow for {obsID} will not be added.')
+                continue
+
+            #-- check for presence of the model --#
+            modelDict = resultDict.get(model, None)
+            if modelDict is None:
+                print('\nPresent model is not saved in the JSON file.')
+                continue
+
+            #-- read the data --#
+            mComps = [k for k in modelDict.keys() if k != 'results']
+            for comp in mComps:
+                mParams = modelDict[comp].keys()
+                for param in mParams:
+                    if param == 'kT':
+                        if param in df.columns.tolist():
+                            pCol = param + '_1'
+                        else:
+                            pCol = param
+                        df.loc[obsID, pCol] = modelDict[comp][param]['value']
+
+    print(df)  #, df.columns.tolist())
     return print('\nSuccessfully created the specResultsTable!')
 
 
@@ -80,7 +126,8 @@ if __name__=="__main__":
                         help='name of the obj used to locate the xmmObj pickle file.')
 
     #-- fitSpectra arguments --#
-    parser.add_argument('--model', action='store', default='tbabs*zashift*(powerlaw)', \
+    defaultModel = 'tbabs*clumin*zashift*(bbodyrad+bbodyrad)_1frozen'
+    parser.add_argument('--model', action='store', default=defaultModel, \
                         help='name of the model to be used. (default:%(default)s)')
 
     args = parser.parse_args()
