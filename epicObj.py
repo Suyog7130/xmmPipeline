@@ -189,9 +189,10 @@ class epicObj:
         #-- create a new sorted df --#
         df1 = pd.DataFrame({'obsIDs':obsIDs, 'time':times})
         df1.sort_values(by=['time'], inplace=True)
-        print(df1)
-                
-        return print('\nSorted the obsIDs.')
+        
+        #print(df1)
+        print('\nSorted the obsIDs.')
+        return df1
         
     
     ##-- function to download the data --##
