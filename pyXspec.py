@@ -175,7 +175,6 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     for name in list(set(names)):
         resultDict[mName]['results'][name] = {}
     for name, unit, val in zip(names, units, vals):
-        print(name, unit, val)
         resultDict[mName]['results'][name][unit] = val
 
     #-- save the JSON file to disk --#
@@ -415,10 +414,10 @@ if __name__=="__main__":
     parser.add_argument('--smallMode', action='store', default='no', \
                         help='is the obsID in Small-mode? (default:%(default)s)')
 
-    parser.add_argument('--noSaveFig', action='store_false', default=True, \
-                        help='do not save the matplotlib plots? (default:%(default)s)')
-    parser.add_argument('--showFig', action='store_true', default=False, \
+    parser.add_argument('--showFig', action='store', default='no', \
                         help='show the matplotlib plots or not? (default:%(default)s)')
+    parser.add_argument('--saveFig', action='store', default='yes', \
+                        help='do not save the matplotlib plots? (default:%(default)s)')
 
     #-- parse the arguments --#
     args = parser.parse_args()
@@ -427,12 +426,13 @@ if __name__=="__main__":
     workdir = '/media/suyog/DATA/xmm_obs/'+obsID+'/work'
     instName, model = args.instName, args.model
     grouped, smallMode = strToBool(args.grouped), strToBool(args.smallMode)
+    showFig, saveFig = strToBool(args.showFig), strToBool(args.saveFig)
     modelParams = args.modelParams #eval(args.modelParams)
     
     if instName == 'all':
         allSpec(workdir, obsID=obsID, model=model, modelParams=modelParams,
                 grouped=grouped, smallMode=smallMode, \
-                saveFig=args.noSaveFig, showFig=args.showFig)
+                saveFig=saveFig, showFig=showFig)
     else:
         indiSpec(instName=instName, workdir=workdir, obsID=obsID, model=model, \
                  grouped=grouped, saveFig=args.noSaveFig, showFig=args.showFig)

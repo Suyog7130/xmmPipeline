@@ -41,8 +41,13 @@ from plotAnal import plotAnal
 
 
 ##-- function to convert yes/no to bool --##
-def strToBool (s):
+def strToBool (s, inverse=False):
     if type(s)==bool:
+        if inverse:
+            if s:
+                return 'yes'
+            else:
+                return 'no'
         return s
     elif s in ['yes', 'y', 'true', 'True', 'Y', 'YES', 'TRUE']:
         return True

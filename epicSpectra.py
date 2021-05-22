@@ -230,10 +230,8 @@ class epicSpectra (epicObj):
             workdir = self.workdir+'/'+obsID+'/work'
 
             smallMode = self.smallMode[obsID]
-            if smallMode:
-                smallMode = 'yes'
-            else:
-                smallMode = 'no'
+            smallMode = strToBool(smallMode, inverse=True)
+            showFig = strToBool(self.showFig, inverse=True)
 
             #-- read a modelParams dict --#
             model = self.model.replace(')', '\)').replace('(', '\(')
@@ -246,7 +244,7 @@ class epicSpectra (epicObj):
                             ". $SAS_DIR/setsas.sh;"+ \
                             #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                             "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+ \
-                                " --instName all --showFig --smallMode "+smallMode+ \
+                                " --instName all --showFig "+showFig+" --smallMode "+smallMode+ \
                                 " --model "+model+" --modelParams "+modelParams+";"
                             , shell=True)
             print('\nSpectra fitting for obsID {} finished.'.format(obsID))
