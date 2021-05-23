@@ -108,6 +108,9 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
 
     #-- input model parameters --#
     freeze = modelParams.get('freeze', None)
+    if freeze is None:
+        freeze = modelParams.get('frozen', None)
+
     #m1.setPars(modelParams)
     for i in modelParams.keys():
         if type(i) == int:
@@ -415,7 +418,8 @@ if __name__=="__main__":
     parser.add_argument('--modelParams', action='store', type=eval, \
                         help='give a dictionary of model parameter values to use. \
                               Put double quotes for str values and enclose the dict \
-                              within single quotes at the end.')
+                              within single quotes at the end. \
+                              Use freeze=[a, b] to freeze parameters a and b.')
 
     parser.add_argument('--grouped', action='store', default='yes', \
                         help='whether to use grouped spectra data or not? (default:%(default)s)')
