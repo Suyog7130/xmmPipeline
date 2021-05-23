@@ -415,7 +415,7 @@ if __name__=="__main__":
                         help='the instrument to use. (default:%(default)s)')
     parser.add_argument('--model', action='store', default="tbabs*zashift*(powerlaw)", \
                         help='what model to use for fitting. (default:%(default)s)')
-    parser.add_argument('--modelParams', action='store', type=eval, \
+    parser.add_argument('--modelParams', action='store', type=eval, default={}, \
                         help='give a dictionary of model parameter values to use. \
                               Put double quotes for str values and enclose the dict \
                               within single quotes at the end. \
