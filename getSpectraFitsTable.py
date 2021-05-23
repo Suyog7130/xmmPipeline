@@ -99,7 +99,8 @@ def main (args):
 
             #-- add columns for useful model parameters --#
             df = df.fillna('None')
-            tableCols = ['kT', 'norm', 'lg10Lum', 'flux', 'chiSq', 'dof']
+            tableCols = ['kT', 'norm', 'PhoIndex', 'norm', \
+                         'lg10Lum', 'lg10Flux', 'pnLumin', 'pnFlux', 'chiSq', 'dof']
             mComps = [k for k in modelDict.keys() if k != 'results']
 
             for comp in mComps:
@@ -117,7 +118,12 @@ def main (args):
             metricDict = modelDict['results']
             for metric in metricDict.keys():
                 if metric in tableCols:
-                    df.loc[obsID, metric] = metricDict[metric]
+                    val = metricDict[metric]
+                    if metric in ['pnLumin', 'mos1lumin', 'mos2lumin']:
+                        val = val['eUnit_Ine44']
+                    if metric in ['pnFlux', 'mos1Flux', 'mos2Flux']:
+                        val = val['eUnit']
+                    df.loc[obsID, metric] = val
 
         #-- if only some obsIDs have to be included --#
         if args.obsIDs is not None:
@@ -131,7 +137,7 @@ def main (args):
         print(f'\nThe final specResultsTable for model\n\t{model}\n')  
         print(df)   #, df.columns.tolist())
         print('\nSuccessfully created the specResultsTable!')
-        
+
         df.to_csv('specResultsTable_'+model+'.csv')
         if verbose:
             print('Saved the specResultsTable to CSV.')
