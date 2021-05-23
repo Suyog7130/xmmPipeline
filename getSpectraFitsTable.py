@@ -13,6 +13,11 @@ files for each of the obsIDs and create a `specResultsTable` using them.
 I don't the obsIDs thing will be valid here.
 Why would one not wanna include some obsIDs in the final table?
 Anyway.
+
+23rd May 2021:
+---
+The primary ``for`` loop should be for model since each model will have a
+separate ``specResultsTable``.
 """
 
 import os
@@ -34,6 +39,7 @@ pd.set_option('display.expand_frame_repr', False)
 
 ##-- the main function --##
 def main (args):
+    verbose = args.verbose
     
     #-- create an object of class spectra --#
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
@@ -61,14 +67,16 @@ def main (args):
               'tbabs*clumin*zashift*(bbodyrad+powerlaw+diskbb)']
     if not args.model == 'all':
         models = [args.model]
-    
+
     #-- iterate for all the models --#
     for model in models:
-        print(f'\nCreating specResultsTable for model\n{model}')
-
+        if verbose:
+            print(f'\nCreating specResultsTable for model\n\t{model}')
+    
         #-- iterate for each obsIDs --#
         for obsID in sortedObsIDs:
-            print(f'\nLoading specModelParams.json for {obsID}')
+            if verbose:
+                print(f'\nLoading specModelParams.json for {obsID}')
             workdir = args.workdir +'/'+ obsID +'/work'
             
             #-- load the `specModelParams.json` file --#
@@ -77,19 +85,21 @@ def main (args):
                 resultDict = json.load( open(fname, 'r') )
                 #print(resultDict)
             else:
-                printErrorMessage('file not found!')
-                print(f'\nRow for {obsID} will not be added.')
+                if verbose:
+                    printErrorMessage('file not found!')
+                    print(f'\nRow for {obsID} will not be added.')
                 continue
 
             #-- check for presence of the model --#
             modelDict = resultDict.get(model, None)
             if modelDict is None:
-                print('\nPresent model is not saved in the JSON file.')
+                if verbose:
+                    print('\nPresent model is not saved in the JSON file.')
                 continue
 
             #-- add columns for useful model parameters --#
             df = df.fillna('None')
-            tableCols = ['kT', 'norm', 'lg10Lum', 'flux', 'chiSq']
+            tableCols = ['kT', 'norm', 'lg10Lum', 'flux', 'chiSq', 'dof']
             mComps = [k for k in modelDict.keys() if k != 'results']
 
             for comp in mComps:
@@ -113,15 +123,20 @@ def main (args):
         if args.obsIDs is not None:
             toDrop = list( set(df.index.tolist()) - set(args.obsIDs) )
             df = df.drop(toDrop)
-            print('Using the obsIDs passed.')
+            if verbose:
+                print('Using the obsIDs passed.')
 
         df = df.replace('None', 0.0)  #--convert empty values to float64.
 
-        print('\nThe final specResultsTable is:\n', df)  
-        print(df.info())   #, df.columns.tolist())
+        print(f'\nThe final specResultsTable for model\n\t{model}\n')  
+        print(df)   #, df.columns.tolist())
+        print('\nSuccessfully created the specResultsTable!')
+        
         df.to_csv('specResultsTable_'+model+'.csv')
+        if verbose:
+            print('Saved the specResultsTable to CSV.')
 
-    return print('\nSuccessfully created the specResultsTable!')
+    return True
 
 
 if __name__=="__main__":
@@ -141,6 +156,8 @@ if __name__=="__main__":
                                 Valid only when --method argument is specified. (default:%(default)s)''')
     parser.add_argument('--objName', action='store', default=None, \
                         help='name of the obj used to locate the xmmObj pickle file.')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False, \
+                        help='more messages shown on the terminal. (default:%(default)s)')
 
     #-- fitSpectra arguments --#
     defaultModel = 'tbabs*clumin*zashift*(bbodyrad+bbodyrad)_1frozen'
