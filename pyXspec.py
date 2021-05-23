@@ -142,7 +142,7 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     else:
         resultDict = {}
 
-    if freeze is not None:
+    if freeze is not None and doNotOverwriteModel:
         mName = model +'_'+ 'p'.join( [str(i) for i in freeze] ) + 'frozen'
     else:
         mName = model
