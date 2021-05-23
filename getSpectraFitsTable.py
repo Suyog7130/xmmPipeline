@@ -134,6 +134,27 @@ def main (args):
 
         df = df.replace('None', 0.0)  #--convert empty values to float64.
 
+        #-- move ``chiSq`` and ``dof`` columns to the end --#
+        kTcols = ['kT', 'kT_sigma', 'norm', 'norm_sigma']
+        phoCols = ['PhoIndex', 'PhoIndex_sigma', 'norm_1', 'norm_1_sigma']
+        pho0cols = ['PhoIndex', 'PhoIndex_sigma', 'norm', 'norm_sigma']
+        kT1cols = ['kT_1', 'kT_1_sigma', 'norm_1', 'norm_1_sigma']
+        pho1cols = ['PhoIndex_1', 'PhoIndex_1_sigma', 'norm_1', 'norm_1_sigma']
+        otherCols = ['lg10Lum', 'lg10Lum_sigma', 'lg10Flux', 'lg10Flux_sigma', \
+                     'pnLumin', 'pnFlux', 'chiSq', 'dof']
+
+        dfColsList = df.columns.tolist()
+        if 'kT' in dfColsList and 'kT_1' in dfColsList:
+            moveColToEndOrder = kTcols + kT1cols
+        if 'kT' in dfColsList and 'PhoIndex' in dfColsList:
+            moveColToEndOrder = kTcols + phoCols
+        moveColToEndOrder = moveColToEndOrder + otherCols
+
+        if args.orderTableCols:
+            for col in moveColToEndOrder:
+                if col in dfColsList:
+                    df.insert(len(df.columns)-1, col, df.pop(col))
+
         print(f'\nThe final specResultsTable for model\n\t{model}\n')  
         print(df)   #, df.columns.tolist())
         print('\nSuccessfully created the specResultsTable!')
@@ -162,8 +183,11 @@ if __name__=="__main__":
                                 Valid only when --method argument is specified. (default:%(default)s)''')
     parser.add_argument('--objName', action='store', default=None, \
                         help='name of the obj used to locate the xmmObj pickle file.')
+
     parser.add_argument('-v', '--verbose', action='store_true', default=False, \
                         help='more messages shown on the terminal. (default:%(default)s)')
+    parser.add_argument('--orderTableCols', action='store_true', default=False, \
+                        help='order the specResultsTable columns. (default:%(default)s)')
 
     #-- fitSpectra arguments --#
     defaultModel = 'tbabs*clumin*zashift*(bbodyrad+bbodyrad)_1frozen'
