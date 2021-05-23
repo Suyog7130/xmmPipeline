@@ -145,15 +145,25 @@ def main (args):
 
         dfColsList = df.columns.tolist()
         if 'kT' in dfColsList and 'kT_1' in dfColsList:
-            moveColToEndOrder = kTcols + kT1cols
-        if 'kT' in dfColsList and 'PhoIndex' in dfColsList:
-            moveColToEndOrder = kTcols + phoCols
-        moveColToEndOrder = moveColToEndOrder + otherCols
+            moveColToEndOrder = kTcols + kT1cols + otherCols
+        elif 'kT' in dfColsList and 'PhoIndex' in dfColsList:
+            moveColToEndOrder = kTcols + phoCols + otherCols
+        else:
+            moveColToEndOrder = otherCols
 
         if args.orderTableCols:
             for col in moveColToEndOrder:
                 if col in dfColsList:
                     df.insert(len(df.columns)-1, col, df.pop(col))
+
+        #-- add the ``redChiSq`` value column --#
+        redChiSq = []
+        for chiSq, dof in zip(df.chiSq.tolist(), df.dof.tolist()):
+            if dof != 0:
+                redChiSq.append(chiSq/dof)
+            else:
+                redChiSq.append(0)
+        df['redChiSq'] = redChiSq
 
         print(f'\nThe final specResultsTable for model\n\t{model}\n')  
         print(df)   #, df.columns.tolist())
