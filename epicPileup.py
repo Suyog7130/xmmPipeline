@@ -353,7 +353,8 @@ if __name__=="__main__":
     parser.add_argument('--correctPileUp', action='store_true', default=False, \
                         help='run correctPileUp function. (default:%(default)s)')
     parser.add_argument('--srcRin', action='store', type=int, default=None, \
-                        help='the inner radius of the Source circle, in Arcsec. (default:%(default)s)')
+                        help='the inner radius of the Source circle, in Sky Coordinates. \
+                             (default:%(default)s)')
     
     parser.add_argument('--showFig', action='store_true', default=False, \
                         help='show the epatplot output in evince. (default:%(default)s)')
