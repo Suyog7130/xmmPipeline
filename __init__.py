@@ -1,4 +1,10 @@
 
+from epicObj import *
+from epicPipeline import *
+from epicPileup import *
+from epicSpectra import *
 
-def __init__ ():
-    print('Hello!')
+from plotAnal import *
+from convert import *
+
+#__all__ = ['xmmPipeline']
