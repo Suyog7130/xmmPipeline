@@ -810,34 +810,25 @@ class epicObj:
         Function to find all the other Sources, in addition to the main Source, lying within the region of interest.
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep
     
-        PARAMETERS
-        ----------
-            inst: name of the instrument of use, str.
+        Args:
+            inst (str): name of the instrument of use.
 
-        INPUT
-        -----
-            inst_CCD##.evts: instrument Event list and corresponding extracted images in the Energy band 0.3-10 KeV
-                using evselect.
+        :Input: ``inst_CCD##.evts`` Event list.
 
-        OUTPUT
-        ------
-        Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources, 
+        Raises:
+            Error: if `inst` is not in ['PN', 'MOS1', 'MOS2']
+
+        :Output:
+            Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources, 
             apart from the region file from DS9.
 
         NOTES
         -----
-        Note that other sources may be found within any of the regions using different input files,
-        for instance 'PN_image_full.fits' obtained from 'PNclean.ds' etc.
-
-        However, only the sources within the PNMOS12 overlap region or the PN region, in case of small mode,
-        are of interest. Since, the PN region necessarily contains the overlap region within it regardless of 
-        the mode of observation, this should have been sufficient to get other sources. However, the MOS data adds 
-        some of its own sources and 'edetect_chain' is easier to use and can be used with multiple imagesets,
-        so both 'PNMOS12' and 'PN_CCD##' are being used to get the sources.
-
-        Further, right now the SAS command 'edetect_chain', which is pretty slow when number of sources is large,
-        is been used. Individual tasks within 'edetect_chain' can be run separately to fasten this up, although
-        that would require changes in the createOutputImages() function below.
+        This separate function based on `find_otherSources` is meant to be used for
+        finding individual instrument other sources. It uses ``edetect_chain`` function 
+        from XMMSAS for detecting the Sources.
+        ``inst_CCD##.evts`` is required to extract corresponding images in the Energy band 
+        0.3-10 KeV using ``evselect``.
         """
         print('\nFinding all the other Sources.')
         

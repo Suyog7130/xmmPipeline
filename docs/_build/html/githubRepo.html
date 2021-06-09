@@ -54,6 +54,9 @@ Adding options for Pile-up obsIDs.</p>
 —
 Editing the <cite>removeFlareBackground</cite> function.
 A seperate function <cite>extract_flareGTI</cite> will also be added.</p>
+<p>9th June 2021:
+—
+Starting to write the functions for obtaining individual background circles.</p>
 <dl class="py class">
 <dt id="githubRepo.epicObj.epicObj">
 <em class="property">class </em><code class="sig-prename descclassname">githubRepo.epicObj.</code><code class="sig-name descname">epicObj</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ra</span></em>, <em class="sig-param"><span class="n">dec</span></em>, <em class="sig-param"><span class="n">workdir</span></em>, <em class="sig-param"><span class="n">sas_dir</span></em>, <em class="sig-param"><span class="n">headas</span></em>, <em class="sig-param"><span class="n">sas_ccfpath</span></em>, <em class="sig-param"><span class="n">srcCircRadius</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bkgCircRadius</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dSrcThreshold</span><span class="o">=</span><span class="default_value">70</span></em>, <em class="sig-param"><span class="n">bkgCircGap</span><span class="o">=</span><span class="default_value">2.5</span></em>, <em class="sig-param"><span class="n">edetectmode</span><span class="o">=</span><span class="default_value">'chain'</span></em>, <em class="sig-param"><span class="n">esp_nsplinenodes</span><span class="o">=</span><span class="default_value">14</span></em>, <em class="sig-param"><span class="n">gti_indiThreshold</span><span class="o">=</span><span class="default_value">500</span></em>, <em class="sig-param"><span class="n">gti_combThreshold</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lcBinSize</span><span class="o">=</span><span class="default_value">25</span></em>, <em class="sig-param"><span class="n">binBkglc</span><span class="o">=</span><span class="default_value">'no'</span></em>, <em class="sig-param"><span class="n">saveFig</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">showFig</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">ignorePileup</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj" title="Permalink to this definition">¶</a></dt>
@@ -170,6 +173,34 @@ so both ‘PNMOS12’ and ‘PN_CCD##’ are being used to get the sources.</p>
 <p>Further, right now the SAS command ‘edetect_chain’, which is pretty slow when number of sources is large,
 is been used. Individual tasks within ‘edetect_chain’ can be run separately to fasten this up, although
 that would require changes in the createOutputImages() function below.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="githubRepo.epicObj.epicObj.find_otherSources_indi">
+<code class="sig-name descname">find_otherSources_indi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inst</span><span class="o">=</span><span class="default_value">'PN'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.find_otherSources_indi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to find all the other Sources, in addition to the main Source, lying within the region of interest.
+See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep">https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inst</strong> (<em>str</em>) – name of the instrument of use.</p>
+</dd>
+<dt class="field-even">Input</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">inst_CCD##.evts</span></code> Event list.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>Error</strong> – if <cite>inst</cite> is not in [‘PN’, ‘MOS1’, ‘MOS2’]</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
+apart from the region file from DS9.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This separate function based on <cite>find_otherSources</cite> is meant to be used for
+finding individual instrument other sources. It uses <code class="docutils literal notranslate"><span class="pre">edetect_chain</span></code> function
+from XMMSAS for detecting the Sources.
+<code class="docutils literal notranslate"><span class="pre">inst_CCD##.evts</span></code> is required to extract corresponding images in the Energy band
+0.3-10 KeV using <code class="docutils literal notranslate"><span class="pre">evselect</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
