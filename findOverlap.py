@@ -259,8 +259,8 @@ class findOverlap:
     ##-- function to obtain the overlap --##
     def obtainOverlap (self, axes):
         """
-        Input: The workdir where the PN, MOS and PNMOS12 FITS files are located.
-        Output: The detected overlap region if it is larger in size than then MOS region,
+        :Input: The workdir where the PN, MOS and PNMOS12 FITS files are located.
+        :Output: The detected overlap region if it is larger in size than then MOS region,
                 or else the PNMOS12 image data.
         """
         workdir, pnCCD = self.workdir, self.pnCCD
@@ -325,9 +325,9 @@ class findOverlap:
     ##-- function to find some background circles --##
     def backgroundCircles (self, axes):
         """
-        Input: The output from 'obtainOverlap()' function aka detected overlap region.,
+        :Input: The output from 'obtainOverlap()' function aka detected overlap region.,
                and the Source coordinates.
-        Output: Coordinates and Radii of the Background Circles.
+        :Output: Coordinates and Radii of the Background Circles.
         """
         workdir, obsID = self.workdir, self.obsID
         overlap, imgPNMOS, imgMOS, imgPN = self.overlap, self.imgPNMOS, self.imgMOS, self.imgPN
@@ -346,8 +346,8 @@ class findOverlap:
             """
             Calculates the Euclidean distance between two cartesian points.
         
-            Input: Coordinates of the two points in form of tuples.
-            Output: The distance between the points, float.
+            :Input: Coordinates of the two points in form of tuples.
+            :Output: The distance between the points, float.
         
             Note that the Source coordinates are reversed, so that has to be taken 
             into account when passing the values.
@@ -361,9 +361,9 @@ class findOverlap:
             """
             Calculates the perpendicular distance of point from a line.
         
-            Input: Two tuples P0 and line. P0 contains the x and y coordinates of the point and
+            :Input: Two tuples P0 and line. P0 contains the x and y coordinates of the point and
                    line contains the coordinates of the start and end points of the line.
-            Output: The perpendicular distance of the point from the line, float.
+            :Output: The perpendicular distance of the point from the line, float.
         
             First the intersection point Pi of the perpendicular from P0 to the line is calculated.
             The output is then the EuclideanDist between P0 and Pi.
@@ -617,8 +617,8 @@ class findOverlap:
         the other showing the Source and the Background Circles.
         'PNMOS12_image_full' is used as the backdrop.
 
-        Input: findOverlap object with all previous functions already run.
-        Output: Saved images in the workdir of the obsID.
+        :Input: findOverlap object with all previous functions already run.
+        :Output: Saved images in the workdir of the obsID.
         """
         workdir, header = self.workdir, self.header
         obsID = self.obsID

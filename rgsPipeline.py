@@ -83,8 +83,8 @@ class rgsObj:
     ##-- function to find the obsIDs --##
     def findObsIDs (self):
         """
-        Input: Coordinates of the object and path to work directory.
-        Output: List of obsIDs.
+        :Input: Coordinates of the object and path to work directory.
+        :Output: List of obsIDs.
         """
         ra, dec, workdir = str(self.ra), str(self.dec), self.workdir
         print('\nLooking for obsIDs at RA={} and DEC={}\nWORKDIR is set at {}'.format(ra,dec,workdir))
@@ -165,8 +165,8 @@ class rgsObj:
         A folder names 'RGS/' is created in the work folder of each obsID directory.
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-rgs
 
-        Input: None.
-        Output: Source and Background RGS Spectra and the associated response matrices.
+        :Input: None.
+        :Output: Source and Background RGS Spectra and the associated response matrices.
         """
         print('\nInitializing RGS data reduction.')
 
@@ -200,7 +200,7 @@ class rgsObj:
                            '''export SAS_ODF="`pwd`/` ls *SUM.SAS`";'''+ \
                            #"echo $SAS_ODF;"+ \
                            "rgsproc;" 
-                           "fv *R1*SRCLI*;"
+                           #"fv *R1*SRCLI*;"
                            , shell=True)
             print('\nData reduction for obsID {} finished.'.format(obsID))
             
@@ -338,3 +338,4 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
+

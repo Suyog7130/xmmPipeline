@@ -65,9 +65,9 @@ class epicSpectra (epicObj):
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-mos-spectrum,
              https://www.cosmos.esa.int/web/xmm-newton/sas-thread-pn-spectrum
 
-        Input: Flared Background filtered PN, MOS1&2 Event Lists, `PNclean.ds`, `MOS1clean.ds` and
+        :Input: Flared Background filtered PN, MOS1&2 Event Lists, `PNclean.ds`, `MOS1clean.ds` and
                `MOS2clean.ds`. Alongwith SrcBkg coordinates and SourceCCDs resulting from `epicPipeline.py`
-        Output: MOS12 and PN SrcBkg Spectra in Image Mode, a Redistribution Matrix (`rmf`) file and
+        :Output: MOS12 and PN SrcBkg Spectra in Image Mode, a Redistribution Matrix (`rmf`) file and
                 an Effective Area Vector (`arf`) file.
 
         Note that for Small Mode obsIDs, since the background is taken from PN image data,
@@ -216,8 +216,8 @@ class epicSpectra (epicObj):
         is required to run it.
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec
 
-        Input: Extracted Spectra FITS file and input model parameters.
-        Output: Spectra plots and `specModelParams.json` file.
+        :Input: Extracted Spectra FITS file and input model parameters.
+        :Output: Spectra plots and `specModelParams.json` file.
 
         20th May 2021: Adding feature to allow model parameter value inputs.
         """

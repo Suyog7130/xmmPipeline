@@ -85,13 +85,13 @@ class epicPileup (epicObj):
         If the obsID is found to be Piled-up then the user should run the `correctPileUp`
         function to correct for it.
 
-        Input: Concatenated and Calibrated Event list, pnGTI file, 
+        :Input: Concatenated and Calibrated Event list, pnGTI file, 
                `sourceCCDs` and the Source location parameters.
-        Output: The Source Annulus radii together with Filtered Event List
+        :Output: The Source Annulus radii together with Filtered Event List
                 `source_PN_filtered_obsID.evts` and the corresponding image 
                 `source_PN_filteredPattern.ps`.
 
-        Note: The term `filtered` means that the GTI have been applied.
+        :Note: The term `filtered` means that the GTI have been applied.
         """
         print('\nStarting Pile-up Checking.')
 
@@ -162,15 +162,15 @@ class epicPileup (epicObj):
         file. Henceforth, for these Pile-up obsIDs the Source region defined
         from `rIn` to `rOut` will be used for obtaing the Spectra.
 
-        Input: Concatenated and Calibrated Event list, pnGTI file, 
+        :Input: Concatenated and Calibrated Event list, pnGTI file, 
                `sourceCCDs` and the Source location parameters.
-        Output: The Source Annulus radii together with Filtered Event List
+        :Output: The Source Annulus radii together with Filtered Event List
                 `source_PN_filtered_obsID.evts` and the corresponding image 
                 `source_PN_filteredPattern.ps`, and the Annulus files 
                 `source_PN_filteredAnnulus_obsID.evts` and `source_PN_filteredPattern_Annulus.ps` 
                 showing resolution of the Pile-up issue.
 
-        Note: The term `filtered` means that the GTI have been applied.
+        :Note: The term `filtered` means that the GTI have been applied.
         """
         print('\nStarting Pile-up Correction.')
         if srcRin is None:

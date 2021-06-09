@@ -429,14 +429,20 @@ See: <cite>https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epatplot</cite><
 because the latter results in very few useful data points.</p>
 <p>If the obsID is found to be Piled-up then the user should run the <cite>correctPileUp</cite>
 function to correct for it.</p>
-<dl class="simple">
-<dt>Input: Concatenated and Calibrated Event list, pnGTI file,</dt><dd><p><cite>sourceCCDs</cite> and the Source location parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Concatenated and Calibrated Event list, pnGTI file,
+<cite>sourceCCDs</cite> and the Source location parameters.</p>
 </dd>
-<dt>Output: The Source Annulus radii together with Filtered Event List</dt><dd><p><cite>source_PN_filtered_obsID.evts</cite> and the corresponding image
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>The Source Annulus radii together with Filtered Event List
+<cite>source_PN_filtered_obsID.evts</cite> and the corresponding image
 <cite>source_PN_filteredPattern.ps</cite>.</p>
 </dd>
+<dt class="field-odd">Note</dt>
+<dd class="field-odd"><p>The term <cite>filtered</cite> means that the GTI have been applied.</p>
+</dd>
 </dl>
-<p>Note: The term <cite>filtered</cite> means that the GTI have been applied.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -459,16 +465,22 @@ Annulus for which Pile-up is negligible. These new found <cite>rIn</cite> and <c
 are then saved into to the <cite>epicObj</cite> and are written to <cite>ccd_coords_info.pickle</cite>
 file. Henceforth, for these Pile-up obsIDs the Source region defined
 from <cite>rIn</cite> to <cite>rOut</cite> will be used for obtaing the Spectra.</p>
-<dl class="simple">
-<dt>Input: Concatenated and Calibrated Event list, pnGTI file,</dt><dd><p><cite>sourceCCDs</cite> and the Source location parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Concatenated and Calibrated Event list, pnGTI file,
+<cite>sourceCCDs</cite> and the Source location parameters.</p>
 </dd>
-<dt>Output: The Source Annulus radii together with Filtered Event List</dt><dd><p><cite>source_PN_filtered_obsID.evts</cite> and the corresponding image
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>The Source Annulus radii together with Filtered Event List
+<cite>source_PN_filtered_obsID.evts</cite> and the corresponding image
 <cite>source_PN_filteredPattern.ps</cite>, and the Annulus files
 <cite>source_PN_filteredAnnulus_obsID.evts</cite> and <cite>source_PN_filteredPattern_Annulus.ps</cite>
 showing resolution of the Pile-up issue.</p>
 </dd>
+<dt class="field-odd">Note</dt>
+<dd class="field-odd"><p>The term <cite>filtered</cite> means that the GTI have been applied.</p>
+</dd>
 </dl>
-<p>Note: The term <cite>filtered</cite> means that the GTI have been applied.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -548,10 +560,14 @@ See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newt
 <blockquote>
 <div><p><a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newton/sas-thread-pn-spectrum">https://www.cosmos.esa.int/web/xmm-newton/sas-thread-pn-spectrum</a></p>
 </div></blockquote>
-<dl class="simple">
-<dt>Input: Flared Background filtered PN, MOS1&amp;2 Event Lists, <cite>PNclean.ds</cite>, <cite>MOS1clean.ds</cite> and</dt><dd><p><cite>MOS2clean.ds</cite>. Alongwith SrcBkg coordinates and SourceCCDs resulting from <cite>epicPipeline.py</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Flared Background filtered PN, MOS1&amp;2 Event Lists, <cite>PNclean.ds</cite>, <cite>MOS1clean.ds</cite> and
+<cite>MOS2clean.ds</cite>. Alongwith SrcBkg coordinates and SourceCCDs resulting from <cite>epicPipeline.py</cite></p>
 </dd>
-<dt>Output: MOS12 and PN SrcBkg Spectra in Image Mode, a Redistribution Matrix (<cite>rmf</cite>) file and</dt><dd><p>an Effective Area Vector (<cite>arf</cite>) file.</p>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>MOS12 and PN SrcBkg Spectra in Image Mode, a Redistribution Matrix (<cite>rmf</cite>) file and
+an Effective Area Vector (<cite>arf</cite>) file.</p>
 </dd>
 </dl>
 <p>Note that for Small Mode obsIDs, since the background is taken from PN image data,
@@ -582,8 +598,14 @@ folder in the main directory.</p>
 Since, <cite>pyXspec</cite> requires HEA initialisation, a separate routine <cite>pyXspec.py</cite>
 is required to run it.
 See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec">https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec</a></p>
-<p>Input: Extracted Spectra FITS file and input model parameters.
-Output: Spectra plots and <cite>specModelParams.json</cite> file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Extracted Spectra FITS file and input model parameters.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Spectra plots and <cite>specModelParams.json</cite> file.</p>
+</dd>
+</dl>
 <p>20th May 2021: Adding feature to allow model parameter value inputs.</p>
 </dd></dl>
 
@@ -643,11 +665,15 @@ Also lowered the Bkg Circle Gap to 2.5 pixels instead of 5 pixles.</p>
 <dl class="py method">
 <dt id="githubRepo.findOverlap.findOverlap.backgroundCircles">
 <code class="sig-name descname">backgroundCircles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.findOverlap.findOverlap.backgroundCircles" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Input: The output from ‘obtainOverlap()’ function aka detected overlap region.,</dt><dd><p>and the Source coordinates.</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>The output from ‘obtainOverlap()’ function aka detected overlap region.,
+and the Source coordinates.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Coordinates and Radii of the Background Circles.</p>
 </dd>
 </dl>
-<p>Output: Coordinates and Radii of the Background Circles.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -656,8 +682,14 @@ Also lowered the Bkg Circle Gap to 2.5 pixels instead of 5 pixles.</p>
 <dd><p>Creates two JPEG output images, one showing the other sources and
 the other showing the Source and the Background Circles.
 ‘PNMOS12_image_full’ is used as the backdrop.</p>
-<p>Input: findOverlap object with all previous functions already run.
-Output: Saved images in the workdir of the obsID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>findOverlap object with all previous functions already run.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Saved images in the workdir of the obsID.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -668,11 +700,15 @@ Output: Saved images in the workdir of the obsID.</p>
 <dl class="py method">
 <dt id="githubRepo.findOverlap.findOverlap.obtainOverlap">
 <code class="sig-name descname">obtainOverlap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.findOverlap.findOverlap.obtainOverlap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Input: The workdir where the PN, MOS and PNMOS12 FITS files are located.
-Output: The detected overlap region if it is larger in size than then MOS region,</p>
-<blockquote>
-<div><p>or else the PNMOS12 image data.</p>
-</div></blockquote>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>The workdir where the PN, MOS and PNMOS12 FITS files are located.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>The detected overlap region if it is larger in size than then MOS region,
+or else the PNMOS12 image data.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
