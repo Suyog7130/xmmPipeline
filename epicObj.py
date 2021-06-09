@@ -18,6 +18,10 @@ Adding options for Pile-up obsIDs.
 ---
 Editing the `removeFlareBackground` function.
 A seperate function `extract_flareGTI` will also be added.
+
+9th June 2021:
+---
+Starting to write the functions for obtaining individual background circles.
 """
 
 import os
@@ -687,7 +691,6 @@ class epicObj:
         return print('\nSuccessfully combined EPIC PN and MOS data!')
 
 
-
     ##-- to find other sources --##
     def find_otherSources (self):
         """
@@ -765,6 +768,96 @@ class epicObj:
                                withregionfile=true regionfile=allSources.reg;"
                            , shell=True)
             """
+            subprocess.run("cd "+workdir+";"+ \
+                           ". $HEADAS/headas-init.sh;"+ \
+                           ". $SAS_DIR/setsas.sh;"+ \
+                           '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
+                           "evselect table=PNMOS12.evts:EVENTS imagebinning='binSize' \
+                               imageset='PNMOS12_image_full.fits' withimageset=yes \
+                               xcolumn='X' ycolumn='Y' ximagebinsize=80 yimagebinsize=80 \
+                               expression='(PI in [300:10000]) && (PATTERN in [0:12])';"+ \
+                           "evselect table=PN_CCD"+pnCCD+".evts:EVENTS \
+                               imagebinning='binSize' imageset='PN_CCD"+pnCCD+"_image.fits' withimageset=yes \
+                               xcolumn='X' ycolumn='Y' ximagebinsize=80 yimagebinsize=80 \
+                               expression='#XMMEA_EP && (PI in [300:10000]) && (PATTERN in [0:12])';"+ \
+                           "edetect_chain imagesets='PNMOS12_image_full.fits PN_CCD"+pnCCD+"_image.fits' \
+                               eventsets='PNMOS12.evts PN_CCD"+pnCCD+".evts' attitudeset="+AttFile+" \
+                               pimin='300 300' pimax='10000 10000' ecf='2.0 2.0' \
+                               esp_nsplinenodes="+esp_nsplinenodes+" esen_mlmin=10;"+ \
+                           "srcdisplay boxlistset=emllist.fits imageset=PN_CCD"+pnCCD+"_imagesmap.fits sourceradius=0.005 \
+                               withregionfile=true regionfile=allSources.reg;"
+                           #"fv emllist.fits;" 
+                           #"ds9 PNMOS12_image_fullsmap.fits -regions load allSources.reg \
+                           #    -cmap bb -scale log -zoom 4 -export 'allSources.jpeg' 300;"
+                           , shell=True) 
+
+            t = Table.read(workdir+'/'+'emllist.fits', format='fits')
+            #t = t[list(t.columns)]
+            t.write(workdir+'/'+'emllist.csv', overwrite=True)
+            df = pd.read_csv(workdir+'/'+'emllist.csv').drop_duplicates(['X_IMA'])
+            allX, allY = np.array(df.X_IMA), np.array(df.Y_IMA)
+
+            self.otherSources[obsID] = [(x, y) for x, y in zip(allX, allY)]
+
+            print('\nAll other Sources for obsID {} found.'.format(obsID))
+        #print(self.otherSources)    
+        return print('\nFinished finding all the other Sources!')
+
+
+    ##-- to find other sources --##
+    def find_otherSources_indi (self, inst='PN'):
+        """
+        Function to find all the other Sources, in addition to the main Source, lying within the region of interest.
+        See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep
+    
+        PARAMETERS
+        ----------
+            inst: name of the instrument of use, str.
+
+        INPUT
+        -----
+            inst_CCD##.evts: instrument Event list and corresponding extracted images in the Energy band 0.3-10 KeV
+                using evselect.
+
+        OUTPUT
+        ------
+        Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources, 
+            apart from the region file from DS9.
+
+        NOTES
+        -----
+        Note that other sources may be found within any of the regions using different input files,
+        for instance 'PN_image_full.fits' obtained from 'PNclean.ds' etc.
+
+        However, only the sources within the PNMOS12 overlap region or the PN region, in case of small mode,
+        are of interest. Since, the PN region necessarily contains the overlap region within it regardless of 
+        the mode of observation, this should have been sufficient to get other sources. However, the MOS data adds 
+        some of its own sources and 'edetect_chain' is easier to use and can be used with multiple imagesets,
+        so both 'PNMOS12' and 'PN_CCD##' are being used to get the sources.
+
+        Further, right now the SAS command 'edetect_chain', which is pretty slow when number of sources is large,
+        is been used. Individual tasks within 'edetect_chain' can be run separately to fasten this up, although
+        that would require changes in the createOutputImages() function below.
+        """
+        print('\nFinding all the other Sources.')
+        
+        #-- set the environment variables --#
+        os.environ['SAS_DIR'] = self.sas_dir
+        os.environ['HEADAS'] = self.headas
+        os.environ['SAS_CCFPATH'] = self.sas_ccfpath
+    
+        esp_nsplinenodes = str(self.esp_nsplinenodes)
+
+        #-- iterating for all the obsIDs --#     
+        for obsID in self.obsIDs:
+            print('\nFinding other Sources for obsID {}.'.format(obsID))
+            workdir = self.workdir+'/'+obsID+'/work'
+
+            ccd = str(self.sourceCCDs[obsID][inst])
+            name = inst + '_CCD' + ccd
+
+            #-- grab Attitude File --#
+            AttFile = glob.glob(workdir+'/*AttHk*.ds')[0]
             subprocess.run("cd "+workdir+";"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
