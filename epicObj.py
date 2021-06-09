@@ -116,8 +116,8 @@ class epicObj:
     ##-- function to find the obsIDs --##
     def findObsIDs (self):
         """
-        Input: Coordinates of the object and path to work directory.
-        Output: List of obsIDs.
+        :Input: Coordinates of the object and path to work directory.
+        :Output: List of obsIDs.
         """
         ra, dec, workdir = str(self.ra), str(self.dec), self.workdir
         print('\nLooking for obsIDs at RA={} and DEC={}\nWORKDIR is set at {}'.format(ra,dec,workdir))
@@ -208,8 +208,8 @@ class epicObj:
     ##-- function to download the data --##
     def downloadData (self):
         """
-        Input: List of obsIDs for which data has to be downloaded.
-        Output: None.
+        :Input: List of obsIDs for which data has to be downloaded.
+        :Output: None.
         
         First it is checked is the the downloading has been done before.
         If yes, then if the size of the obsID folder is large, it's downloading is skipped.
@@ -252,8 +252,8 @@ class epicObj:
         """
         Runs the XMMSAS commands on the shell to reduce EPIC data.
         
-        Input: SAS Summary file in the work directory, that is downloaded alongwith the data.
-        Output: EPIC PN and MOS1&2 calibrated and concatenated Event lists
+        :Input: SAS Summary file in the work directory, that is downloaded alongwith the data.
+        :Output: EPIC PN and MOS1&2 calibrated and concatenated Event lists
                 produced by SAS tasks `epproc` and `emproc`.
                 
         These event lists contain Instrumental GTI for each of the CCDs.
@@ -301,8 +301,8 @@ class epicObj:
         """
         Runs the XMMSAS commands to extract Flare GTI from PN Event List.
         
-        Input: Unfiltered EPIC PN and MOS1&2 Events lists.
-        Output: `flareGTI` file for the obsIDs.
+        :Input: Unfiltered EPIC PN and MOS1&2 Events lists.
+        :Output: `flareGTI` file for the obsIDs.
         
         This function largely follows the following SAS thread:
         https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground
@@ -356,8 +356,8 @@ class epicObj:
         Spectral Analysis, since for Light Curve extraction, `combinedGTI` file 
         and combined `PNMOS12.evts` EPIC data is used.
         
-        Input: Unfiltered EPIC PN and MOS1&2 Events lists and `flareGTI` file.
-        Output: Flare Background filtered Event Lists for each EPIC instrument.
+        :Input: Unfiltered EPIC PN and MOS1&2 Events lists and `flareGTI` file.
+        :Output: Flare Background filtered Event Lists for each EPIC instrument.
         
         This function largely follows the following SAS thread:
         https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground
@@ -407,9 +407,9 @@ class epicObj:
         Uses 'ecoordconv' command of SAS to find which CCD contains the Source
         in each of the EPIC's three cameras.
         
-        Input: EPIC concatenated and calibrated Event lists obtained by running 
+        :Input: EPIC concatenated and calibrated Event lists obtained by running 
                emproc and epproc.
-        Output: None.
+        :Output: None.
         
         self.sourceCCDs is updated as a dictionary of dictionaries containing the
         Source CCD number for PN, MOS1 and MOS2 cameras for all the obsIDs.
@@ -494,9 +494,9 @@ class epicObj:
         """
         Extracts Instrumental GTIs from EPIC data using 'fextract' command.
         
-        Input: EPIC concatenated and calibrated Event lists obtained by running 
+        :Input: EPIC concatenated and calibrated Event lists obtained by running 
                emproc and epproc.
-        Output: Intrumental GTI FITS files for EPIC PN, MOS1 and MOS2.
+        :Output: Intrumental GTI FITS files for EPIC PN, MOS1 and MOS2.
         
         'fextract' command can't overwrite the extracted file if it already exists 
         in the work directory, so they are deleted using 'rm -rf', which doesn't 
@@ -555,8 +555,8 @@ class epicObj:
         """
         Combines Flare and Instrumental GTIs.
         
-        Input: Flare, EPIC PN, MOS1 and MOS2 GTIs.
-        Output: Combined Flare and Instrumental GTI FITS file.
+        :Input: Flare, EPIC PN, MOS1 and MOS2 GTIs.
+        :Output: Combined Flare and Instrumental GTI FITS file.
         """
         print('\nStarting process to Combine Flare, EPIC PN, MOS1 and MOS2 GTIs.')
         
@@ -623,9 +623,9 @@ class epicObj:
         Combines EPIC PN, MOS1 and MOS2 Event lists data corresponding to the CCD
         where the Source is located.
         
-        Input: EPIC concatenated and calibrated Event lists obtained by running 
+        :Input: EPIC concatenated and calibrated Event lists obtained by running 
                emproc and epproc.
-        Output: Combined PNMOS12.evts and MOS12.evts Event lists.
+        :Output: Combined PNMOS12.evts and MOS12.evts Event lists.
         """
         print('\nStarting process to Combine EPIC PN, MOS1 and MOS2 data.')
         
@@ -697,9 +697,9 @@ class epicObj:
         Function to find all the other Sources, in addition to the main Source, lying within the region of interest.
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep
     
-        Input: PNMOS12.evts and PN_CCD##.evts and corresponding extracted images in the Energy band 0.3-10 KeV
+        :Input: PNMOS12.evts and PN_CCD##.evts and corresponding extracted images in the Energy band 0.3-10 KeV
                using evselect.
-        Output: Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources, 
+        :Output: Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources, 
                 apart from the region file from DS9.
 
         Note that other sources may be found within any of the regions using different input files,
@@ -818,7 +818,7 @@ class epicObj:
         Raises:
             Error: if `inst` is not in ['PN', 'MOS1', 'MOS2']
 
-        :Output:
+        ::Output:
             Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources, 
             apart from the region file from DS9.
 
@@ -892,8 +892,8 @@ class epicObj:
         find 2 background cicles in it. 
         If the MOS mode is 'small', then the PN image is used for getting the background circles.
 
-        Input: PN_image.fits, MOS12_image.fits and PNMOS12_image.fits to get the overlap from.
-        Output: x, y coords of the background circles alongwith the radii of these circles and the
+        :Input: PN_image.fits, MOS12_image.fits and PNMOS12_image.fits to get the overlap from.
+        :Output: x, y coords of the background circles alongwith the radii of these circles and the
                 source circle. Units of radii are pixels or Sky Coord units.
         """
         print('\nAutomatically detecting the Background Circles.')
@@ -1034,9 +1034,9 @@ class epicObj:
 
         19th May 2021: Added options for Pile-up obsIDs.
         
-        Input: Combined PNMOS12 Event list, Source and Background X, Y in Sky coords and
+        :Input: Combined PNMOS12 Event list, Source and Background X, Y in Sky coords and
                rIn, rOut, the radii of the circles.
-        Output: Extracted Source and Background Event lists.
+        :Output: Extracted Source and Background Event lists.
         """
         print('\nInitiating final Source and Background Event lists extraction.')
         
@@ -1106,8 +1106,8 @@ class epicObj:
         and mean PN Source count rate, scales up the Background light curve for small mode obsIDs,
         such that as if they weren't in small mode and were extracted from the overlap region.
 
-        Input: Source location parameters, PN_CCD##.evts, combined GTI file.
-        Output: Source PN count rate, as an array.
+        :Input: Source location parameters, PN_CCD##.evts, combined GTI file.
+        :Output: Source PN count rate, as an array.
         """
         print('\nExtracting the Source PN Event list and light curve.')
         
@@ -1166,8 +1166,8 @@ class epicObj:
         """
         Obtains the light curves from the Source and Background Event lists.
         
-        Input: Source and Background Event lists.
-        Output: Corresponding light curves.
+        :Input: Source and Background Event lists.
+        :Output: Corresponding light curves.
 
         By default, the background light curve is not binned.
         """

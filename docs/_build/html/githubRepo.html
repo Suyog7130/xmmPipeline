@@ -66,26 +66,42 @@ Starting to write the functions for obtaining individual background circles.</p>
 <code class="sig-name descname">combineEPICdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.combineEPICdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combines EPIC PN, MOS1 and MOS2 Event lists data corresponding to the CCD
 where the Source is located.</p>
-<dl class="simple">
-<dt>Input: EPIC concatenated and calibrated Event lists obtained by running</dt><dd><p>emproc and epproc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>EPIC concatenated and calibrated Event lists obtained by running
+emproc and epproc.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Combined PNMOS12.evts and MOS12.evts Event lists.</p>
 </dd>
 </dl>
-<p>Output: Combined PNMOS12.evts and MOS12.evts Event lists.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="githubRepo.epicObj.epicObj.combineGTIs">
 <code class="sig-name descname">combineGTIs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.combineGTIs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combines Flare and Instrumental GTIs.</p>
-<p>Input: Flare, EPIC PN, MOS1 and MOS2 GTIs.
-Output: Combined Flare and Instrumental GTI FITS file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Flare, EPIC PN, MOS1 and MOS2 GTIs.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Combined Flare and Instrumental GTI FITS file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="githubRepo.epicObj.epicObj.downloadData">
 <code class="sig-name descname">downloadData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.downloadData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Input: List of obsIDs for which data has to be downloaded.
-Output: None.</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>List of obsIDs for which data has to be downloaded.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
 <p>First it is checked is the the downloading has been done before.
 If yes, then if the size of the obsID folder is large, it’s downloading is skipped.</p>
 </dd></dl>
@@ -94,11 +110,15 @@ If yes, then if the size of the obsID folder is large, it’s downloading is ski
 <dt id="githubRepo.epicObj.epicObj.extract_InstrumentalGTIs">
 <code class="sig-name descname">extract_InstrumentalGTIs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.extract_InstrumentalGTIs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extracts Instrumental GTIs from EPIC data using ‘fextract’ command.</p>
-<dl class="simple">
-<dt>Input: EPIC concatenated and calibrated Event lists obtained by running</dt><dd><p>emproc and epproc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>EPIC concatenated and calibrated Event lists obtained by running
+emproc and epproc.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Intrumental GTI FITS files for EPIC PN, MOS1 and MOS2.</p>
 </dd>
 </dl>
-<p>Output: Intrumental GTI FITS files for EPIC PN, MOS1 and MOS2.</p>
 <p>‘fextract’ command can’t overwrite the extracted file if it already exists
 in the work directory, so they are deleted using ‘rm -rf’, which doesn’t
 raises any error even if no such files are found for deleting during the
@@ -109,8 +129,14 @@ first run.</p>
 <dt id="githubRepo.epicObj.epicObj.extract_flareGTI">
 <code class="sig-name descname">extract_flareGTI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.extract_flareGTI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the XMMSAS commands to extract Flare GTI from PN Event List.</p>
-<p>Input: Unfiltered EPIC PN and MOS1&amp;2 Events lists.
-Output: <cite>flareGTI</cite> file for the obsIDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Unfiltered EPIC PN and MOS1&amp;2 Events lists.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p><cite>flareGTI</cite> file for the obsIDs.</p>
+</dd>
+</dl>
 <p>This function largely follows the following SAS thread:
 <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground">https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground</a></p>
 <p>Only one of either EPIC PN or MOS Flare Background filtering is required
@@ -124,18 +150,28 @@ since the Flare affects the whole telescope.</p>
 using the Source and Background location parameters given as Input.
 These Event lists will then be used for getting source images in JPEG using DS9.</p>
 <p>19th May 2021: Added options for Pile-up obsIDs.</p>
-<dl class="simple">
-<dt>Input: Combined PNMOS12 Event list, Source and Background X, Y in Sky coords and</dt><dd><p>rIn, rOut, the radii of the circles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Combined PNMOS12 Event list, Source and Background X, Y in Sky coords and
+rIn, rOut, the radii of the circles.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Extracted Source and Background Event lists.</p>
 </dd>
 </dl>
-<p>Output: Extracted Source and Background Event lists.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="githubRepo.epicObj.epicObj.findObsIDs">
 <code class="sig-name descname">findObsIDs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.findObsIDs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Input: Coordinates of the object and path to work directory.
-Output: List of obsIDs.</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Coordinates of the object and path to work directory.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>List of obsIDs.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -143,11 +179,15 @@ Output: List of obsIDs.</p>
 <code class="sig-name descname">findSourceCCD</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.findSourceCCD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses ‘ecoordconv’ command of SAS to find which CCD contains the Source
 in each of the EPIC’s three cameras.</p>
-<dl class="simple">
-<dt>Input: EPIC concatenated and calibrated Event lists obtained by running</dt><dd><p>emproc and epproc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>EPIC concatenated and calibrated Event lists obtained by running
+emproc and epproc.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
-<p>Output: None.</p>
 <p>self.sourceCCDs is updated as a dictionary of dictionaries containing the
 Source CCD number for PN, MOS1 and MOS2 cameras for all the obsIDs.</p>
 </dd></dl>
@@ -157,10 +197,14 @@ Source CCD number for PN, MOS1 and MOS2 cameras for all the obsIDs.</p>
 <code class="sig-name descname">find_otherSources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.find_otherSources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to find all the other Sources, in addition to the main Source, lying within the region of interest.
 See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep">https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep</a></p>
-<dl class="simple">
-<dt>Input: PNMOS12.evts and PN_CCD##.evts and corresponding extracted images in the Energy band 0.3-10 KeV</dt><dd><p>using evselect.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>PNMOS12.evts and PN_CCD##.evts and corresponding extracted images in the Energy band 0.3-10 KeV
+using evselect.</p>
 </dd>
-<dt>Output: Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,</dt><dd><p>apart from the region file from DS9.</p>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
+apart from the region file from DS9.</p>
 </dd>
 </dl>
 <p>Note that other sources may be found within any of the regions using different input files,
@@ -190,8 +234,9 @@ See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newt
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><strong>Error</strong> – if <cite>inst</cite> is not in [‘PN’, ‘MOS1’, ‘MOS2’]</p>
 </dd>
-<dt class="field-even">Output</dt>
-<dd class="field-even"><p>Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
+</dl>
+<dl class="simple">
+<dt>::Output:</dt><dd><p>Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
 apart from the region file from DS9.</p>
 </dd>
 </dl>
@@ -209,19 +254,29 @@ from XMMSAS for detecting the Sources.
 <dd><p>Calls ‘findOverlap.py’ functions to automatically detect the overlap PNMOS12 region and
 find 2 background cicles in it.
 If the MOS mode is ‘small’, then the PN image is used for getting the background circles.</p>
-<p>Input: PN_image.fits, MOS12_image.fits and PNMOS12_image.fits to get the overlap from.
-Output: x, y coords of the background circles alongwith the radii of these circles and the</p>
-<blockquote>
-<div><p>source circle. Units of radii are pixels or Sky Coord units.</p>
-</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>PN_image.fits, MOS12_image.fits and PNMOS12_image.fits to get the overlap from.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>x, y coords of the background circles alongwith the radii of these circles and the
+source circle. Units of radii are pixels or Sky Coord units.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="githubRepo.epicObj.epicObj.obtain_lightCurves">
 <code class="sig-name descname">obtain_lightCurves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.obtain_lightCurves" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtains the light curves from the Source and Background Event lists.</p>
-<p>Input: Source and Background Event lists.
-Output: Corresponding light curves.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Source and Background Event lists.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Corresponding light curves.</p>
+</dd>
+</dl>
 <p>By default, the background light curve is not binned.</p>
 </dd></dl>
 
@@ -235,11 +290,15 @@ Output: Corresponding light curves.</p>
 <dt id="githubRepo.epicObj.epicObj.reduceEPICdata">
 <code class="sig-name descname">reduceEPICdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.reduceEPICdata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the XMMSAS commands on the shell to reduce EPIC data.</p>
-<p>Input: SAS Summary file in the work directory, that is downloaded alongwith the data.
-Output: EPIC PN and MOS1&amp;2 calibrated and concatenated Event lists</p>
-<blockquote>
-<div><p>produced by SAS tasks <cite>epproc</cite> and <cite>emproc</cite>.</p>
-</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>SAS Summary file in the work directory, that is downloaded alongwith the data.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>EPIC PN and MOS1&amp;2 calibrated and concatenated Event lists
+produced by SAS tasks <cite>epproc</cite> and <cite>emproc</cite>.</p>
+</dd>
+</dl>
 <p>These event lists contain Instrumental GTI for each of the CCDs.
 See Notes and <a class="reference external" href="http://xmm-tools.cosmos.esa.int/external/sas/current/doc/epicproc/node17.html">http://xmm-tools.cosmos.esa.int/external/sas/current/doc/epicproc/node17.html</a></p>
 <p>This function largely follows the following SAS thread:
@@ -257,8 +316,14 @@ this same <cite>flareGTI</cite> file can be used for them all.</p>
 <p>Note that these Flare Background filtered Event Lists are only used for
 Spectral Analysis, since for Light Curve extraction, <cite>combinedGTI</cite> file
 and combined <cite>PNMOS12.evts</cite> EPIC data is used.</p>
-<p>Input: Unfiltered EPIC PN and MOS1&amp;2 Events lists and <cite>flareGTI</cite> file.
-Output: Flare Background filtered Event Lists for each EPIC instrument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Input</dt>
+<dd class="field-odd"><p>Unfiltered EPIC PN and MOS1&amp;2 Events lists and <cite>flareGTI</cite> file.</p>
+</dd>
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Flare Background filtered Event Lists for each EPIC instrument.</p>
+</dd>
+</dl>
 <p>This function largely follows the following SAS thread:
 <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground">https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground</a></p>
 </dd></dl>
