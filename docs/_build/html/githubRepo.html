@@ -229,14 +229,13 @@ See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newt
 <dd class="field-odd"><p><strong>inst</strong> (<em>str</em>) – name of the instrument of use.</p>
 </dd>
 <dt class="field-even">Input</dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">inst_CCD##.evts</span></code> Event list.</p>
+<dd class="field-even"><p><cite>inst_CCD##.evts</cite> Event list.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><strong>Error</strong> – if <cite>inst</cite> is not in [‘PN’, ‘MOS1’, ‘MOS2’]</p>
 </dd>
-</dl>
-<dl class="simple">
-<dt>::Output:</dt><dd><p>Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
+<dt class="field-even">Output</dt>
+<dd class="field-even"><p>Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
 apart from the region file from DS9.</p>
 </dd>
 </dl>
@@ -244,7 +243,7 @@ apart from the region file from DS9.</p>
 <p>This separate function based on <cite>find_otherSources</cite> is meant to be used for
 finding individual instrument other sources. It uses <code class="docutils literal notranslate"><span class="pre">edetect_chain</span></code> function
 from XMMSAS for detecting the Sources.
-<code class="docutils literal notranslate"><span class="pre">inst_CCD##.evts</span></code> is required to extract corresponding images in the Energy band
+<cite>inst_CCD##.evts</cite> is required to extract corresponding images in the Energy band
 0.3-10 KeV using <code class="docutils literal notranslate"><span class="pre">evselect</span></code>.</p>
 </dd></dl>
 
