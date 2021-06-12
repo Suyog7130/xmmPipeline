@@ -686,11 +686,17 @@ class findOverlap:
 
 
     ##-- main function --##
-    def main (self):
+    def main (self, indiBkgCircs=False):
         fig, axes = plt.subplots(1, 4, figsize=(20, 5))
-        self.obtainOverlap(axes=axes)
-        self.backgroundCircles(axes=axes)
-        self.createOutputImages()
+
+        if not indiBkgCircs:
+            self.obtainOverlap(axes=axes)
+            self.backgroundCircles(axes=axes)
+            self.createOutputImages()
+        else:
+            self.backgroundCircles(axes=axes)
+            self.createOutputImages()
+            
         return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR, self.isSmallMode)
 
 
