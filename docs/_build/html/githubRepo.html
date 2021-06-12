@@ -236,7 +236,8 @@ See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newt
 </dd>
 <dt class="field-even">Output</dt>
 <dd class="field-even"><p>Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
-apart from the region file from DS9.</p>
+apart from the region file from DS9.
+Updates the <code class="docutils literal notranslate"><span class="pre">otherSourceIndi</span></code> dictionary for each of the obsIDs in <code class="docutils literal notranslate"><span class="pre">self.obsIDs</span></code></p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -250,18 +251,50 @@ from XMMSAS for detecting the Sources.
 <dl class="py method">
 <dt id="githubRepo.epicObj.epicObj.getBackgroundCircles">
 <code class="sig-name descname">getBackgroundCircles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.getBackgroundCircles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calls ‘findOverlap.py’ functions to automatically detect the overlap PNMOS12 region and
+<dd><p>Calls <cite>findOverlap.py</cite> functions to automatically detect the overlap PNMOS12 region and
 find 2 background cicles in it.
-If the MOS mode is ‘small’, then the PN image is used for getting the background circles.</p>
+If the MOS mode is <cite>small</cite>, then the PN image is used for getting the background circles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Input</dt>
 <dd class="field-odd"><p>PN_image.fits, MOS12_image.fits and PNMOS12_image.fits to get the overlap from.</p>
 </dd>
 <dt class="field-even">Output</dt>
 <dd class="field-even"><p>x, y coords of the background circles alongwith the radii of these circles and the
-source circle. Units of radii are pixels or Sky Coord units.</p>
+source circle. Units of radii are pixels or Sky Coord units.
+Updates the <code class="docutils literal notranslate"><span class="pre">sourceLoc</span></code> and <code class="docutils literal notranslate"><span class="pre">backgroundLoc</span></code> dictionaries with the location
+parameters.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="githubRepo.epicObj.epicObj.getBackgroundCircles_indi">
+<code class="sig-name descname">getBackgroundCircles_indi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inst</span><span class="o">=</span><span class="default_value">'PN'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.epicObj.epicObj.getBackgroundCircles_indi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls the <cite>backgroundCircles</cite> function in <cite>findOverlap.py</cite> to automatically
+find 2 background cicles in the data of the instrument passed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inst</strong> (<em>str</em>) – name of the instrument of use.</p>
+</dd>
+<dt class="field-even">Input</dt>
+<dd class="field-even"><p><cite>inst_CCD##_image.fits</cite> files containing the extracted image data of the instrument.</p>
+</dd>
+<dt class="field-odd">Requires</dt>
+<dd class="field-odd"><p>Call to <cite>find_otherSources_indi</cite> function for the dictionary of
+other Sources.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Error</strong> – if <cite>inst</cite> is not in [‘PN’, ‘MOS1’, ‘MOS2’]</p>
+</dd>
+<dt class="field-odd">Output</dt>
+<dd class="field-odd"><p>x, y coords of the background circles alongwith the radii of these circles.
+Units of radii are pixels or Sky Coord units.
+Updates the <code class="docutils literal notranslate"><span class="pre">sourceLoc</span></code> and <code class="docutils literal notranslate"><span class="pre">backgroundLoc</span></code> dictionaries with the location
+parameters.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p><code class="docutils literal notranslate"><span class="pre">small-mode</span></code> MOS checking is invalid here since overlap is not found.</p>
 </dd></dl>
 
 <dl class="py method">

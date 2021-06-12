@@ -16,7 +16,7 @@
 		\hyperpage{6}
   \item \spxentry{combineEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{1}
   \item \spxentry{combineGTIs()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{1}
-  \item \spxentry{correctPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}, \hyperpage{5}
+  \item \spxentry{correctPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}, \hyperpage{6}
   \item \spxentry{createOutputImages()}\spxextra{githubRepo.findOverlap.findOverlap method}, 
 		\hyperpage{8}
 
@@ -53,6 +53,8 @@
   \bigletter G
   \item \spxentry{getBackgroundCircles()}\spxextra{githubRepo.epicObj.epicObj method}, 
 		\hyperpage{3}
+  \item \spxentry{getBackgroundCircles\_indi()}\spxextra{githubRepo.epicObj.epicObj method}, 
+		\hyperpage{3}
   \item \spxentry{githubRepo}
     \subitem \spxentry{module}, \hyperpage{11}
   \item \spxentry{githubRepo.convert}
@@ -64,7 +66,7 @@
   \item \spxentry{githubRepo.epicPipeline}
     \subitem \spxentry{module}, \hyperpage{6}
   \item \spxentry{githubRepo.epicSpectra}
-    \subitem \spxentry{module}, \hyperpage{6}
+    \subitem \spxentry{module}, \hyperpage{7}
   \item \spxentry{githubRepo.findOverlap}
     \subitem \spxentry{module}, \hyperpage{8}
   \item \spxentry{githubRepo.getSpectraFitsTable}
@@ -76,7 +78,7 @@
 
   \indexspace
   \bigletter I
-  \item \spxentry{imageMOS12()}\spxextra{in module githubRepo.findOverlap}, \hyperpage{8}
+  \item \spxentry{imageMOS12()}\spxextra{in module githubRepo.findOverlap}, \hyperpage{9}
   \item \spxentry{imageMOS12\_soft()}\spxextra{in module githubRepo.findOverlap}, \hyperpage{9}
   \item \spxentry{imagePN()}\spxextra{in module githubRepo.findOverlap}, \hyperpage{9}
   \item \spxentry{imagePN\_soft()}\spxextra{in module githubRepo.findOverlap}, \hyperpage{9}
@@ -102,7 +104,7 @@
     \subitem \spxentry{githubRepo.epicObj}, \hyperpage{1}
     \subitem \spxentry{githubRepo.epicPileup}, \hyperpage{5}
     \subitem \spxentry{githubRepo.epicPipeline}, \hyperpage{6}
-    \subitem \spxentry{githubRepo.epicSpectra}, \hyperpage{6}
+    \subitem \spxentry{githubRepo.epicSpectra}, \hyperpage{7}
     \subitem \spxentry{githubRepo.findOverlap}, \hyperpage{8}
     \subitem \spxentry{githubRepo.getSpectraFitsTable}, \hyperpage{9}
     \subitem \spxentry{githubRepo.plotAnal}, \hyperpage{9}
@@ -110,7 +112,7 @@
 
   \indexspace
   \bigletter O
-  \item \spxentry{obtain\_lightCurves()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{3}
+  \item \spxentry{obtain\_lightCurves()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{4}
   \item \spxentry{obtainOverlap()}\spxextra{githubRepo.findOverlap.findOverlap method}, 
 		\hyperpage{8}
 
@@ -120,16 +122,16 @@
   \item \spxentry{pearson\_spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}, 
 		\hyperpage{10}
   \item \spxentry{plotAnal}\spxextra{class in githubRepo.plotAnal}, \hyperpage{9}
-  \item \spxentry{printErrorMessage()}\spxextra{in module githubRepo.epicObj}, \hyperpage{4}
+  \item \spxentry{printErrorMessage()}\spxextra{in module githubRepo.epicObj}, \hyperpage{5}
   \item \spxentry{printErrorMessage()}\spxextra{in module githubRepo.rgsPipeline}, \hyperpage{10}
   \item \spxentry{PSNR()}\spxextra{githubRepo.plotAnal.plotAnal method}, \hyperpage{9}
 
   \indexspace
   \bigletter R
-  \item \spxentry{readCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{3}
+  \item \spxentry{readCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{4}
   \item \spxentry{readPickleFile()}\spxextra{githubRepo.rgsPipeline.rgsObj method}, \hyperpage{10}
   \item \spxentry{reduceData\_method()}\spxextra{in module githubRepo.epicPipeline}, \hyperpage{6}
-  \item \spxentry{reduceEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{3}
+  \item \spxentry{reduceEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{4}
   \item \spxentry{reduceRGSdata()}\spxextra{githubRepo.rgsPipeline.rgsObj method}, \hyperpage{10}
   \item \spxentry{removeFlareBackground()}\spxextra{githubRepo.epicObj.epicObj method}, 
 		\hyperpage{4}
@@ -141,14 +143,14 @@
   \item \spxentry{save\_pileUpResults()}\spxextra{githubRepo.epicPileup.epicPileup method}, 
 		\hyperpage{6}
   \item \spxentry{save\_results()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{4}
-  \item \spxentry{save\_results()}\spxextra{githubRepo.rgsPipeline.rgsObj method}, \hyperpage{10}
+  \item \spxentry{save\_results()}\spxextra{githubRepo.rgsPipeline.rgsObj method}, \hyperpage{11}
   \item \spxentry{save\_spectraResults()}\spxextra{githubRepo.epicSpectra.epicSpectra method}, 
 		\hyperpage{7}
   \item \spxentry{sortObsIDs()}\spxextra{githubRepo.epicObj.epicObj method}, \hyperpage{4}
   \item \spxentry{spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}, \hyperpage{10}
   \item \spxentry{SSIM()}\spxextra{githubRepo.plotAnal.plotAnal method}, \hyperpage{9}
   \item \spxentry{SSIM\_value()}\spxextra{githubRepo.plotAnal.plotAnal method}, \hyperpage{9}
-  \item \spxentry{strToBool()}\spxextra{in module githubRepo.epicObj}, \hyperpage{4}
+  \item \spxentry{strToBool()}\spxextra{in module githubRepo.epicObj}, \hyperpage{5}
   \item \spxentry{strToBool()}\spxextra{in module githubRepo.rgsPipeline}, \hyperpage{11}
 
   \indexspace

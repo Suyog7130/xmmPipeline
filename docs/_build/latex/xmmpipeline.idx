@@ -14,20 +14,21 @@
 \indexentry{find\_otherSources() (githubRepo.epicObj.epicObj method)@\spxentry{find\_otherSources()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{2}
 \indexentry{find\_otherSources\_indi() (githubRepo.epicObj.epicObj method)@\spxentry{find\_otherSources\_indi()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
 \indexentry{getBackgroundCircles() (githubRepo.epicObj.epicObj method)@\spxentry{getBackgroundCircles()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
-\indexentry{obtain\_lightCurves() (githubRepo.epicObj.epicObj method)@\spxentry{obtain\_lightCurves()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
-\indexentry{readCCDcoordsPickle() (githubRepo.epicObj.epicObj method)@\spxentry{readCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
-\indexentry{reduceEPICdata() (githubRepo.epicObj.epicObj method)@\spxentry{reduceEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
+\indexentry{getBackgroundCircles\_indi() (githubRepo.epicObj.epicObj method)@\spxentry{getBackgroundCircles\_indi()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
+\indexentry{obtain\_lightCurves() (githubRepo.epicObj.epicObj method)@\spxentry{obtain\_lightCurves()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
+\indexentry{readCCDcoordsPickle() (githubRepo.epicObj.epicObj method)@\spxentry{readCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
+\indexentry{reduceEPICdata() (githubRepo.epicObj.epicObj method)@\spxentry{reduceEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
 \indexentry{removeFlareBackground() (githubRepo.epicObj.epicObj method)@\spxentry{removeFlareBackground()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
 \indexentry{save\_results() (githubRepo.epicObj.epicObj method)@\spxentry{save\_results()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
 \indexentry{sortObsIDs() (githubRepo.epicObj.epicObj method)@\spxentry{sortObsIDs()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
 \indexentry{writeCCDcoordsPickle() (githubRepo.epicObj.epicObj method)@\spxentry{writeCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
-\indexentry{printErrorMessage() (in module githubRepo.epicObj)@\spxentry{printErrorMessage()}\spxextra{in module githubRepo.epicObj}|hyperpage}{4}
-\indexentry{strToBool() (in module githubRepo.epicObj)@\spxentry{strToBool()}\spxextra{in module githubRepo.epicObj}|hyperpage}{4}
+\indexentry{printErrorMessage() (in module githubRepo.epicObj)@\spxentry{printErrorMessage()}\spxextra{in module githubRepo.epicObj}|hyperpage}{5}
+\indexentry{strToBool() (in module githubRepo.epicObj)@\spxentry{strToBool()}\spxextra{in module githubRepo.epicObj}|hyperpage}{5}
 \indexentry{module@\spxentry{module}!githubRepo.epicPileup@\spxentry{githubRepo.epicPileup}|hyperpage}{5}
 \indexentry{githubRepo.epicPileup@\spxentry{githubRepo.epicPileup}!module@\spxentry{module}|hyperpage}{5}
 \indexentry{epicPileup (class in githubRepo.epicPileup)@\spxentry{epicPileup}\spxextra{class in githubRepo.epicPileup}|hyperpage}{5}
 \indexentry{checkPileUp() (githubRepo.epicPileup.epicPileup method)@\spxentry{checkPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}|hyperpage}{5}
-\indexentry{correctPileUp() (githubRepo.epicPileup.epicPileup method)@\spxentry{correctPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}|hyperpage}{5}
+\indexentry{correctPileUp() (githubRepo.epicPileup.epicPileup method)@\spxentry{correctPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}|hyperpage}{6}
 \indexentry{save\_pileUpResults() (githubRepo.epicPileup.epicPileup method)@\spxentry{save\_pileUpResults()}\spxextra{githubRepo.epicPileup.epicPileup method}|hyperpage}{6}
 \indexentry{main() (in module githubRepo.epicPileup)@\spxentry{main()}\spxextra{in module githubRepo.epicPileup}|hyperpage}{6}
 \indexentry{module@\spxentry{module}!githubRepo.epicPipeline@\spxentry{githubRepo.epicPipeline}|hyperpage}{6}
@@ -35,8 +36,8 @@
 \indexentry{combineAndFind\_method() (in module githubRepo.epicPipeline)@\spxentry{combineAndFind\_method()}\spxextra{in module githubRepo.epicPipeline}|hyperpage}{6}
 \indexentry{extractProds\_method() (in module githubRepo.epicPipeline)@\spxentry{extractProds\_method()}\spxextra{in module githubRepo.epicPipeline}|hyperpage}{6}
 \indexentry{reduceData\_method() (in module githubRepo.epicPipeline)@\spxentry{reduceData\_method()}\spxextra{in module githubRepo.epicPipeline}|hyperpage}{6}
-\indexentry{module@\spxentry{module}!githubRepo.epicSpectra@\spxentry{githubRepo.epicSpectra}|hyperpage}{6}
-\indexentry{githubRepo.epicSpectra@\spxentry{githubRepo.epicSpectra}!module@\spxentry{module}|hyperpage}{6}
+\indexentry{module@\spxentry{module}!githubRepo.epicSpectra@\spxentry{githubRepo.epicSpectra}|hyperpage}{7}
+\indexentry{githubRepo.epicSpectra@\spxentry{githubRepo.epicSpectra}!module@\spxentry{module}|hyperpage}{7}
 \indexentry{epicSpectra (class in githubRepo.epicSpectra)@\spxentry{epicSpectra}\spxextra{class in githubRepo.epicSpectra}|hyperpage}{7}
 \indexentry{extractSpectra\_imageMode() (githubRepo.epicSpectra.epicSpectra method)@\spxentry{extractSpectra\_imageMode()}\spxextra{githubRepo.epicSpectra.epicSpectra method}|hyperpage}{7}
 \indexentry{save\_spectraResults() (githubRepo.epicSpectra.epicSpectra method)@\spxentry{save\_spectraResults()}\spxextra{githubRepo.epicSpectra.epicSpectra method}|hyperpage}{7}
@@ -49,7 +50,7 @@
 \indexentry{createOutputImages() (githubRepo.findOverlap.findOverlap method)@\spxentry{createOutputImages()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
 \indexentry{main() (githubRepo.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
 \indexentry{obtainOverlap() (githubRepo.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
-\indexentry{imageMOS12() (in module githubRepo.findOverlap)@\spxentry{imageMOS12()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{8}
+\indexentry{imageMOS12() (in module githubRepo.findOverlap)@\spxentry{imageMOS12()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
 \indexentry{imageMOS12\_soft() (in module githubRepo.findOverlap)@\spxentry{imageMOS12\_soft()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
 \indexentry{imagePN() (in module githubRepo.findOverlap)@\spxentry{imagePN()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
 \indexentry{imagePNMOS12() (in module githubRepo.findOverlap)@\spxentry{imagePNMOS12()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
@@ -79,7 +80,7 @@
 \indexentry{findObsIDs() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{findObsIDs()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{10}
 \indexentry{readPickleFile() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{readPickleFile()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{10}
 \indexentry{reduceRGSdata() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{reduceRGSdata()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{10}
-\indexentry{save\_results() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{save\_results()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{10}
+\indexentry{save\_results() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{save\_results()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
 \indexentry{strToBool() (in module githubRepo.rgsPipeline)@\spxentry{strToBool()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{11}
 \indexentry{module@\spxentry{module}!githubRepo@\spxentry{githubRepo}|hyperpage}{11}
 \indexentry{githubRepo@\spxentry{githubRepo}!module@\spxentry{module}|hyperpage}{11}

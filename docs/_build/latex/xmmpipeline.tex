@@ -73,7 +73,7 @@
 
 
 \title{xmmPipeline}
-\date{Jun 10, 2021}
+\date{Jun 13, 2021}
 \release{v1.3}
 \author{Suyog Garg}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -331,6 +331,7 @@ See: \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-st
 \item[{Output}] \leavevmode
 Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
 apart from the region file from DS9.
+Updates the \sphinxcode{\sphinxupquote{otherSourceIndi}} dictionary for each of the obsIDs in \sphinxcode{\sphinxupquote{self.obsIDs}}
 
 \end{description}\end{quote}
 \subsubsection*{Notes}
@@ -347,9 +348,9 @@ from XMMSAS for detecting the Sources.
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.getBackgroundCircles}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{getBackgroundCircles}}}{}{}
-Calls ‘findOverlap.py’ functions to automatically detect the overlap PNMOS12 region and
+Calls \sphinxtitleref{findOverlap.py} functions to automatically detect the overlap PNMOS12 region and
 find 2 background cicles in it.
-If the MOS mode is ‘small’, then the PN image is used for getting the background circles.
+If the MOS mode is \sphinxtitleref{small}, then the PN image is used for getting the background circles.
 \begin{quote}\begin{description}
 \item[{Input}] \leavevmode
 PN\_image.fits, MOS12\_image.fits and PNMOS12\_image.fits to get the overlap from.
@@ -357,8 +358,43 @@ PN\_image.fits, MOS12\_image.fits and PNMOS12\_image.fits to get the overlap fro
 \item[{Output}] \leavevmode
 x, y coords of the background circles alongwith the radii of these circles and the
 source circle. Units of radii are pixels or Sky Coord units.
+Updates the \sphinxcode{\sphinxupquote{sourceLoc}} and \sphinxcode{\sphinxupquote{backgroundLoc}} dictionaries with the location
+parameters.
 
 \end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{getBackgroundCircles\_indi() (githubRepo.epicObj.epicObj method)@\spxentry{getBackgroundCircles\_indi()}\spxextra{githubRepo.epicObj.epicObj method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.getBackgroundCircles_indi}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{getBackgroundCircles\_indi}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}PN\textquotesingle{}}}}{}
+Calls the \sphinxtitleref{backgroundCircles} function in \sphinxtitleref{findOverlap.py} to automatically
+find 2 background cicles in the data of the instrument passed.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of the instrument of use.
+
+\item[{Input}] \leavevmode
+\sphinxtitleref{inst\_CCD\#\#\_image.fits} files containing the extracted image data of the instrument.
+
+\item[{Requires}] \leavevmode
+Call to \sphinxtitleref{find\_otherSources\_indi} function for the dictionary of
+other Sources.
+
+\item[{Raises}] \leavevmode
+\sphinxstyleliteralstrong{\sphinxupquote{Error}} \textendash{} if \sphinxtitleref{inst} is not in {[}‘PN’, ‘MOS1’, ‘MOS2’{]}
+
+\item[{Output}] \leavevmode
+x, y coords of the background circles alongwith the radii of these circles.
+Units of radii are pixels or Sky Coord units.
+Updates the \sphinxcode{\sphinxupquote{sourceLoc}} and \sphinxcode{\sphinxupquote{backgroundLoc}} dictionaries with the location
+parameters.
+
+\end{description}\end{quote}
+\subsubsection*{Notes}
+
+\sphinxcode{\sphinxupquote{small\sphinxhyphen{}mode}} MOS checking is invalid here since overlap is not found.
 
 \end{fulllineitems}
 
@@ -879,7 +915,7 @@ Saved images in the workdir of the obsID.
 \index{main() (githubRepo.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{githubRepo.findOverlap.findOverlap method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.main}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{main}}}{}{}
+\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.main}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{indiBkgCircs}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
 \end{fulllineitems}
 
 \index{obtainOverlap() (githubRepo.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{githubRepo.findOverlap.findOverlap method}}
