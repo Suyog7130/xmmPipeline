@@ -388,13 +388,14 @@ other Sources.
 \item[{Output}] \leavevmode
 x, y coords of the background circles alongwith the radii of these circles.
 Units of radii are pixels or Sky Coord units.
-Updates the \sphinxcode{\sphinxupquote{sourceLoc}} and \sphinxcode{\sphinxupquote{backgroundLoc}} dictionaries with the location
+Updates the \sphinxcode{\sphinxupquote{backgroundLocIndi}} dictionaries with the background location
 parameters.
 
 \end{description}\end{quote}
 \subsubsection*{Notes}
 
 \sphinxcode{\sphinxupquote{small\sphinxhyphen{}mode}} MOS checking is invalid here since overlap is not found.
+The CCD argument in \sphinxcode{\sphinxupquote{findOverlap}} class is named \sphinxcode{\sphinxupquote{pnCCD}}.
 
 \end{fulllineitems}
 
@@ -894,6 +895,31 @@ Coordinates and Radii of the Background Circles.
 
 \end{fulllineitems}
 
+\index{backgroundCircles\_indi() (githubRepo.findOverlap.findOverlap method)@\spxentry{backgroundCircles\_indi()}\spxextra{githubRepo.findOverlap.findOverlap method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.backgroundCircles_indi}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{backgroundCircles\_indi}}}{\emph{\DUrole{n}{axes}}, \emph{\DUrole{n}{inst}}}{}
+Automatically finds Background Circles in the instrument data passed.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{axes}} (\sphinxstyleliteralemphasis{\sphinxupquote{obj}}) \textendash{} \sphinxtitleref{matplotlib.pyplot.axes} object for plotting the images.
+
+\item {} 
+\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of the instrument of use.
+
+\end{itemize}
+
+\item[{Input}] \leavevmode
+\sphinxtitleref{inst\_CCD\#\#\_image.fits} files containing the extracted image data of the instrument.
+
+\item[{Output}] \leavevmode
+Coordinates and Radii of the Background Circles.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{createOutputImages() (githubRepo.findOverlap.findOverlap method)@\spxentry{createOutputImages()}\spxextra{githubRepo.findOverlap.findOverlap method}}
 
 \begin{fulllineitems}
@@ -915,7 +941,45 @@ Saved images in the workdir of the obsID.
 \index{main() (githubRepo.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{githubRepo.findOverlap.findOverlap method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.main}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{indiBkgCircs}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.main}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+The main function to sequentially run the functions in \sphinxtitleref{findOverlap} class.
+\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+
+(x, y, r) coords and radius of first background circle.
+bCircle2 (tuple): (x, y, r) coords and radius of second background circle.
+\begin{description}
+\item[{correctSrc (tuple): corrected (x, y) coords of the main Source.}] \leavevmode
+The original main Source coords found by the \sphinxtitleref{epicObj.findSourceCCD}
+function using the XMMSAS \sphinxcode{\sphinxupquote{ecoordconv}} utility are a little bit shifted
+from what the main Source likely is as found from \sphinxcode{\sphinxupquote{edetect\_chain}} while
+finding other Sources. So, the main Source coords are changed to the coords
+of the nearest Source to it in the \sphinxcode{\sphinxupquote{otherSrc}} dictionary.
+
+\item[{srcR (float): radius of the Source circle or outer radius of the Source Annulus}] \leavevmode
+for the Piled\sphinxhyphen{}up cases, although a full circle is detected here.
+
+\item[{isSmallMode (bool): True, if absolute difference between flattened MOS12 and}] \leavevmode
+PNMOS12 image arrays is less than 500. False otherwise.
+See issue \#28 in the xmmPipeline repository in this regard,
+\sphinxurl{https://github.com/Suyog7130/xmmPipeline/issues/28}
+
+\end{description}
+
+
+\item[{Return type}] \leavevmode
+bCircle1 (tuple)
+
+\end{description}\end{quote}
+\subsubsection*{Notes}
+
+All returned coordinates are in \sphinxstylestrong{Physical Units}.
+These (x, y) are termed as (\sphinxstylestrong{RAWX}, \sphinxstylestrong{RAWY}) in DS9.
+The radius values are in \sphinxstylestrong{Sky Coordinates}, which I think is the name XMMSAS gives
+to \sphinxstylestrong{Physical Units}. Each Sky Coord unit equals \sphinxstylestrong{0.05 arcsec}.
+So, a radius of 640 equals 32 arcsec.
+See issue \#24 for more details, \sphinxurl{https://github.com/Suyog7130/xmmPipeline/issues/24}
+
 \end{fulllineitems}
 
 \index{obtainOverlap() (githubRepo.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{githubRepo.findOverlap.findOverlap method}}

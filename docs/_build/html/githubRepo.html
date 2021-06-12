@@ -289,12 +289,13 @@ other Sources.</p>
 <dt class="field-odd">Output</dt>
 <dd class="field-odd"><p>x, y coords of the background circles alongwith the radii of these circles.
 Units of radii are pixels or Sky Coord units.
-Updates the <code class="docutils literal notranslate"><span class="pre">sourceLoc</span></code> and <code class="docutils literal notranslate"><span class="pre">backgroundLoc</span></code> dictionaries with the location
+Updates the <code class="docutils literal notranslate"><span class="pre">backgroundLocIndi</span></code> dictionaries with the background location
 parameters.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p><code class="docutils literal notranslate"><span class="pre">small-mode</span></code> MOS checking is invalid here since overlap is not found.</p>
+<p><code class="docutils literal notranslate"><span class="pre">small-mode</span></code> MOS checking is invalid here since overlap is not found.
+The CCD argument in <code class="docutils literal notranslate"><span class="pre">findOverlap</span></code> class is named <code class="docutils literal notranslate"><span class="pre">pnCCD</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -709,6 +710,26 @@ and the Source coordinates.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="githubRepo.findOverlap.findOverlap.backgroundCircles_indi">
+<code class="sig-name descname">backgroundCircles_indi</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">inst</span></em><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.findOverlap.findOverlap.backgroundCircles_indi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically finds Background Circles in the instrument data passed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axes</strong> (<em>obj</em>) – <cite>matplotlib.pyplot.axes</cite> object for plotting the images.</p></li>
+<li><p><strong>inst</strong> (<em>str</em>) – name of the instrument of use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input</dt>
+<dd class="field-even"><p><cite>inst_CCD##_image.fits</cite> files containing the extracted image data of the instrument.</p>
+</dd>
+<dt class="field-odd">Output</dt>
+<dd class="field-odd"><p>Coordinates and Radii of the Background Circles.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="githubRepo.findOverlap.findOverlap.createOutputImages">
 <code class="sig-name descname">createOutputImages</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.findOverlap.findOverlap.createOutputImages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates two JPEG output images, one showing the other sources and
@@ -726,8 +747,40 @@ the other showing the Source and the Background Circles.
 
 <dl class="py method">
 <dt id="githubRepo.findOverlap.findOverlap.main">
-<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.findOverlap.findOverlap.main" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inst</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#githubRepo.findOverlap.findOverlap.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main function to sequentially run the functions in <cite>findOverlap</cite> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>(x, y, r) coords and radius of first background circle.
+bCircle2 (tuple): (x, y, r) coords and radius of second background circle.</p>
+<dl class="simple">
+<dt>correctSrc (tuple): corrected (x, y) coords of the main Source.</dt><dd><p>The original main Source coords found by the <cite>epicObj.findSourceCCD</cite>
+function using the XMMSAS <code class="docutils literal notranslate"><span class="pre">ecoordconv</span></code> utility are a little bit shifted
+from what the main Source likely is as found from <code class="docutils literal notranslate"><span class="pre">edetect_chain</span></code> while
+finding other Sources. So, the main Source coords are changed to the coords
+of the nearest Source to it in the <code class="docutils literal notranslate"><span class="pre">otherSrc</span></code> dictionary.</p>
+</dd>
+<dt>srcR (float): radius of the Source circle or outer radius of the Source Annulus</dt><dd><p>for the Piled-up cases, although a full circle is detected here.</p>
+</dd>
+<dt>isSmallMode (bool): True, if absolute difference between flattened MOS12 and</dt><dd><p>PNMOS12 image arrays is less than 500. False otherwise.
+See issue #28 in the xmmPipeline repository in this regard,
+<a class="reference external" href="https://github.com/Suyog7130/xmmPipeline/issues/28">https://github.com/Suyog7130/xmmPipeline/issues/28</a></p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bCircle1 (tuple)</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>All returned coordinates are in <strong>Physical Units</strong>.
+These (x, y) are termed as (<strong>RAWX</strong>, <strong>RAWY</strong>) in DS9.
+The radius values are in <strong>Sky Coordinates</strong>, which I think is the name XMMSAS gives
+to <strong>Physical Units</strong>. Each Sky Coord unit equals <strong>0.05 arcsec</strong>.
+So, a radius of 640 equals 32 arcsec.
+See issue #24 for more details, <a class="reference external" href="https://github.com/Suyog7130/xmmPipeline/issues/24">https://github.com/Suyog7130/xmmPipeline/issues/24</a></p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="githubRepo.findOverlap.findOverlap.obtainOverlap">

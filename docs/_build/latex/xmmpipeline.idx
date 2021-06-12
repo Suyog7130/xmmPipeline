@@ -47,40 +47,41 @@
 \indexentry{githubRepo.findOverlap@\spxentry{githubRepo.findOverlap}!module@\spxentry{module}|hyperpage}{8}
 \indexentry{findOverlap (class in githubRepo.findOverlap)@\spxentry{findOverlap}\spxextra{class in githubRepo.findOverlap}|hyperpage}{8}
 \indexentry{backgroundCircles() (githubRepo.findOverlap.findOverlap method)@\spxentry{backgroundCircles()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
+\indexentry{backgroundCircles\_indi() (githubRepo.findOverlap.findOverlap method)@\spxentry{backgroundCircles\_indi()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
 \indexentry{createOutputImages() (githubRepo.findOverlap.findOverlap method)@\spxentry{createOutputImages()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
-\indexentry{main() (githubRepo.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
-\indexentry{obtainOverlap() (githubRepo.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
+\indexentry{main() (githubRepo.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{9}
+\indexentry{obtainOverlap() (githubRepo.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{9}
 \indexentry{imageMOS12() (in module githubRepo.findOverlap)@\spxentry{imageMOS12()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
 \indexentry{imageMOS12\_soft() (in module githubRepo.findOverlap)@\spxentry{imageMOS12\_soft()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
 \indexentry{imagePN() (in module githubRepo.findOverlap)@\spxentry{imagePN()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
 \indexentry{imagePNMOS12() (in module githubRepo.findOverlap)@\spxentry{imagePNMOS12()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
 \indexentry{imagePNMOS12\_soft() (in module githubRepo.findOverlap)@\spxentry{imagePNMOS12\_soft()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
 \indexentry{imagePN\_soft() (in module githubRepo.findOverlap)@\spxentry{imagePN\_soft()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
-\indexentry{module@\spxentry{module}!githubRepo.getSpectraFitsTable@\spxentry{githubRepo.getSpectraFitsTable}|hyperpage}{9}
-\indexentry{githubRepo.getSpectraFitsTable@\spxentry{githubRepo.getSpectraFitsTable}!module@\spxentry{module}|hyperpage}{9}
-\indexentry{main() (in module githubRepo.getSpectraFitsTable)@\spxentry{main()}\spxextra{in module githubRepo.getSpectraFitsTable}|hyperpage}{9}
-\indexentry{module@\spxentry{module}!githubRepo.plotAnal@\spxentry{githubRepo.plotAnal}|hyperpage}{9}
-\indexentry{githubRepo.plotAnal@\spxentry{githubRepo.plotAnal}!module@\spxentry{module}|hyperpage}{9}
-\indexentry{plotAnal (class in githubRepo.plotAnal)@\spxentry{plotAnal}\spxextra{class in githubRepo.plotAnal}|hyperpage}{9}
-\indexentry{PSNR() (githubRepo.plotAnal.plotAnal method)@\spxentry{PSNR()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{9}
-\indexentry{SSIM() (githubRepo.plotAnal.plotAnal method)@\spxentry{SSIM()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{9}
-\indexentry{SSIM\_value() (githubRepo.plotAnal.plotAnal method)@\spxentry{SSIM\_value()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{9}
-\indexentry{beautifyPlot() (githubRepo.plotAnal.plotAnal method)@\spxentry{beautifyPlot()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{9}
+\indexentry{module@\spxentry{module}!githubRepo.getSpectraFitsTable@\spxentry{githubRepo.getSpectraFitsTable}|hyperpage}{10}
+\indexentry{githubRepo.getSpectraFitsTable@\spxentry{githubRepo.getSpectraFitsTable}!module@\spxentry{module}|hyperpage}{10}
+\indexentry{main() (in module githubRepo.getSpectraFitsTable)@\spxentry{main()}\spxextra{in module githubRepo.getSpectraFitsTable}|hyperpage}{10}
+\indexentry{module@\spxentry{module}!githubRepo.plotAnal@\spxentry{githubRepo.plotAnal}|hyperpage}{10}
+\indexentry{githubRepo.plotAnal@\spxentry{githubRepo.plotAnal}!module@\spxentry{module}|hyperpage}{10}
+\indexentry{plotAnal (class in githubRepo.plotAnal)@\spxentry{plotAnal}\spxextra{class in githubRepo.plotAnal}|hyperpage}{10}
+\indexentry{PSNR() (githubRepo.plotAnal.plotAnal method)@\spxentry{PSNR()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
+\indexentry{SSIM() (githubRepo.plotAnal.plotAnal method)@\spxentry{SSIM()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
+\indexentry{SSIM\_value() (githubRepo.plotAnal.plotAnal method)@\spxentry{SSIM\_value()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
+\indexentry{beautifyPlot() (githubRepo.plotAnal.plotAnal method)@\spxentry{beautifyPlot()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
 \indexentry{linearFit() (githubRepo.plotAnal.plotAnal method)@\spxentry{linearFit()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
 \indexentry{linearFit\_plotCal() (githubRepo.plotAnal.plotAnal method)@\spxentry{linearFit\_plotCal()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
 \indexentry{pearson() (githubRepo.plotAnal.plotAnal method)@\spxentry{pearson()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
 \indexentry{pearson\_spearman() (githubRepo.plotAnal.plotAnal method)@\spxentry{pearson\_spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{rSquared() (githubRepo.plotAnal.plotAnal method)@\spxentry{rSquared()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{spearman() (githubRepo.plotAnal.plotAnal method)@\spxentry{spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{module@\spxentry{module}!githubRepo.rgsPipeline@\spxentry{githubRepo.rgsPipeline}|hyperpage}{10}
-\indexentry{githubRepo.rgsPipeline@\spxentry{githubRepo.rgsPipeline}!module@\spxentry{module}|hyperpage}{10}
-\indexentry{main() (in module githubRepo.rgsPipeline)@\spxentry{main()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{10}
-\indexentry{printErrorMessage() (in module githubRepo.rgsPipeline)@\spxentry{printErrorMessage()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{10}
-\indexentry{rgsObj (class in githubRepo.rgsPipeline)@\spxentry{rgsObj}\spxextra{class in githubRepo.rgsPipeline}|hyperpage}{10}
-\indexentry{findObsIDs() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{findObsIDs()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{10}
-\indexentry{readPickleFile() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{readPickleFile()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{10}
-\indexentry{reduceRGSdata() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{reduceRGSdata()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{10}
+\indexentry{rSquared() (githubRepo.plotAnal.plotAnal method)@\spxentry{rSquared()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{11}
+\indexentry{spearman() (githubRepo.plotAnal.plotAnal method)@\spxentry{spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{11}
+\indexentry{module@\spxentry{module}!githubRepo.rgsPipeline@\spxentry{githubRepo.rgsPipeline}|hyperpage}{11}
+\indexentry{githubRepo.rgsPipeline@\spxentry{githubRepo.rgsPipeline}!module@\spxentry{module}|hyperpage}{11}
+\indexentry{main() (in module githubRepo.rgsPipeline)@\spxentry{main()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{11}
+\indexentry{printErrorMessage() (in module githubRepo.rgsPipeline)@\spxentry{printErrorMessage()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{11}
+\indexentry{rgsObj (class in githubRepo.rgsPipeline)@\spxentry{rgsObj}\spxextra{class in githubRepo.rgsPipeline}|hyperpage}{11}
+\indexentry{findObsIDs() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{findObsIDs()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
+\indexentry{readPickleFile() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{readPickleFile()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
+\indexentry{reduceRGSdata() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{reduceRGSdata()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
 \indexentry{save\_results() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{save\_results()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
 \indexentry{strToBool() (in module githubRepo.rgsPipeline)@\spxentry{strToBool()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{11}
-\indexentry{module@\spxentry{module}!githubRepo@\spxentry{githubRepo}|hyperpage}{11}
-\indexentry{githubRepo@\spxentry{githubRepo}!module@\spxentry{module}|hyperpage}{11}
+\indexentry{module@\spxentry{module}!githubRepo@\spxentry{githubRepo}|hyperpage}{12}
+\indexentry{githubRepo@\spxentry{githubRepo}!module@\spxentry{module}|hyperpage}{12}

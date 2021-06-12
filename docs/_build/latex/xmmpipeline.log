@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.5.16)  13 JUN 2021 00:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.5.16)  13 JUN 2021 02:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1182,47 +1182,47 @@ LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <10> not available
 (Font)              Font shape `T1/pcr/m/sl' tried instead on input line 323.
  [3] [4]
 LaTeX Font Info:    Font shape `T1/ptm/bx/it' in size <10> not available
-(Font)              Font shape `T1/ptm/b/it' tried instead on input line 510.
+(Font)              Font shape `T1/ptm/b/it' tried instead on input line 511.
 LaTeX Font Info:    Font shape `TS1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `TS1/ptm/b/n' tried instead on input line 542.
+(Font)              Font shape `TS1/ptm/b/n' tried instead on input line 543.
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--578
+Underfull \hbox (badness 10000) in paragraph at lines 579--579
 \T1/ptm/m/it/10 sr-c-Cir-cRa-dius=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 bkg-Cir-
 cRa-dius=None\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--578
+Underfull \hbox (badness 10000) in paragraph at lines 579--579
 \T1/ptm/m/it/10 dSrc-Thresh-old=70\T1/ptm/m/n/10 , \T1/ptm/m/it/10 bkg-Cir-c-Ga
 p=2.5\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ede-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 578--578
+Underfull \hbox (badness 10000) in paragraph at lines 579--579
 \T1/ptm/m/it/10 tect-mode=\TS1/ptm/m/it/10 '\T1/ptm/m/it/10 chain\TS1/ptm/m/it/
 10 '\T1/ptm/m/n/10 , \T1/ptm/m/it/10 esp_nsplinenodes=14\T1/ptm/m/n/10 ,
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 608--612
+Underfull \hbox (badness 10000) in paragraph at lines 609--613
 []\T1/ptm/m/n/10 The Source An-nu-lus radii to-gether with Fil-tered Event List
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 650--656
+Underfull \hbox (badness 10000) in paragraph at lines 651--657
 []\T1/ptm/m/n/10 The Source An-nu-lus radii to-gether with Fil-tered Event List
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 650--656
+Underfull \hbox (badness 10000) in paragraph at lines 651--657
 \T1/ptm/m/n/10 and the An-nu-lus files \T1/ptm/m/it/10 source_PN_filteredAnnulu
 s_obsID.evts \T1/ptm/m/n/10 and
  []
 
 [6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 880--880
+Underfull \hbox (badness 10000) in paragraph at lines 881--881
 []\T1/ptm/m/it/10 workdir\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ob-sID=\TS1/ptm/m/it/
 10 '\T1/ptm/m/it/10 NA\TS1/ptm/m/it/10 '\T1/ptm/m/n/10 , \T1/ptm/m/it/10 pnCCD=
 \TS1/ptm/m/it/10 '\T1/ptm/m/it/10 4\TS1/ptm/m/it/10 '\T1/ptm/m/n/10 , \T1/ptm/m
@@ -1230,24 +1230,34 @@ Underfull \hbox (badness 10000) in paragraph at lines 880--880
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 880--880
+Underfull \hbox (badness 10000) in paragraph at lines 881--881
 \T1/ptm/m/it/10 Co-ords=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 oth-er-Src=None\T1
 /ptm/m/n/10 , \T1/ptm/m/it/10 gap=2.5\T1/ptm/m/n/10 ,
  []
 
 [8]
-Underfull \hbox (badness 7558) in paragraph at lines 1060--1060
+Underfull \hbox (badness 10000) in paragraph at lines 959--961
+[]\T1/ptm/m/n/10 for the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 962--966
+[]
+ []
+
+[9]
+Underfull \hbox (badness 7558) in paragraph at lines 1124--1124
 \T1/ptm/m/it/10 mi-nor=False\T1/ptm/m/n/10 , \T1/ptm/m/it/10 grid=False\T1/ptm/
 m/n/10 , \T1/ptm/m/it/10 ax-is-Color=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 yT-ic
 ks=True\T1/ptm/m/n/10 , \T1/ptm/m/it/10 xTicks=True\T1/ptm/m/n/10 , \T1/ptm/m/i
 t/10 log-
  []
 
-[9] [10] [11] [12
-
-]
+[10] [11] [12]
 Chapter 2.
-[13] [14
+[13
+
+] [14
 
 ] [15
 
@@ -1261,255 +1271,260 @@ Underfull \hbox (badness 10000) in paragraph at lines 8--10
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 10--11
+Underfull \hbox (badness 10000) in paragraph at lines 10--12
+[]\T1/pcr/m/n/10 backgroundCircles_indi()
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--13
 []\T1/pcr/m/n/10 beautifyPlot() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.plot
 Anal.plotAnal
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 14--15
+Underfull \hbox (badness 10000) in paragraph at lines 16--17
 []\T1/pcr/m/n/10 checkPileUp() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.epicP
 ileup.epicPileup
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 15--17
+Underfull \hbox (badness 10000) in paragraph at lines 17--19
 []\T1/pcr/m/n/10 combineAndFind_method() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
 -ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 17--18
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
 []\T1/pcr/m/n/10 combineEPICdata() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.e
 picObj.epicObj
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 18--19
+Underfull \hbox (badness 10000) in paragraph at lines 20--21
 []\T1/pcr/m/n/10 combineGTIs() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.epicO
 bj.epicObj
  []
 
 
-Overfull \hbox (2.00116pt too wide) in paragraph at lines 19--20
+Overfull \hbox (2.00116pt too wide) in paragraph at lines 21--22
 []\T1/pcr/m/n/10 correctPileUp() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.epi
 cPileup.epicPileup
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 20--22
+Underfull \hbox (badness 10000) in paragraph at lines 22--24
 []\T1/pcr/m/n/10 createOutputImages()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 25--26
+Underfull \hbox (badness 10000) in paragraph at lines 27--28
 []\T1/pcr/m/n/10 downloadData() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.epic
 Obj.epicObj
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 33--35
+Underfull \hbox (badness 10000) in paragraph at lines 35--37
 []\T1/pcr/m/n/10 extract_InstrumentalGTIs()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 35--37
+Underfull \hbox (badness 10000) in paragraph at lines 37--39
 []\T1/pcr/m/n/10 extract_srcBkg_eventLists()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 37--39
+Underfull \hbox (badness 10000) in paragraph at lines 39--41
 []\T1/pcr/m/n/10 extractProds_method() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-u
 le
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--41
+Underfull \hbox (badness 10000) in paragraph at lines 41--43
 []\T1/pcr/m/n/10 extractSpectra_imageMode()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 44--45
+Underfull \hbox (badness 10000) in paragraph at lines 46--47
 []\T1/pcr/m/n/10 find_otherSources()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 45--47
+Underfull \hbox (badness 10000) in paragraph at lines 47--49
 []\T1/pcr/m/n/10 find_otherSources_indi()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 48--49
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
 []\T1/pcr/m/n/10 findObsIDs() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.rgsPip
 eline.rgsObj
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 50--51
+Underfull \hbox (badness 10000) in paragraph at lines 52--53
 []\T1/pcr/m/n/10 findSourceCCD() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.epi
 cObj.epicObj
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 54--56
+Underfull \hbox (badness 10000) in paragraph at lines 56--58
 []\T1/pcr/m/n/10 getBackgroundCircles()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 56--58
+Underfull \hbox (badness 10000) in paragraph at lines 58--60
 []\T1/pcr/m/n/10 getBackgroundCircles_indi()
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--83
-[]\T1/pcr/m/n/10 imageMOS12_soft() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
  []
 
 [17
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 84--85
-[]\T1/pcr/m/n/10 imagePN_soft() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 85--86
-[]\T1/pcr/m/n/10 imagePNMOS12() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
+[]\T1/pcr/m/n/10 imageMOS12_soft() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 86--87
+[]\T1/pcr/m/n/10 imagePN_soft() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 87--88
+[]\T1/pcr/m/n/10 imagePNMOS12() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
 []\T1/pcr/m/n/10 imagePNMOS12_soft() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--93
+Underfull \hbox (badness 10000) in paragraph at lines 93--95
 []\T1/pcr/m/n/10 linearFit_plotCal()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--93
+Underfull \hbox (badness 10000) in paragraph at lines 93--95
 \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.plotAnal.plotAnal method\T1/ptm/m/n/
 10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 115--116
+Underfull \hbox (badness 10000) in paragraph at lines 117--118
 []\T1/pcr/m/n/10 obtain_lightCurves()
  []
 
 
-Overfull \hbox (12.00146pt too wide) in paragraph at lines 116--118
+Overfull \hbox (12.00146pt too wide) in paragraph at lines 118--120
 []\T1/pcr/m/n/10 obtainOverlap() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.fin
 dOverlap.findOverlap
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 122--124
+Underfull \hbox (badness 10000) in paragraph at lines 124--126
 []\T1/pcr/m/n/10 pearson_spearman()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 122--124
+Underfull \hbox (badness 10000) in paragraph at lines 124--126
 \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.plotAnal.plotAnal method\T1/ptm/m/n/
 10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 125--126
+Underfull \hbox (badness 10000) in paragraph at lines 127--128
 []\T1/pcr/m/n/10 printErrorMessage() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 126--127
+Underfull \hbox (badness 10000) in paragraph at lines 128--129
 []\T1/pcr/m/n/10 printErrorMessage() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 131--132
-[]\T1/pcr/m/n/10 readCCDcoordsPickle()
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 133--134
+[]\T1/pcr/m/n/10 readCCDcoordsPickle()
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 135--136
 []\T1/pcr/m/n/10 reduceData_method() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 134--135
+Underfull \hbox (badness 10000) in paragraph at lines 136--137
 []\T1/pcr/m/n/10 reduceEPICdata() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.ep
 icObj.epicObj
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 135--136
+Underfull \hbox (badness 10000) in paragraph at lines 137--138
 []\T1/pcr/m/n/10 reduceRGSdata() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.rgs
 Pipeline.rgsObj
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--138
+Underfull \hbox (badness 10000) in paragraph at lines 138--140
 []\T1/pcr/m/n/10 removeFlareBackground()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 143--145
+Underfull \hbox (badness 10000) in paragraph at lines 145--147
 []\T1/pcr/m/n/10 save_pileUpResults()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 145--146
+Underfull \hbox (badness 10000) in paragraph at lines 147--148
 []\T1/pcr/m/n/10 save_results() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.epic
 Obj.epicObj
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 146--147
+Underfull \hbox (badness 10000) in paragraph at lines 148--149
 []\T1/pcr/m/n/10 save_results() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.rgsP
 ipeline.rgsObj
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 147--149
+Underfull \hbox (badness 10000) in paragraph at lines 149--151
 []\T1/pcr/m/n/10 save_spectraResults()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 152--153
+Underfull \hbox (badness 10000) in paragraph at lines 154--155
 []\T1/pcr/m/n/10 SSIM_value() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 githubRepo.plotAn
 al.plotAnal
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 158--160
+Underfull \hbox (badness 10000) in paragraph at lines 160--162
 []\T1/pcr/m/n/10 writeCCDcoordsPickle()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 163--165
+Underfull \hbox (badness 10000) in paragraph at lines 165--167
 []\T1/pcr/m/n/10 xspec_fitSpectra()
  []
 
 [18])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1264.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1264.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1328.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1328.
  (./xmmpipeline.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1264.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1264.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1328.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1328.
 
 Package rerunfilecheck Info: File `xmmpipeline.out' has not changed.
-(rerunfilecheck)             Checksum: 165331A3F72D19620FB6982D1BCC4A30;595.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1264.
+(rerunfilecheck)             Checksum: 30F566006C7F78B28432237E07CFC53D;595.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1328.
  ) 
 Here is how much of TeX's memory you used:
- 13822 strings out of 492982
- 194274 string characters out of 6134896
- 288316 words of memory out of 5000000
- 16966 multiletter control sequences out of 15000+600000
+ 13824 strings out of 492982
+ 194355 string characters out of 6134896
+ 287384 words of memory out of 5000000
+ 16967 multiletter control sequences out of 15000+600000
  51123 words of font info for 71 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
  37i,12n,45p,1504b,618s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1523,10 +1538,10 @@ texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type
 1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
 ri8a.pfb>
-Output written on xmmpipeline.pdf (22 pages, 162915 bytes).
+Output written on xmmpipeline.pdf (22 pages, 166590 bytes).
 PDF statistics:
- 396 PDF objects out of 1000 (max. 8388607)
- 353 compressed objects within 4 object streams
- 109 named destinations out of 1000 (max. 500000)
+ 401 PDF objects out of 1000 (max. 8388607)
+ 358 compressed objects within 4 object streams
+ 110 named destinations out of 1000 (max. 500000)
  61 words of extra memory for PDF output out of 10000 (max. 10000000)
 
