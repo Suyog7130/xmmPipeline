@@ -994,7 +994,7 @@ class findOverlap:
                 from what the main Source likely is as found from ``edetect_chain`` while
                 finding other Sources. So, the main Source coords are changed to the coords
                 of the nearest Source to it in the ``otherSrc`` dictionary.
-            
+
             srcR (float): radius of the Source circle or outer radius of the Source Annulus
                 for the Piled-up cases, although a full circle is detected here.
 
