@@ -58,6 +58,7 @@ class epicSpectra (epicObj):
         super().__init__(*args, **kwargs)
         self.doNotOverwriteModel = doNotOverwriteModel
 
+
     ##-- extract the Spectra in Image Mode --##
     def extractSpectra_imageMode (self):
         """
