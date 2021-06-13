@@ -918,7 +918,7 @@ class findOverlap:
         
         ##-- recursively find random background points --##
         nBkgCircs = 3
-        globalBx, globalBy, globalBr = [], [], []
+        globalBx, globalBy = [], []
 
         def __backgroundPt (xToUse=xUseN, yToUse=yUseN, ax=None):
             """
@@ -943,7 +943,6 @@ class findOverlap:
             Bx1, By1 = xToUse[idx1], yToUse[idx1]
             globalBx.append(Bx1)
             globalBy.append(By1)
-            #globalBr.append(Br1)
 
             ax.plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
 
@@ -963,20 +962,9 @@ class findOverlap:
                     return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
                 
 
-        __backgroundPt(ax=ax)
-        Bx1, Bx3, Bx2 = globalBx
-        By1, By3, By2 = globalBy
-        #Br1, Br2 = globalBr
-
-        """ totalBr = Br1 + Br2
-        xf, yf = [], []
-        for ptX, ptY in zip(xUseN, yUseN):
-            dist = __euclideanDist((Bx1, By1), (ptX, ptY))
-            if dist >= totalBr:
-                xf.append(ptX)
-                yf.append(ptY)
-                
-        Bx2, By2, Bx3, By3 = __backgroundPt(xToUse=xf, yToUse=yf, ax=ax) """
+        __backgroundPt(ax=ax)   #--populates the globalBx/y lists.
+        Bx1, Bx2, Bx3 = globalBx
+        By1, By2, By3 = globalBy
 
         #-- have max radius at these bkg locations --#
         def __maxBkgRadius (Bx, By):
@@ -987,12 +975,18 @@ class findOverlap:
             checklist.append( __euclideanDist((xC, yC), (Bx, By)) - srcR*(1/3600)/header['CDELT2'] )
             return (min(checklist) - self.gap)  #--leaving a gap around the circle.
 
-        Br1new = __maxBkgRadius(Bx1, By1)
-        if Br1new >= Br1:
-            Br1 = Br1new
-        Br2new = __maxBkgRadius(Bx2, By2)
-        if Br2new >= Br2:
-            Br2 = Br2new
+        globalBr = []
+        for bx, by in zip(globalBx, globalBy):
+            Br1new = __maxBkgRadius(bx, by)
+            if Br1new >= min(Br1, Br2):
+                globalBr.append(Br1new)
+            elif bx == Bx1:
+                globalBr.append( max(Br1, Br2) )
+            elif bx == Bx2:
+                globalBr.append( min(Br1, Br2) )
+            else:
+                globalBr.append( max(Br1, Br2) )
+        Br1, Br2, Br3 = globalBr
 
         #-- check for distance between the two bkg circles --#
         if __euclideanDist((Bx1, By1), (Bx2, By2)) < Br1+Br2:
