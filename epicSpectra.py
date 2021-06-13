@@ -101,24 +101,29 @@ class epicSpectra (epicObj):
                                , shell=True)
             else:
                 result = {}
+            
+                    #-- save the CCD and coords info in a pickle file --#
+                result['sourceCCDs'] = self.sourceCCDs[obsID]
+                result['sourceLoc'] = self.sourceLoc[obsID]
+                result['backgroundLoc'] = self.backgroundLoc[obsID]
+                result['otherSources'] = self.otherSources[obsID]
+                result['smallMode'] = self.smallMode[obsID]
+                if obsID in self.badObs:
+                    result['badObs'] = True
+                else:
+                    result['badObs'] = False
 
-            #-- save backgroundLoc_indi dictionary --#
-            dic = result.get('backgroundLoc_indi', None)
-            if dic is None:
+            #-- save ``backgroundLoc_indi`` dictionary --#
+            if result.get('backgroundLoc_indi', None) is None:
                 result['backgroundLoc_indi'] = {}
             result['backgroundLoc_indi'][inst] = self.backgroundLoc_indi[obsID][inst]
-            
-            #-- save the CCD and coords info in a pickle file --#
-            result['sourceCCDs'] = self.sourceCCDs[obsID]
-            result['sourceLoc'] = self.sourceLoc[obsID]
-            result['backgroundLoc'] = self.backgroundLoc[obsID]
-            result['otherSources'] = self.otherSources[obsID]
-            result['smallMode'] = self.smallMode[obsID]
-            if obsID in self.badObs:
-                result['badObs'] = True
-            else:
-                result['badObs'] = False
 
+            #-- save ``otherSources_indi`` dictionary --#
+            if result.get('backgroundLoc_indi', None) is None:
+                result['backgroundLoc_indi'] = {}
+            result['backgroundLoc_indi'][inst] = self.backgroundLoc_indi[obsID][inst]
+
+            #-- dump to the pickle file --#
             outfile = open(fname, 'wb')
             pickle.dump(result, outfile)
             outfile.close()
