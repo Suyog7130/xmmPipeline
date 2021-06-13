@@ -28,6 +28,11 @@ Two criterions to be checked for each obsIDs:
 Changed to using Flare Background filtered Event Lists for Spectra extraction.
 Found a way to save the output parameter values from `pyXspec.py`.
 Completing the SpecModel fitting now.
+
+13th June 2021:
+---
+Completing the work for obtaining individual instrument bkgCircs.
+    * Adding `runIndiBkgCircFuncs` to the main function.
 """
 
 import os
@@ -57,6 +62,53 @@ class epicSpectra (epicObj):
     def __init__ (self, doNotOverwriteModel=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.doNotOverwriteModel = doNotOverwriteModel
+
+
+    ##-- update location parameters in the pickle file --##
+    def updateCCDcoordsPickle (self):
+        """
+        Writes the location parameters to `ccd_coords_info.pickle` file.
+        If the file is already present in the directory, then the values for the 
+        corresponding keys will be updated.
+
+        21st May 2021: Added loading `ccd_coords_info.pickle` file if it is already
+                       present in the directory.
+        """
+        maindir = self.workdir
+        print('\nWriting the location parameters to ccd_coords_info.pickle file.\n')
+
+        #-- iterating for all the obsIDs --#      
+        for obsID in self.obsIDs:
+            print('Saving pickle for obsID {}.'.format(obsID))
+            workdir = maindir+'/'+obsID+'/work'
+            fname = workdir+'/'+'ccd_coords_info.pickle'
+
+            #-- load the `ccd_coords_info.pickle` if already present --#
+            if os.path.isfile(fname):
+                result = pickle.load(open(fname, 'rb'))
+                    #-- create a backup file --#
+                subprocess.run("cd "+workdir+";"+ \
+                               "cp ccd_coords_info.pickle ccd_coords_info.bak;"
+                               , shell=True)
+            else:
+                result = {}
+            
+            #-- save the CCD and coords info in a pickle file --#
+            result['sourceCCDs'] = self.sourceCCDs[obsID]
+            result['sourceLoc'] = self.sourceLoc[obsID]
+            result['backgroundLoc'] = self.backgroundLoc[obsID]
+            result['otherSources'] = self.otherSources[obsID]
+            result['smallMode'] = self.smallMode[obsID]
+            if obsID in self.badObs:
+                result['badObs'] = True
+            else:
+                result['badObs'] = False
+
+            outfile = open(fname, 'wb')
+            pickle.dump(result, outfile)
+            outfile.close()
+
+        return print('\nWrote location parameters to the pickle file.')
 
 
     ##-- extract the Spectra in Image Mode --##
@@ -341,6 +393,15 @@ def main (args):
         obj.save_spectraResults()
         return True
 
+    #-- if ``runIndiBkgCircFuncs``, then run them and exit --#
+    if args.runIndiBkgCircFuncs:
+        obj.readCCDcoordsPickle()
+        obj.otherSources_indi()
+        obj.getBackgroundCircles_indi()
+        obj.updateCCDcoordsPickle()
+        return print('\nRan the IndiBkgCirc functions and obtained indi inst bkg circles. \
+            The CCDcoordsPickle file has also been updated with backgroundLocIndi key.')
+
     #-- run the spectra functions --#
     obj.readCCDcoordsPickle()
     if args.method == 'extractSpectra':
@@ -405,6 +466,12 @@ if __name__=="__main__":
                               If the model is already present in the file, it is not \
                               overwritten by appending 1 to the new model name. \
                               (default:%(default)s)')
+    parser.add_argument('--runIndiBkgCircFuncs', action='store_true', default=False, \
+                        help='Spectral Analysis requires the three EPIC camera data \
+                              to be separately processed. For this individual instrument \
+                              background circles are required. Use this flag to run the \
+                              functions in epicObj to find indi inst bkgCircs, which \
+                              are then updated in the CCDcoordsPickle.')
 
     #-- methods --#
     parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
@@ -425,6 +492,7 @@ if __name__=="__main__":
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
     #print('{}\n{}'.format(args, args.modelParams))
+    args.runIndiBkgCircFuncs = strToBool(args.runIndiBkgCircFuncs)
 
     #-- call the main function --#
     main(args)
