@@ -78,9 +78,14 @@ useful area. However, what my aim has been ever since the start was to have the 
 automatically find two of the largest BkgCircs satisfying the coditions.
 Hhmm... I think that would be a pretty daunting task and a difficult one at that, 
 since I haven't go just what I have been wanting since a long time now.
+
 What is much better in my opinion is that I can repeat the procedure of filtering out the 
 last found BkgPt + 2R dist points n number of times to obtain n number of Bkg points.
 Let's try that out now!
+
+This recursive way of finding the background circles takes care of overlap between the 
+circles all by itself, since the ``xToUse`` and ``yToUse`` are recursively filtered for 
+the circle area.
 """
 
 import os
@@ -738,6 +743,7 @@ class findOverlap:
     def backgroundCircles_indi (self, ax, inst):
         """
         Automatically finds Background Circles in the instrument data passed.
+        Modified the function a great deal from the earlier naive `backgroundCircles` function.
 
         :Input: 
             `inst_CCD##_image.fits` files containing the extracted image data of the instrument.
@@ -907,14 +913,15 @@ class findOverlap:
                     if distList[0] > DSource:
                         xUseN.append(ptX)
                         yUseN.append(ptY)
-                        if distList[0] >= (minDistToOtherSrc + self.gap):
-                            Bx1, By1 = ptX, ptY
  
         #print(len(xUseN), len(yUseN))
         
-        ##-- find random background points --##
-        def __backgroundPt (xToUse=xUseN, yToUse=yUseN, bkgPt=None, ax=None):
-            """ 
+        ##-- recursively find random background points --##
+        nBkgCircs = 3
+        globalBx, globalBy, globalBr = [], [], []
+
+        def __backgroundPt (xToUse=xUseN, yToUse=yUseN, ax=None):
+            """
             Internal function to select random constrained points.
             At first, the arrays (xUseN, yUseN) are used to find the random points.
 
@@ -922,47 +929,46 @@ class findOverlap:
             threshold distance away from eachother are not found, then the arrays (xUse, yUse)
             are used. 
             """
-           
             message = f'\nNOTE:There are too many other sources for obsID {obsID}, such that at the threshold given, no background circles are possible.' \
                         +'\nKindly redo the product extraction for this one later with some changed parameters.' \
                         +'\nFor now the other sources are not taken into account for obtaining the background circles.\n'
             
             #-- check if the arrays are empty --#
-            if len(xToUse)<2:
-                print(message)
-                return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
+            #if len(xToUse)<2:
+            #    print(message)
+            #    return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
             #-- first random point --#
-            if bkgPt is None:
-                idx1 = np.random.choice( range(len(xToUse)) )
-                Bx1, By1 = xToUse[idx1], yToUse[idx1]
-            else:
-                Bx1, By1 = bkgPt
+            idx1 = np.random.choice( range(len(xToUse)) )
+            Bx1, By1 = xToUse[idx1], yToUse[idx1]
+            globalBx.append(Bx1)
+            globalBy.append(By1)
+            #globalBr.append(Br1)
+
+            ax.plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
 
             #-- second background point --#
-            totalBr = Br1 + Br2
-            Bx2, By2 = None, None
-            for ptX, ptY in zip(xToUse, yToUse):
-                dist = __euclideanDist((Bx1, By1), (ptX, ptY))
-                if dist >= totalBr:
-                    totalBr = dist       #--I should take the minimum such totalBr point.
-                    Bx2, By2 = ptX, ptY
-
-            if Bx2 is not None:
-                ax.plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
-                return [Bx1, By1, Bx2, By2]
+            if len(globalBx) < nBkgCircs:
+                totalBr = Br1 + Br2
+                xf, yf = [], []
+                for ptX, ptY in zip(xUseN, yUseN):
+                    dist = __euclideanDist((Bx1, By1), (ptX, ptY))
+                    if dist >= totalBr:
+                        xf.append(ptX)
+                        yf.append(ptY)
+                if len(xf) > 0:
+                    __backgroundPt(xToUse=xf, yToUse=yf, ax=ax)
+                else:   #-- when other sources are too many --#
+                    print(message)
+                    return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
                 
-            #-- when other sources are too many --#
-            else:
-                print(message)
-                return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
-        #if Bx1 is not None:
-        #    Bx1, By1, Bx2, By2 = __backgroundPt(bkgPt=(Bx1, By1), ax=ax)
-        #else:
-        Bx1, By1, Bx2, By2 = __backgroundPt(ax=ax)
+        __backgroundPt(ax=ax)
+        Bx1, Bx2, Bx3 = globalBx
+        By1, By2, By3 = globalBy
+        #Br1, Br2 = globalBr
 
-        totalBr = Br1 + Br2
+        """ totalBr = Br1 + Br2
         xf, yf = [], []
         for ptX, ptY in zip(xUseN, yUseN):
             dist = __euclideanDist((Bx1, By1), (ptX, ptY))
@@ -970,7 +976,7 @@ class findOverlap:
                 xf.append(ptX)
                 yf.append(ptY)
                 
-        Bx2, By2, Bx3, By3 = __backgroundPt(xToUse=xf, yToUse=yf, ax=ax)
+        Bx2, By2, Bx3, By3 = __backgroundPt(xToUse=xf, yToUse=yf, ax=ax) """
 
         #-- have max radius at these bkg locations --#
         def __maxBkgRadius (Bx, By):
@@ -1078,7 +1084,7 @@ class findOverlap:
             return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR, self.isSmallMode)
         
         #-- for individual instrument --#
-        fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
         self.backgroundCircles_indi(ax=ax, inst=inst)
         self.createOutputImages(inst=inst)
         return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR)
