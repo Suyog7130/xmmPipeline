@@ -193,8 +193,7 @@ class findOverlap:
         self.srcThreshold = srcThreshold  #--threshold distance from Source passed by the user, arcsec.
         self.gap = gap                    #--gap to have around the circles, in pixels.
 
-        self.bCircle1 = None     #--first found background circle, x, y and radius.
-        self.bCircle2 = None     #--second found background circle, x, y and radius.
+        self.bCircles = []     #--list of list for [x,y,r] of each found background circles.
         self.correctSrc = None   #--corrected main source coordinates.
 
         self.axlims = {'xlim':None, 'ylim':None}    #--four corners of the PNMOS12 image, for setting the axis limits.
@@ -895,7 +894,6 @@ class findOverlap:
         #-- shortlisting random points --#
         xUse, yUse, xUseN, yUseN = [], [], [], []
         minDistToOtherSrc = Br1
-        Bx1, By1 = None, None
         for ptX, ptY in zip(xxImg, yyImg):
             ptRepeat0 = np.repeat(np.array([(ptX, ptY)]), len(cornerLines), axis=0)
             pDistList = list(map(__pDistToLine, ptRepeat0, cornerLines))
@@ -918,7 +916,7 @@ class findOverlap:
         
         ##-- recursively find random background points --##
         nBkgCircs = 3
-        globalBx, globalBy = [], []
+        globalBx, globalBy = [], []                 #--need to define these before `__backgroundPt()` 
 
         def __backgroundPt (xToUse=xUseN, yToUse=yUseN, ax=None):
             """
@@ -963,10 +961,8 @@ class findOverlap:
                 
 
         __backgroundPt(ax=ax)   #--populates the globalBx/y lists.
-        Bx1, Bx2, Bx3 = globalBx
-        By1, By2, By3 = globalBy
 
-        #-- have max radius at these bkg locations --#
+        #-- func to calculate max radius at these bkg locations --#
         def __maxBkgRadius (Bx, By):
             ptRepeatA = np.repeat(np.array([(Bx, By)]), len(otherSrc), axis=0)
             ptRepeatB = np.repeat(np.array([(Bx, By)]), len(cornerLines), axis=0)
@@ -975,18 +971,18 @@ class findOverlap:
             checklist.append( __euclideanDist((xC, yC), (Bx, By)) - srcR*(1/3600)/header['CDELT2'] )
             return (min(checklist) - self.gap)  #--leaving a gap around the circle.
 
+        #-- find the maximum possible radius for each bkgPt --#
         globalBr = []
         for bx, by in zip(globalBx, globalBy):
             Br1new = __maxBkgRadius(bx, by)
             if Br1new >= min(Br1, Br2):
                 globalBr.append(Br1new)
-            elif bx == Bx1:
+            elif bx == globalBx[0]:
                 globalBr.append( max(Br1, Br2) )
-            elif bx == Bx2:
+            elif bx == globalBx[1]:
                 globalBr.append( min(Br1, Br2) )
             else:
                 globalBr.append( max(Br1, Br2) )
-        Br1, Br2, Br3 = globalBr
 
         #-- check for distance between each pair of bkg circles --#
         for i in range(len(globalBx)):
@@ -998,8 +994,6 @@ class findOverlap:
                             globalBr[i] = dist - globalBr[j] - self.gap
                         else:
                             globalBr[j] = dist - globalBr[i] - self.gap
-
-        Br = np.array(globalBr)*3600*header['CDELT2']  #--convert to arcsec
     
         #-- plot the randomly selected background points --#
         for i in range(4):
@@ -1024,13 +1018,18 @@ class findOverlap:
             plt.show()
         plt.close()
 
-        #-- return the background circles --#
-        Bx1, By1, Bx2, By2 = np.array([Bx1, By1, Bx2, By2])*header['CDELT2L']  #--coords in Sky coords.
-        print('\nFirst Background circle: ', Bx1, By1, Br[0])
-        print('Second Background circle: ', Bx2, By2, Br[1])
+        #-- save the background circles to ``self.bCircles`` --#
+        Br = np.array(globalBr)*3600*header['CDELT2']    #--convert radius to arcsec for reading.
+        globalBx = np.array(globalBx)*header['CDELT2L']  
+        globalBy = np.array(globalBy)*header['CDELT2L']  #--coords in Sky coords.
+        for i, bx, by, br in zip(range(len(Br)), globalBx, globalBy, Br):
+            if i==0:
+                print('')
+            print(f'Background circle {i}:\t{bx} {by} {br}')
 
-        self.bCircle1 = [Bx1, By1, Br1*header['CDELT2L']]
-        self.bCircle2 = [Bx2, By2, Br2*header['CDELT2L']]
+        globalBr = np.array(globalBr)*header['CDELT2L']  #--radius in log-pixel for FITS overlay plot.
+        for bx, by, br in zip(globalBx, globalBy, globalBr):
+            self.bCircles.append([bx, by, br])
         return True
 
 
