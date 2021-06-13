@@ -154,6 +154,7 @@ class findOverlap:
         self.imgPNMOS = None
         self.imgMOS = None
         self.imgPN = None
+        self.imgInst = None
         self.header = None
 
         self.srcCoords = srcCoords        #--main source coordinates.
@@ -615,23 +616,41 @@ class findOverlap:
 
 
     ##-- function to create output images --##
-    def createOutputImages (self):
+    def createOutputImages (self, inst=None):
         """
-        Creates two JPEG output images, one showing the other sources and 
-        the other showing the Source and the Background Circles.
-        'PNMOS12_image_full' is used as the backdrop.
+        Creates the `source_background_circles.png` output image showing
+        the other Sources and the Source and Background circles overlayed
+        on top of the image.
+        The overlap ('PNMOS12_image_full' for Small-Mode cases) is used 
+        as the backdrop for cases when the overlap detection is performed 
+        and the cicles are found using that overlap data.
+        Otherwise, `inst_CCD##_image` is used as the backdrop.
+
+        Args:
+            inst (str): Name of the instrument to use. Defaults to None.
+                If None then it is assumed at the overlap detected is
+                performed.
 
         :Input: findOverlap object with all previous functions already run.
-        :Output: Saved images in the workdir of the obsID.
+
+        :Output: Output image saved in the workdir of the obsID.
+            Image file name is `source_background_circles.png` for the 
+            default case and `srcBkg_circs_inst.png` for when individual
+            instrument background circles are been found.
         """
         workdir, header = self.workdir, self.header
         obsID = self.obsID
         otherSrc = np.array(self.otherSrc)
 
-        if self.isSmallMode:
-            img = self.imgPNMOS
+        if inst is None:  #--overlap detection performed.
+            if self.isSmallMode:
+                img = self.imgPNMOS
+            else:
+                img = self.overlap
+            fname = 'source_background_circles.png'
         else:
-            img = self.overlap
+            img = self.imgInst
+            fname = 'srcBkg_circs_'+inst+'.png'
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
         ax.imshow(img, cmap='afmhot', origin='lower')
@@ -673,7 +692,7 @@ class findOverlap:
             ax.add_artist( plt.Circle((Bx, By), Br, alpha=0.50) )
             ax.add_artist( plt.Circle((Bx, By), Br, color='green', fill=False) )
 
-        if self.isSmallMode:
+        if self.isSmallMode and inst is None:
             ax.set_title('small mode', fontsize=12, loc='left')
         ax.set_title(obsID, fontsize=12, loc='right')
         plt.legend(loc='upper right')
@@ -681,7 +700,7 @@ class findOverlap:
 
         #-- save/show final figure --#
         if self.saveFig:
-            plt.savefig(workdir+'/'+'source_background_circles.png', dpi=600)
+            plt.savefig(workdir+'/'+fname, dpi=600)
         if self.showFig:
             plt.show()
         plt.close()
@@ -712,13 +731,14 @@ class findOverlap:
         ``small-mode`` MOS checking is invalid here since overlap is not been detected.
         """
         workdir, obsID, instCCD = self.workdir, self.obsID, self.pnCCD
-        name = inst + '_CCD' + instCCD
-        
-        #-- open the images --#
-        imgInst, header = self.__openImg(workdir+'/'+name+'_image.fits', header=True)
-
         srcCoords, otherSrc = self.srcCoords, np.array(self.otherSrc)
-    
+        
+        #-- open the image --#
+        name = inst + '_CCD' + instCCD
+        imgInst, header = self.__openImg(workdir+'/'+name+'_image.fits', header=True)
+        self.imgInst = imgInst
+
+
         ##-- distance between two points --##
         def __euclideanDist (P1, P2):
             """
@@ -766,34 +786,26 @@ class findOverlap:
             return __euclideanDist(P0, (xI, yI))
         
     
-        #-- find corners of the overlap --#
-        xiOverlap, yiOverlap = self._detect_individual(overlap, wSize=4, percent=0.05, ax=axes[3], mesh=False)
+        #-- find corners of the image data --#
+        xiImg, yiImg = self._detect_individual(imgInst, wSize=4, percent=0.05, ax=axes[3], mesh=False)
     
         #-- coordinates of all the points in the overlap --#
-        xxOverlap, yyOverlap = polygon(yiOverlap, xiOverlap)
-        #axes[3].plot(xxOverlap, yyOverlap, '.', color='pink')
+        xxImg, yyImg = polygon(yiImg, xiImg)
+        #axes[3].plot(xxImg, yyImg, '.', color='pink')
        
-        #-- lines made by the overlap corners --#
+        #-- lines made by the image corners --#
         cornerLines = []
         for i in range(4):
             if i==3:
-                cornerLines.append( (yiOverlap[i], xiOverlap[i], yiOverlap[0], xiOverlap[0]) )
+                cornerLines.append( (yiImg[i], xiImg[i], yiImg[0], xiImg[0]) )
             else:
-                cornerLines.append( (yiOverlap[i], xiOverlap[i], yiOverlap[i+1], xiOverlap[i+1]) )
+                cornerLines.append( (yiImg[i], xiImg[i], yiImg[i+1], xiImg[i+1]) )
     
         #-- the source coordinates --#
         if srcCoords!=None:
             srcCoords = np.array(srcCoords)/header['CDELT2L']
             xC, yC = srcCoords
-            """
-            if self.isSmallMode:
-                xC, yC = srcCoords
-            else:
-                yC, xC = srcCoords   #--the axes are opposite here.
-            """
             print('\nThe Source coordinate value in log scale pixel is: {}, {}'.format(xC, yC))
-        else:
-            xC, yC = int(imgPNMOS.shape[0]/2), int(imgPNMOS.shape[1]/2)
         #axes[3].plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
 
         #-- correct the position of main Source --#
@@ -852,7 +864,7 @@ class findOverlap:
         xUse, yUse, xUseN, yUseN = [], [], [], []
         minDistToOtherSrc = Br1
         Bx1, By1 = None, None
-        for ptX, ptY in zip(xxOverlap, yyOverlap):
+        for ptX, ptY in zip(xxImg, yyImg):
             ptRepeat0 = np.repeat(np.array([(ptX, ptY)]), len(cornerLines), axis=0)
             pDistList = list(map(__pDistToLine, ptRepeat0, cornerLines))
             pDistList.sort()
@@ -966,14 +978,14 @@ class findOverlap:
 
         #-- zoom to the overlap --#
         pad = 10
-        axes[3].set_xlim([min(yiOverlap)-pad, max(yiOverlap)+pad])
-        axes[3].set_ylim([min(xiOverlap)-pad, max(xiOverlap)+pad])
-        self.axlims['xlim'] = [min(yiOverlap)-pad, max(yiOverlap)+pad]
-        self.axlims['ylim'] = [min(xiOverlap)-pad, max(xiOverlap)+pad]
+        axes[3].set_xlim([min(yiImg)-pad, max(yiImg)+pad])
+        axes[3].set_ylim([min(xiImg)-pad, max(xiImg)+pad])
+        self.axlims['xlim'] = [min(yiImg)-pad, max(yiImg)+pad]
+        self.axlims['ylim'] = [min(xiImg)-pad, max(xiImg)+pad]
     
         #-- save/show final figure --#
-        if self.saveFig:
-            plt.savefig(workdir+'/'+'detected_overlap_'+obsID+'.png', dpi=600)
+        #if self.saveFig:
+        #    plt.savefig(workdir+'/'+'detected_overlap_'+obsID+'.png', dpi=600)
         if self.showFig:
             plt.show()
         plt.close()
@@ -1031,8 +1043,8 @@ class findOverlap:
             return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR, self.isSmallMode)
         
         #-- for individual instrument --#
-        self.backgroundCircles(axes=axes)
-        self.createOutputImages()
+        self.backgroundCircles_indi(axes=axes, inst=inst)
+        self.createOutputImages(inst=inst)
         return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR)
 
 
