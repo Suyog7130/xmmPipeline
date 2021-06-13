@@ -977,7 +977,7 @@ class epicObj:
 
         NOTES
         -----
-        ``small-mode`` MOS checking is invalid here since overlap is not detected.
+        ``small-mode`` MOS checking is invalid here since overlap is not been detected.
         The CCD argument in ``findOverlap`` class is named ``pnCCD``.
         """
         print('\nAutomatically detecting the Background Circles.')

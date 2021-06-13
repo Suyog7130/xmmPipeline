@@ -53,6 +53,10 @@ Made the second background point non-random as well.
 The program takes a little longer now, but both the circles are large sized.
 Gonna check if there's any errors that come up because of this.
 Also lowered the Bkg Circle Gap to 2.5 pixels instead of 5 pixles.
+
+13th June 2021:
+---
+Writing the functions for obtaining individual background circles.
 """
 
 import os
@@ -690,25 +694,30 @@ class findOverlap:
         """
         Automatically finds Background Circles in the instrument data passed.
 
+        :Input: 
+            `inst_CCD##_image.fits` files containing the extracted image data of the instrument.
+            ``srcCoords`` dictionary containing coords of the main Source.
+            ``otherSrc`` dictionary containing coords of other Sources.
+
+        :Requires: Call to `epicObj.find_otherSources_indi` function.
+
         Args:
             axes (obj): `matplotlib.pyplot.axes` object for plotting the images.
             inst (str): name of the instrument of use.
 
-        :Input: `inst_CCD##_image.fits` files containing the extracted image data of the instrument.
-
         :Output: Coordinates and Radii of the Background Circles.
-        """
-        workdir, obsID = self.workdir, self.obsID
-        overlap, imgPNMOS, imgMOS, imgPN = self.overlap, self.imgPNMOS, self.imgMOS, self.imgPN
-        header = self.header
-        srcCoords, otherSrc = self.srcCoords, np.array(self.otherSrc)
 
-        #-- check if overlap region is small --#
-        overlap1, imgMOSa, imgPNa = np.nan_to_num(overlap), np.nan_to_num(imgMOS), np.nan_to_num(imgPN)   #--remove invalid values.
-        if np.abs( len(overlap1[overlap1>0.0].flatten()) - len(imgMOS[imgMOS>0.0].flatten()) ) < 500: 
-            overlap = imgPNMOS
-            self.isSmallMode = True
-            print('\nNote: obsID in Small Mode.')
+        NOTES
+        -----
+        ``small-mode`` MOS checking is invalid here since overlap is not been detected.
+        """
+        workdir, obsID, instCCD = self.workdir, self.obsID, self.pnCCD
+        name = inst + '_CCD' + instCCD
+        
+        #-- open the images --#
+        imgInst, header = self.__openImg(workdir+'/'+name+'_image.fits', header=True)
+
+        srcCoords, otherSrc = self.srcCoords, np.array(self.otherSrc)
     
         ##-- distance between two points --##
         def __euclideanDist (P1, P2):
@@ -1014,12 +1023,14 @@ class findOverlap:
         """
         fig, axes = plt.subplots(1, 4, figsize=(20, 5))
 
+        #-- if finding srcBkg circs in overlap --#
         if inst is None:
             self.obtainOverlap(axes=axes)
             self.backgroundCircles(axes=axes)
             self.createOutputImages()
             return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR, self.isSmallMode)
         
+        #-- for individual instrument --#
         self.backgroundCircles(axes=axes)
         self.createOutputImages()
         return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR)
