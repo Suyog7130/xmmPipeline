@@ -70,6 +70,17 @@ My own solution is pretty elegant then. Better suited for my purpose.
 Wait a minute, what I can do to find more number of Bkg points is first find the first
 point and then remove all the points lying in the 2R distance from the center of this
 first Bkg point and repeat. Let's try this!
+
+Yosh! This works brilliantly. Both the BkgPts are now randomly generated in the given
+area satisfying the coditions.
+Now, I can theoretically iterate a few times until I get both the BkgCircs of sufficiently 
+useful area. However, what my aim has been ever since the start was to have the algorithm 
+automatically find two of the largest BkgCircs satisfying the coditions.
+Hhmm... I think that would be a pretty daunting task and a difficult one at that, 
+since I haven't go just what I have been wanting since a long time now.
+What is much better in my opinion is that I can repeat the procedure of filtering out the 
+last found BkgPt + 2R dist points n number of times to obtain n number of Bkg points.
+Let's try that out now!
 """
 
 import os
@@ -724,7 +735,7 @@ class findOverlap:
 
 
     ##-- function to find some background circles --##
-    def backgroundCircles_indi (self, axes, inst):
+    def backgroundCircles_indi (self, ax, inst):
         """
         Automatically finds Background Circles in the instrument data passed.
 
@@ -736,7 +747,7 @@ class findOverlap:
         :Requires: Call to `epicObj.find_otherSources_indi` function.
 
         Args:
-            axes (obj): `matplotlib.pyplot.axes` object for plotting the images.
+            ax (obj): `matplotlib.pyplot.subplots` object for plotting the images.
             inst (str): name of the instrument of use.
 
         :Output: Coordinates and Radii of the Background Circles.
@@ -802,11 +813,11 @@ class findOverlap:
         
     
         #-- find corners of the image data --#
-        xiImg, yiImg = self._detect_individual(imgInst, wSize=4, percent=0.05, ax=axes[3], mesh=False)
+        xiImg, yiImg = self._detect_individual(imgInst, wSize=4, percent=0.05, ax=ax, mesh=False)
     
         #-- coordinates of all the points in the overlap --#
         xxImg, yyImg = polygon(yiImg, xiImg)
-        #axes[3].plot(xxImg, yyImg, '.', color='pink')
+        #ax.plot(xxImg, yyImg, '.', color='pink')
        
         #-- lines made by the image corners --#
         cornerLines = []
@@ -821,7 +832,7 @@ class findOverlap:
             srcCoords = np.array(srcCoords)/header['CDELT2L']
             xC, yC = srcCoords
             print('\nThe Source coordinate value in log scale pixel is: {}, {}'.format(xC, yC))
-        #axes[3].plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
+        #ax.plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
 
         #-- correct the position of main Source --#
         srcRepeat = np.repeat(np.array([(xC, yC)]), len(otherSrc), axis=0)
@@ -829,10 +840,10 @@ class findOverlap:
         correctSrc = otherSrc[np.where(oSrcDist==min(oSrcDist))]
         xC, yC = correctSrc[0][0], correctSrc[0][1]
         self.correctSrc = np.array([xC, yC])*header['CDELT2L']
-        axes[3].plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
+        ax.plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
 
         #-- plot other sources --#
-        axes[3].plot(otherSrc[:, 0], otherSrc[:, 1], 'p', markersize=10, color='white', markeredgecolor='black', markeredgewidth=0.2)
+        ax.plot(otherSrc[:, 0], otherSrc[:, 1], 'p', markersize=10, color='white', markeredgecolor='black', markeredgewidth=0.2)
     
         #-- threshold distance from the Source --#
         dSrcThreshold = 70  #--value in arcsec.
@@ -938,7 +949,7 @@ class findOverlap:
                     Bx2, By2 = ptX, ptY
 
             if Bx2 is not None:
-                axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
+                ax.plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
                 return [Bx1, By1, Bx2, By2]
                 
             #-- when other sources are too many --#
@@ -947,9 +958,9 @@ class findOverlap:
                 return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
         #if Bx1 is not None:
-        #    Bx1, By1, Bx2, By2 = __backgroundPt(bkgPt=(Bx1, By1), ax=axes[3])
+        #    Bx1, By1, Bx2, By2 = __backgroundPt(bkgPt=(Bx1, By1), ax=ax)
         #else:
-        Bx1, By1, Bx2, By2 = __backgroundPt(ax=axes[3])
+        Bx1, By1, Bx2, By2 = __backgroundPt(ax=ax)
 
         totalBr = Br1 + Br2
         xf, yf = [], []
@@ -959,7 +970,7 @@ class findOverlap:
                 xf.append(ptX)
                 yf.append(ptY)
                 
-        Bx2, By2, Bx3, By3 = __backgroundPt(xToUse=xf, yToUse=yf, ax=axes[3])
+        Bx2, By2, Bx3, By3 = __backgroundPt(xToUse=xf, yToUse=yf, ax=ax)
 
         #-- have max radius at these bkg locations --#
         def __maxBkgRadius (Bx, By):
@@ -989,21 +1000,21 @@ class findOverlap:
         #-- plot the randomly selected background points --#
         for i in range(4):
             for Bx, By in zip([Bx1, Bx2], [By1, By2]):
-                __pDistToLine((Bx, By), cornerLines[i], ax=axes[3])
-                axes[3].plot(Bx, By, 'd', markersize=10, color='darkgreen', markeredgecolor='black', markeredgewidth=0.2)
+                __pDistToLine((Bx, By), cornerLines[i], ax=ax)
+                ax.plot(Bx, By, 'd', markersize=10, color='darkgreen', markeredgecolor='black', markeredgewidth=0.2)
     
         #-- get 1st background circle --#
         bCirc1 = plt.Circle((Bx1, By1), Br1, alpha=0.50)
-        axes[3].add_artist(bCirc1)
+        ax.add_artist(bCirc1)
     
         #-- get 2nd background circle --#
         bCirc2 = plt.Circle((Bx2, By2), Br2, alpha=0.50)
-        axes[3].add_artist(bCirc2)
+        ax.add_artist(bCirc2)
 
         #-- zoom to the overlap --#
         pad = 10
-        axes[3].set_xlim([min(yiImg)-pad, max(yiImg)+pad])
-        axes[3].set_ylim([min(xiImg)-pad, max(xiImg)+pad])
+        ax.set_xlim([min(yiImg)-pad, max(yiImg)+pad])
+        ax.set_ylim([min(xiImg)-pad, max(xiImg)+pad])
         self.axlims['xlim'] = [min(yiImg)-pad, max(yiImg)+pad]
         self.axlims['ylim'] = [min(xiImg)-pad, max(xiImg)+pad]
     
@@ -1057,17 +1068,18 @@ class findOverlap:
         So, a radius of 640 equals 32 arcsec.
         See issue #24 for more details, https://github.com/Suyog7130/xmmPipeline/issues/24
         """
-        fig, axes = plt.subplots(1, 4, figsize=(20, 5))
 
         #-- if finding srcBkg circs in overlap --#
         if inst is None:
+            fig, axes = plt.subplots(1, 4, figsize=(20, 5))
             self.obtainOverlap(axes=axes)
             self.backgroundCircles(axes=axes)
             self.createOutputImages()
             return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR, self.isSmallMode)
         
         #-- for individual instrument --#
-        self.backgroundCircles_indi(axes=axes, inst=inst)
+        fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+        self.backgroundCircles_indi(ax=ax, inst=inst)
         self.createOutputImages(inst=inst)
         return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR)
 
