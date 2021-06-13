@@ -65,12 +65,15 @@ class epicSpectra (epicObj):
 
 
     ##-- update location parameters in the pickle file --##
-    def updateCCDcoordsPickle (self):
+    def updateCCDcoordsPickle (self, inst=None):
         """
         Writes the background location parameter dictionary for individual instruments
         ``backgroundLoc_indi``  to `ccd_coords_info.pickle` file.
         If the file is already present in the directory, then the values for the 
         corresponding keys are updated.
+    
+        Args:
+            inst (str): name of the instrument of use.
 
         :Input: ``backgroundLoc_indi`` dictionary containing the location parameters.
         :Output: Updated ``ccd_coords_info.pickle`` file.
@@ -103,8 +106,7 @@ class epicSpectra (epicObj):
             dic = result.get('backgroundLoc_indi', None)
             if dic is None:
                 result['backgroundLoc_indi'] = {}
-                for inst in 
-
+            result['backgroundLoc_indi'][inst] = self.backgroundLoc_indi[obsID][inst]
             
             #-- save the CCD and coords info in a pickle file --#
             result['sourceCCDs'] = self.sourceCCDs[obsID]
