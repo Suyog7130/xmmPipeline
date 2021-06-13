@@ -936,6 +936,7 @@ class findOverlap:
                 if dist >= totalBr:
                     totalBr = dist       #--I should take the minimum such totalBr point.
                     Bx2, By2 = ptX, ptY
+                    break
 
             if Bx2 is not None:
                 axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
