@@ -67,15 +67,21 @@ class epicSpectra (epicObj):
     ##-- update location parameters in the pickle file --##
     def updateCCDcoordsPickle (self):
         """
-        Writes the location parameters to `ccd_coords_info.pickle` file.
+        Writes the background location parameter dictionary for individual instruments
+        ``backgroundLoc_indi``  to `ccd_coords_info.pickle` file.
         If the file is already present in the directory, then the values for the 
-        corresponding keys will be updated.
+        corresponding keys are updated.
 
-        21st May 2021: Added loading `ccd_coords_info.pickle` file if it is already
-                       present in the directory.
+        :Input: ``backgroundLoc_indi`` dictionary containing the location parameters.
+        :Output: Updated ``ccd_coords_info.pickle`` file.
+
+        NOTES
+        -----
+        If no CCDcoordsPickle file is available in the ``workdir``, then the whole
+        file is created with other values been saved as well.
         """
         maindir = self.workdir
-        print('\nWriting the location parameters to ccd_coords_info.pickle file.\n')
+        print('\nWriting indi inst bkgCircs data to ccd_coords_info.pickle file.\n')
 
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
@@ -92,6 +98,13 @@ class epicSpectra (epicObj):
                                , shell=True)
             else:
                 result = {}
+
+            #-- save backgroundLoc_indi dictionary --#
+            dic = result.get('backgroundLoc_indi', None)
+            if dic is None:
+                result['backgroundLoc_indi'] = {}
+                for inst in 
+
             
             #-- save the CCD and coords info in a pickle file --#
             result['sourceCCDs'] = self.sourceCCDs[obsID]
@@ -394,11 +407,11 @@ def main (args):
         return True
 
     #-- if ``runIndiBkgCircFuncs``, then run them and exit --#
-    if args.runIndiBkgCircFuncs:
+    if args.inst is not None:
         obj.readCCDcoordsPickle()
-        obj.otherSources_indi()
-        obj.getBackgroundCircles_indi()
-        obj.updateCCDcoordsPickle()
+        obj.otherSources_indi(inst=args.inst)
+        obj.getBackgroundCircles_indi(inst=args.inst)
+        obj.updateCCDcoordsPickle(inst=args.inst)
         return print('\nRan the IndiBkgCirc functions and obtained indi inst bkg circles. \
             The CCDcoordsPickle file has also been updated with backgroundLocIndi key.')
 
@@ -438,7 +451,15 @@ if __name__=="__main__":
                         help='''obsIDs for which some specific function has to executed. 
                                 Valid only when --method argument is specified. (default:%(default)s)''')
     parser.add_argument('--objName', action='store', default=None, \
-                        help='name of the obj used to locate the xmmObj pickle file.')
+                        help='name of the obj used to locate the xmmObj pickle file. \
+                              (default:%(default)s)')
+
+    parser.add_argument('--inst', action='store', default=None, \
+                        help='Spectral Analysis requires the three EPIC camera data \
+                              to be separately processed. For this individual instrument \
+                              background circles are required. Use this to pass the \
+                              individual instrument for which bkgCircs have to be found. \
+                              Also updates CCDcoordsPickle. (default:%(default)s)')
     
     #-- location paths arguments --#
     SAS_DIR = '/usr/local/xmmsas_20201028_0905'  
@@ -466,12 +487,6 @@ if __name__=="__main__":
                               If the model is already present in the file, it is not \
                               overwritten by appending 1 to the new model name. \
                               (default:%(default)s)')
-    parser.add_argument('--runIndiBkgCircFuncs', action='store_true', default=False, \
-                        help='Spectral Analysis requires the three EPIC camera data \
-                              to be separately processed. For this individual instrument \
-                              background circles are required. Use this flag to run the \
-                              functions in epicObj to find indi inst bkgCircs, which \
-                              are then updated in the CCDcoordsPickle.')
 
     #-- methods --#
     parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
