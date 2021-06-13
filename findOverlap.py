@@ -86,6 +86,15 @@ Let's try that out now!
 This recursive way of finding the background circles takes care of overlap between the 
 circles all by itself, since the ``xToUse`` and ``yToUse`` are recursively filtered for 
 the circle area.
+Yup! Have verified that most of the times, this recursive way works! Woohooo yayyy!
+Such a great thing.
+For the times when it doesn't work, one of the bkgCirc overlaps with another bkgCircs,
+and consquensly the radius value for comes out to be negative.
+I am adding feature to raise a warning when this happens. A simple rerun of the code
+will remove the problem and yield correct bkgCircs, although yeah! I may need to check
+this up with all the obsIDs.
+And it would be better to have the user input the ``nBkgCirc`` value, so that if it's 
+not possible to obtain more than 2 bkgCircs, the user can find 2 bkgCircs atleast.
 """
 
 import os
@@ -888,7 +897,7 @@ class findOverlap:
             else:
                 print(f'\nsrcCircRadius value of {np.round(srcR_given, 2)} arcsec provided exceed the distance to the nearest overlap border. Defaulting to this distance.')
 
-        print(f'The Source radius is set at {np.round(srcR, 2)} arcsec.')
+        print(f'\nThe Source radius is set at {np.round(srcR, 2)} arcsec.')
         self.srcR = (srcR*(1/3600)/header['CDELT2'] )*header['CDELT2L']  #--convert pixels to log pixels.
 
         #-- shortlisting random points --#
@@ -994,6 +1003,12 @@ class findOverlap:
                             globalBr[i] = dist - globalBr[j] - self.gap
                         else:
                             globalBr[j] = dist - globalBr[i] - self.gap
+
+        for br in globalBr:
+            if br <= 0:
+                badBkgCircsWarning = '\n\tFound BkgCircs overlap with eachother.' + \
+                                     '\n\tPlease try running the routine once again!'
+                print(badBkgCircsWarning)
     
         #-- plot the randomly selected background points --#
         for i in range(4):
