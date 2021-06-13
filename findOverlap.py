@@ -57,6 +57,15 @@ Also lowered the Bkg Circle Gap to 2.5 pixels instead of 5 pixles.
 13th June 2021:
 ---
 Writing the functions for obtaining individual background circles.
+Learned about this awesome algorithm, PolyLabel for finding the `pole of inaccessibility`
+or the point of largest inscribed circle for any polygon. My problem of finding the Bkg
+circles is exactly the same.
+See: https://github.com/Twista/python-polylabel
+
+Damn! That polylabel requires the boundary of the polygon to be defined and hell,
+I have the whole points in the region. Running the ``polylabel(points)`` on that full
+throttles the system. Hell!
+My own solution is pretty elegant then. Better suited for my purpose.
 """
 
 import os
@@ -711,7 +720,7 @@ class findOverlap:
 
 
     ##-- function to find some background circles --##
-    def backgroundCircles_indi (self, axes, inst):
+    def backgroundCircles_indi1 (self, axes, inst):
         """
         Automatically finds Background Circles in the instrument data passed.
 
@@ -963,6 +972,287 @@ class findOverlap:
                 Br2 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br1 - self.gap
 
         Br = np.array([Br1, Br2])*3600*header['CDELT2']  #--convert to arcsec
+    
+        #-- plot the randomly selected background points --#
+        for i in range(4):
+            for Bx, By in zip([Bx1, Bx2], [By1, By2]):
+                __pDistToLine((Bx, By), cornerLines[i], ax=axes[3])
+                axes[3].plot(Bx, By, 'd', markersize=10, color='darkgreen', markeredgecolor='black', markeredgewidth=0.2)
+    
+        #-- get 1st background circle --#
+        bCirc1 = plt.Circle((Bx1, By1), Br1, alpha=0.50)
+        axes[3].add_artist(bCirc1)
+    
+        #-- get 2nd background circle --#
+        bCirc2 = plt.Circle((Bx2, By2), Br2, alpha=0.50)
+        axes[3].add_artist(bCirc2)
+
+        #-- zoom to the overlap --#
+        pad = 10
+        axes[3].set_xlim([min(yiImg)-pad, max(yiImg)+pad])
+        axes[3].set_ylim([min(xiImg)-pad, max(xiImg)+pad])
+        self.axlims['xlim'] = [min(yiImg)-pad, max(yiImg)+pad]
+        self.axlims['ylim'] = [min(xiImg)-pad, max(xiImg)+pad]
+    
+        #-- save/show final figure --#
+        #if self.saveFig:
+        #    plt.savefig(workdir+'/'+'detected_overlap_'+obsID+'.png', dpi=600)
+        if self.showFig:
+            plt.show()
+        plt.close()
+
+        #-- return the background circles --#
+        Bx1, By1, Bx2, By2 = np.array([Bx1, By1, Bx2, By2])*header['CDELT2L']  #--coords in Sky coords.
+        print('\nFirst Background circle: ', Bx1, By1, Br[0])
+        print('Second Background circle: ', Bx2, By2, Br[1])
+
+        self.bCircle1 = [Bx1, By1, Br1*header['CDELT2L']]
+        self.bCircle2 = [Bx2, By2, Br2*header['CDELT2L']]
+        return True
+
+
+    ##-- function to find some background circles --##
+    def backgroundCircles_indi (self, axes, inst):
+        workdir, obsID, instCCD = self.workdir, self.obsID, self.pnCCD
+        srcCoords, otherSrc = self.srcCoords, np.array(self.otherSrc)
+        
+        #-- open the image --#
+        name = inst + '_CCD' + instCCD
+        imgInst, header = self.__openImg(workdir+'/'+name+'_image.fits', header=True)
+        self.imgInst, self.header = imgInst, header
+
+
+        ##-- distance between two points --##
+        def __euclideanDist (P1, P2):
+            """
+            Calculates the Euclidean distance between two cartesian points.
+        
+            :Input: Coordinates of the two points in form of tuples.
+            :Output: The distance between the points, float.
+        
+            Note that the Source coordinates are reversed, so that has to be taken 
+            into account when passing the values.
+            """
+            x1, y1 = P1
+            x2, y2 = P2
+            return np.sqrt( (x2-x1)**2 + (y2-y1)**2 )
+
+        ##-- distance of a point from a line --##
+        def __pDistToLine (P0, line, ax=None):
+            """
+            Calculates the perpendicular distance of point from a line.
+        
+            :Input: Two tuples P0 and line. P0 contains the x and y coordinates of the point and
+                   line contains the coordinates of the start and end points of the line.
+            :Output: The perpendicular distance of the point from the line, float.
+        
+            First the intersection point Pi of the perpendicular from P0 to the line is calculated.
+            The output is then the EuclideanDist between P0 and Pi.
+        
+            Note that the corner points of the overlap are also reversed in coordinates.
+            So, the start and end points of the line have reversed x and y.
+            """
+            x0, y0 = P0
+            x1, y1, x2, y2 = line
+        
+            m = (y2-y1)/(x2-x1)
+            mP = -1/m
+        
+            xI = ((y1-y0) + mP*x0 - m*x1) / (mP-m)
+            yI = y0 + mP * (xI-x0)
+        
+            if ax!=None:
+                ax.plot([x1, x2], [y1, y2], '-', color='blue')
+                ax.plot(xI, yI, 'p', markersize=10, color='red')
+                ax.plot([x0, xI], [y0, yI], '-', color='violet')
+            
+            return __euclideanDist(P0, (xI, yI))
+        
+    
+        #-- find corners of the image data --#
+        xiImg, yiImg = self._detect_individual(imgInst, wSize=4, percent=0.05, ax=axes[3], mesh=False)
+    
+        #-- coordinates of all the points in the overlap --#
+        xxImg, yyImg = polygon(yiImg, xiImg)
+        #axes[3].plot(xxImg, yyImg, '.', color='pink')
+       
+        #-- lines made by the image corners --#
+        cornerLines = []
+        for i in range(4):
+            if i==3:
+                cornerLines.append( (yiImg[i], xiImg[i], yiImg[0], xiImg[0]) )
+            else:
+                cornerLines.append( (yiImg[i], xiImg[i], yiImg[i+1], xiImg[i+1]) )
+    
+        #-- the source coordinates --#
+        if srcCoords!=None:
+            srcCoords = np.array(srcCoords)/header['CDELT2L']
+            xC, yC = srcCoords
+            print('\nThe Source coordinate value in log scale pixel is: {}, {}'.format(xC, yC))
+        #axes[3].plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
+
+        #-- correct the position of main Source --#
+        srcRepeat = np.repeat(np.array([(xC, yC)]), len(otherSrc), axis=0)
+        oSrcDist = np.array( list(map(__euclideanDist, otherSrc, srcRepeat)) )
+        correctSrc = otherSrc[np.where(oSrcDist==min(oSrcDist))]
+        xC, yC = correctSrc[0][0], correctSrc[0][1]
+        self.correctSrc = np.array([xC, yC])*header['CDELT2L']
+        axes[3].plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
+
+        #-- plot other sources --#
+        axes[3].plot(otherSrc[:, 0], otherSrc[:, 1], 'p', markersize=10, color='white', markeredgecolor='black', markeredgewidth=0.2)
+    
+        #-- threshold distance from the Source --#
+        dSrcThreshold = 70  #--value in arcsec.
+        if self.srcThreshold != None:
+            srcThreshold = float(self.srcThreshold)
+            if srcThreshold <= dSrcThreshold:
+                dSrcThreshold = srcThreshold
+            else:
+                print(f'\nProvided threshold value exceed {dSrcThreshold} arcsec. Defaulting to this value.')
+
+        DSource = dSrcThreshold*(1/3600)/header['CDELT2']
+        print('\nThe distance between random Background circle center and the Source is set at {} arcsec.'.format(dSrcThreshold))
+
+        #-- radius of the background circles --#
+        Br = np.array([dSrcThreshold/2, dSrcThreshold/2 - 10])  #--value in arcsec.
+        Br1, Br2 = Br*(1/3600)/header['CDELT2']
+        if self.bkgR!=None:
+            bkgR = np.array(self.bkgR).astype(float)
+            if sum(bkgR) <= sum(Br):
+                Br = bkgR
+                Br1, Br2 = bkgR*(1/3600)/header['CDELT2']
+            else:
+                print('\nProvided background circle radii are more than half of threshold distance.')
+        #print(Br1, Br2)
+    
+        #-- dSrcThreshold gives the Source circle radius --#
+        srcR = dSrcThreshold/2
+        srcToLines = [__pDistToLine((xC, yC), cornerLine) for cornerLine in cornerLines]  #--output is in pixels.
+        if min(srcToLines) < srcR*(1/3600)/header['CDELT2']:
+            print('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
+            srcR = min(srcToLines)*3600*header['CDELT2']  #--convert to arcsec
+
+        if self.srcR != None:
+            srcR_given = float(self.srcR)   #--convert from arcsec.
+            if srcR_given <= srcR:
+                srcR = srcR_given
+            else:
+                print(f'\nsrcCircRadius value of {np.round(srcR_given, 2)} arcsec provided exceed the distance to the nearest overlap border. Defaulting to this distance.')
+
+        print(f'The Source radius is set at {np.round(srcR, 2)} arcsec.')
+        self.srcR = (srcR*(1/3600)/header['CDELT2'] )*header['CDELT2L']  #--convert pixels to log pixels.
+
+        #-- shortlisting random points --#
+        xUse, yUse, xUseN, yUseN = [], [], [], []
+        minDistToOtherSrc = Br1
+        Bx1, By1 = None, None
+        for ptX, ptY in zip(xxImg, yyImg):
+            ptRepeat0 = np.repeat(np.array([(ptX, ptY)]), len(cornerLines), axis=0)
+            pDistList = list(map(__pDistToLine, ptRepeat0, cornerLines))
+            pDistList.sort()
+
+            #-- check distance from main Source and cornerLines --#
+            if __euclideanDist((ptX, ptY), (xC, yC)) > (DSource + self.gap) and pDistList[0] > (Br1 + self.gap):
+                    xUse.append(ptX)
+                    yUse.append(ptY)
+
+                    #-- check distance from other sources --#
+                    ptRepeat = np.repeat(np.array([(ptX, ptY)]), len(otherSrc), axis=0)
+                    distList = list(map(__euclideanDist, ptRepeat, otherSrc))
+                    distList.sort()
+                    if distList[0] > DSource:
+                        xUseN.append(ptX)
+                        yUseN.append(ptY)
+                        if distList[0] >= (minDistToOtherSrc + self.gap):
+                            Bx1, By1 = ptX, ptY
+ 
+        #print(len(xUseN), len(yUseN))
+        
+        ##-- find random background points --##
+        def __backgroundPt (xToUse=xUseN, yToUse=yUseN, bkgPt=None, ax=None):
+            """ 
+            Internal function to select random constrained points.
+            At first, the arrays (xUseN, yUseN) are used to find the random points.
+
+            If the number of points in these is small and two random points atleast the 
+            threshold distance away from eachother are not found, then the arrays (xUse, yUse)
+            are used. 
+            """
+           
+            message = f'\nNOTE:There are too many other sources for obsID {obsID}, such that at the threshold given, no background circles are possible.' \
+                        +'\nKindly redo the product extraction for this one later with some changed parameters.' \
+                        +'\nFor now the other sources are not taken into account for obtaining the background circles.\n'
+            
+            #-- check if the arrays are empty --#
+            if len(xToUse)<2:
+                print(message)
+                return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
+
+            #-- first random point --#
+            if bkgPt is None:
+                idx1 = np.random.choice( range(len(xToUse)) )
+                Bx1, By1 = xToUse[idx1], yToUse[idx1]
+            else:
+                Bx1, By1 = bkgPt
+
+            #-- second background point --#
+            totalBr = Br1 + Br2
+            Bx2, By2 = None, None
+            for ptX, ptY in zip(xToUse, yToUse):
+                dist = __euclideanDist((Bx1, By1), (ptX, ptY))
+                if dist >= totalBr:
+                    totalBr = dist
+                    Bx2, By2 = ptX, ptY
+
+            if Bx2 is not None:
+                axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
+                return [Bx1, By1, Bx2, By2]
+                
+            #-- when other sources are too many --#
+            else:
+                print(message)
+                return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
+
+        if Bx1 is not None:
+            Bx1, By1, Bx2, By2 = __backgroundPt(bkgPt=(Bx1, By1), ax=axes[3])
+        else:
+            Bx1, By1, Bx2, By2 = __backgroundPt(ax=axes[3])
+
+
+        #-- have max radius at these bkg locations --#
+        def __maxBkgRadius (Bx, By):
+            ptRepeatA = np.repeat(np.array([(Bx, By)]), len(otherSrc), axis=0)
+            ptRepeatB = np.repeat(np.array([(Bx, By)]), len(cornerLines), axis=0)
+            checklist = list(map(__euclideanDist, ptRepeatA, otherSrc))
+            checklist = checklist + list(map(__pDistToLine, ptRepeatB, cornerLines))
+            checklist.append( __euclideanDist((xC, yC), (Bx, By)) - srcR*(1/3600)/header['CDELT2'] )
+            return (min(checklist) - self.gap)  #--leaving a gap around the circle.
+
+        Br1new = __maxBkgRadius(Bx1, By1)
+        if Br1new >= Br1:
+            Br1 = Br1new
+        Br2new = __maxBkgRadius(Bx2, By2)
+        if Br2new >= Br2:
+            Br2 = Br2new
+
+        #-- check for distance between the two bkg circles --#
+        if __euclideanDist((Bx1, By1), (Bx2, By2)) < Br1+Br2:
+            if Br1 >= Br2:
+                Br1 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br2 - self.gap
+            else:
+                Br2 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br1 - self.gap
+
+        Br = np.array([Br1, Br2])*3600*header['CDELT2']  #--convert to arcsec
+
+        #-- polylabel --#
+        from polylabel import polylabel
+        points = [[x, y] for x, y in zip(xUseN, yUseN)]
+        #print(len(xUseN))
+        plX, plY = polylabel([points])
+        print(plX)
+        axes[3].plot(plX, plY, 'O', markersize=10, color='yellow', markeredgecolor='black', markeredgewidth=0.2)
+    
     
         #-- plot the randomly selected background points --#
         for i in range(4):
