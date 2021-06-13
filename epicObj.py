@@ -898,6 +898,11 @@ class epicObj:
           of ``edetect_chain``. However, the `emllist.csv` is not b'cuz of the above point
           So `emllist.csv` should be used for the overlap cases.
           And anyway, another run of the original `find_otherSources` will update the said file.
+
+        TODO
+        ----
+        Check is using ``PATTERN in [0:12]`` in ``evselect expression`` for PN is correct?
+        For data extraction elsewhere, the expression for PN reads, ``(PATTERN <= 4)``
         """
         print('\nFinding all the other Sources.')
         
@@ -925,6 +930,11 @@ class epicObj:
 
             pimin, pimax, ecf = '300', '10000', '2.0'
 
+            if inst == 'PN':
+                expression = "#XMMEA_EP && (PI in [300:10000]) && (PATTERN in [0:12])"
+            else:
+                expression = "#XMMEA_EM && (PI in [300:10000]) && (PATTERN in [0:12])"
+
             #-- grab Attitude File --#
             AttFile = glob.glob(workdir+'/*AttHk*.ds')[0]
 
@@ -936,7 +946,7 @@ class epicObj:
                            "evselect table="+name+".evts:EVENTS \
                                imagebinning='binSize' imageset='"+name+"_image.fits' withimageset=yes \
                                xcolumn='X' ycolumn='Y' ximagebinsize=80 yimagebinsize=80 \
-                               expression='#XMMEA_EP && (PI in [300:10000]) && (PATTERN in [0:12])';"+ \
+                               expression='"+expression+"';"+ \
                            "edetect_chain imagesets='"+name+"_image.fits' \
                                eventsets='"+name+".evts' attitudeset="+AttFile+" \
                                pimin='"+pimin+"' pimax='"+pimax+"' ecf='"+ecf+"' \
