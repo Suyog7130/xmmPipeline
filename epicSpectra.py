@@ -400,7 +400,8 @@ def main (args):
         try:
             obj.findObsIDs()
         except KeyError:
-            print('\nNo obsIDs found for the given location. Confirm that you are connected to the Internet!')
+            print('\nNo obsIDs found for the given location.')
+            print('Confirm that you are connected to the Internet!')
     else:
         obj.objName = args.objName
 
@@ -424,8 +425,8 @@ def main (args):
             obj.find_otherSources_indi(inst=args.inst)
             obj.getBackgroundCircles_indi(inst=args.inst)
             obj.updateCCDcoordsPickle(inst=args.inst)
-            return print('''\nRan the IndiBkgCirc functions and obtained indi inst bkg circles.\n 
-                The CCDcoordsPickle file has also been updated with backgroundLocIndi key.''')
+            print('\nRan the IndiBkgCirc functions and obtained indi inst bkg circles.')
+            return print('\nThe CCDcoordsPickle file has also been updated with backgroundLocIndi key.')
 
     #-- run the spectra functions --#
     obj.readCCDcoordsPickle()
