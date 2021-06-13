@@ -988,18 +988,22 @@ class findOverlap:
                 globalBr.append( max(Br1, Br2) )
         Br1, Br2, Br3 = globalBr
 
-        #-- check for distance between the two bkg circles --#
-        if __euclideanDist((Bx1, By1), (Bx2, By2)) < Br1+Br2:
-            if Br1 >= Br2:
-                Br1 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br2 - self.gap
-            else:
-                Br2 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br1 - self.gap
+        #-- check for distance between each pair of bkg circles --#
+        for i in range(len(globalBx)):
+            for j in range(len(globalBx)):
+                if i != j:
+                    dist = __euclideanDist((globalBx[i],globalBy[i]), (globalBx[j],globalBy[j]))
+                    if dist < globalBr[i] + globalBr[j]:
+                        if globalBr[i] >= globalBr[j]:
+                            globalBr[i] = dist - globalBr[j] - self.gap
+                        else:
+                            globalBr[j] = dist - globalBr[i] - self.gap
 
-        Br = np.array([Br1, Br2, Br3])*3600*header['CDELT2']  #--convert to arcsec
+        Br = np.array(globalBr)*3600*header['CDELT2']  #--convert to arcsec
     
         #-- plot the randomly selected background points --#
         for i in range(4):
-            for bx, by, br in zip([Bx1, Bx2, Bx3], [By1, By2, By3], [Br1, Br2, Br3]):
+            for bx, by, br in zip(globalBx, globalBy, globalBr):
                 __pDistToLine((bx, by), cornerLines[i], ax=ax)
                 ax.plot(bx, by, 'd', markersize=10, color='darkgreen', markeredgecolor='black', markeredgewidth=0.2)
                     #-- add circle artists obj to plots --#
