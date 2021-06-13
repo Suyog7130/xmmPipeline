@@ -951,7 +951,7 @@ class findOverlap:
             if len(globalBx) < nBkgCircs:
                 totalBr = Br1 + Br2
                 xf, yf = [], []
-                for ptX, ptY in zip(xUseN, yUseN):
+                for ptX, ptY in zip(xToUse, yToUse):
                     dist = __euclideanDist((Bx1, By1), (ptX, ptY))
                     if dist >= totalBr:
                         xf.append(ptX)
@@ -964,8 +964,8 @@ class findOverlap:
                 
 
         __backgroundPt(ax=ax)
-        Bx1, Bx2, Bx3 = globalBx
-        By1, By2, By3 = globalBy
+        Bx1, Bx3, Bx2 = globalBx
+        By1, By3, By2 = globalBy
         #Br1, Br2 = globalBr
 
         """ totalBr = Br1 + Br2
