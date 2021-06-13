@@ -19,7 +19,7 @@ Adding options for Pile-up obsIDs.
 Editing the `removeFlareBackground` function.
 A seperate function `extract_flareGTI` will also be added.
 
-9th June 2021:
+9th~13th June 2021:
 ---
 Starting to write the functions for obtaining individual background circles.
 """
@@ -882,6 +882,7 @@ class epicObj:
         :Output:
             Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources, 
             apart from the region file from DS9.
+            Also extracts `inst_image_CCD##.fits` file which is later used to find srcBkg circs.
             Updates the ``otherSourceIndi`` dictionary for each of the obsIDs in ``self.obsIDs``
 
         NOTES
@@ -976,7 +977,7 @@ class epicObj:
 
         NOTES
         -----
-        ``small-mode`` MOS checking is invalid here since overlap is not found.
+        ``small-mode`` MOS checking is invalid here since overlap is not detected.
         The CCD argument in ``findOverlap`` class is named ``pnCCD``.
         """
         print('\nAutomatically detecting the Background Circles.')
