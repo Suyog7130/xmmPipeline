@@ -995,21 +995,16 @@ class findOverlap:
             else:
                 Br2 = __euclideanDist((Bx1, By1), (Bx2, By2)) - Br1 - self.gap
 
-        Br = np.array([Br1, Br2])*3600*header['CDELT2']  #--convert to arcsec
+        Br = np.array([Br1, Br2, Br3])*3600*header['CDELT2']  #--convert to arcsec
     
         #-- plot the randomly selected background points --#
         for i in range(4):
-            for Bx, By in zip([Bx1, Bx2], [By1, By2]):
-                __pDistToLine((Bx, By), cornerLines[i], ax=ax)
-                ax.plot(Bx, By, 'd', markersize=10, color='darkgreen', markeredgecolor='black', markeredgewidth=0.2)
-    
-        #-- get 1st background circle --#
-        bCirc1 = plt.Circle((Bx1, By1), Br1, alpha=0.50)
-        ax.add_artist(bCirc1)
-    
-        #-- get 2nd background circle --#
-        bCirc2 = plt.Circle((Bx2, By2), Br2, alpha=0.50)
-        ax.add_artist(bCirc2)
+            for bx, by, br in zip([Bx1, Bx2, Bx3], [By1, By2, By3], [Br1, Br2, Br3]):
+                __pDistToLine((bx, by), cornerLines[i], ax=ax)
+                ax.plot(bx, by, 'd', markersize=10, color='darkgreen', markeredgecolor='black', markeredgewidth=0.2)
+                    #-- add circle artists obj to plots --#
+                bCirc = plt.Circle((bx, by), br, alpha=0.50)
+                ax.add_artist(bCirc)
 
         #-- zoom to the overlap --#
         pad = 10
