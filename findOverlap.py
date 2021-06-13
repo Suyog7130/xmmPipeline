@@ -694,6 +694,8 @@ class findOverlap:
 
         if self.isSmallMode and inst is None:
             ax.set_title('small mode', fontsize=12, loc='left')
+        if inst is not None:
+            ax.set_title(inst, fontsize=12, loc='center')
         ax.set_title(obsID, fontsize=12, loc='right')
         plt.legend(loc='upper right')
         plt.tight_layout()
@@ -736,7 +738,7 @@ class findOverlap:
         #-- open the image --#
         name = inst + '_CCD' + instCCD
         imgInst, header = self.__openImg(workdir+'/'+name+'_image.fits', header=True)
-        self.imgInst = imgInst
+        self.imgInst, self.header = imgInst, header
 
 
         ##-- distance between two points --##

@@ -116,12 +116,12 @@ class epicSpectra (epicObj):
             #-- save ``backgroundLoc_indi`` dictionary --#
             if result.get('backgroundLoc_indi', None) is None:
                 result['backgroundLoc_indi'] = {}
-            result['backgroundLoc_indi'][inst] = self.backgroundLoc_indi[obsID][inst]
+            result['backgroundLoc_indi'][inst] = self.backgroundLocIndi[obsID][inst]
 
             #-- save ``otherSources_indi`` dictionary --#
             if result.get('backgroundLoc_indi', None) is None:
                 result['backgroundLoc_indi'] = {}
-            result['backgroundLoc_indi'][inst] = self.backgroundLoc_indi[obsID][inst]
+            result['backgroundLoc_indi'][inst] = self.backgroundLocIndi[obsID][inst]
 
             #-- dump to the pickle file --#
             outfile = open(fname, 'wb')
@@ -414,13 +414,18 @@ def main (args):
         return True
 
     #-- if ``runIndiBkgCircFuncs``, then run them and exit --#
-    if args.inst is not None:
-        obj.readCCDcoordsPickle()
-        obj.otherSources_indi(inst=args.inst)
-        obj.getBackgroundCircles_indi(inst=args.inst)
-        obj.updateCCDcoordsPickle(inst=args.inst)
-        return print('\nRan the IndiBkgCirc functions and obtained indi inst bkg circles. \
-            The CCDcoordsPickle file has also been updated with backgroundLocIndi key.')
+    if args.runIndiBkgCircFuncs:
+        print('\nrunIndiBkgCircFuncs flag is on.\n \
+               Running Individual Background Circle Functions.')
+        if args.inst is None:
+            return print('\nPlease provide an Instrument name to use!')
+        else:
+            obj.readCCDcoordsPickle()
+            obj.find_otherSources_indi(inst=args.inst)
+            obj.getBackgroundCircles_indi(inst=args.inst)
+            obj.updateCCDcoordsPickle(inst=args.inst)
+            return print('\nRan the IndiBkgCirc functions and obtained indi inst bkg circles.\n \
+                The CCDcoordsPickle file has also been updated with backgroundLocIndi key.')
 
     #-- run the spectra functions --#
     obj.readCCDcoordsPickle()
@@ -494,6 +499,13 @@ if __name__=="__main__":
                               If the model is already present in the file, it is not \
                               overwritten by appending 1 to the new model name. \
                               (default:%(default)s)')
+    
+    parser.add_argument('--runIndiBkgCircFuncs', action='store_true', default=False, \
+                        help='Spectral Analysis requires the three EPIC camera data \
+                              to be separately processed. For this individual instrument \
+                              background circles are required. Use this flag to run the \
+                              functions in epicObj to find indi inst bkgCircs, which \
+                              are then updated in the CCDcoordsPickle.')
 
     #-- methods --#
     parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
@@ -502,8 +514,8 @@ if __name__=="__main__":
                               the Spectra. (default:%(default)s)')
 
     #-- fitSpectra arguments --#
-    parser.add_argument('--instName', action='store', default='PN', \
-                        help='the instrument to use. (default:%(default)s)')
+    #parser.add_argument('--instName', action='store', default='PN', \
+    #                    help='the instrument to use. (default:%(default)s)')
     parser.add_argument('--model', action='store', default='tbabs*zashift*(powerlaw)', \
                         help='name of the model to be used. (default:%(default)s)')
     parser.add_argument('--modelParams', action='store', type=eval, default={}, \

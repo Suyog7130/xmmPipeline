@@ -892,6 +892,12 @@ class epicObj:
         from XMMSAS for detecting the Sources.
         `inst_CCD##.evts` is required to extract corresponding images in the Energy band 
         0.3-10 KeV using ``evselect``.
+
+        * The indi inst files have ``inst`` appended at the end of their names.
+        * `emllist.fits` originally found for the overlap is rewritten with every run
+          of ``edetect_chain``. However, the `emllist.csv` is not b'cuz of the above point
+          So `emllist.csv` should be used for the overlap cases.
+          And anyway, another run of the original `find_otherSources` will update the said file.
         """
         print('\nFinding all the other Sources.')
         
@@ -921,6 +927,8 @@ class epicObj:
 
             #-- grab Attitude File --#
             AttFile = glob.glob(workdir+'/*AttHk*.ds')[0]
+
+            #-- run the functions --#
             subprocess.run("cd "+workdir+";"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
@@ -933,9 +941,10 @@ class epicObj:
                                eventsets='"+name+".evts' attitudeset="+AttFile+" \
                                pimin='"+pimin+"' pimax='"+pimax+"' ecf='"+ecf+"' \
                                esp_nsplinenodes="+esp_nsplinenodes+" esen_mlmin=10;"+ \
+                           "cp emllist.fits emllist_"+inst+".fits;"+  
                            "srcdisplay boxlistset=emllist_"+inst+".fits imageset="+name+"_imagesmap.fits sourceradius=0.005 \
-                               withregionfile=true regionfile=allSources.reg;"
-                           #"fv emllist.fits;" 
+                               withregionfile=true regionfile=allSources_"+inst+".reg;"
+                           #"fv emllist_"+inst+".fits;" 
                            #"ds9 PNMOS12_image_fullsmap.fits -regions load allSources.reg \
                            #    -cmap bb -scale log -zoom 4 -export 'allSources.jpeg' 300;"
                            , shell=True) 
@@ -946,7 +955,7 @@ class epicObj:
             df = pd.read_csv(workdir+'/'+'emllist_'+inst+'.csv').drop_duplicates(['X_IMA'])
             allX, allY = np.array(df.X_IMA), np.array(df.Y_IMA)
 
-            self.otherSources[obsID][inst] = [(x, y) for x, y in zip(allX, allY)]
+            self.otherSourcesIndi[obsID][inst] = [(x, y) for x, y in zip(allX, allY)]
 
             print('\nAll other Sources for obsID {} found.'.format(obsID))
         #print(self.otherSources)    
@@ -989,7 +998,7 @@ class epicObj:
         
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nDetecting the PNMOS12 overlap region for obsID {}.'.format(obsID))
+            print(f'\nDetecting {inst} BkgCircs for obsID {obsID}.')
             workdir = self.workdir+'/'+obsID+'/work'
 
             self.backgroundLocIndi[obsID] = {}  #--initialize empty dict for saving indi inst bkgCircs.
