@@ -936,7 +936,6 @@ class findOverlap:
                 if dist >= totalBr:
                     totalBr = dist       #--I should take the minimum such totalBr point.
                     Bx2, By2 = ptX, ptY
-                    break
 
             if Bx2 is not None:
                 axes[3].plot(xToUse, yToUse, '.', color='cyan', alpha=0.25)
@@ -952,6 +951,15 @@ class findOverlap:
         #else:
         Bx1, By1, Bx2, By2 = __backgroundPt(ax=axes[3])
 
+        totalBr = Br1 + Br2
+        xf, yf = [], []
+        for ptX, ptY in zip(xUseN, yUseN):
+            dist = __euclideanDist((Bx1, By1), (ptX, ptY))
+            if dist >= totalBr:
+                xf.append(ptX)
+                yf.append(ptY)
+                
+        Bx2, By2, Bx3, By3 = __backgroundPt(xToUse=xf, yToUse=yf, ax=axes[3])
 
         #-- have max radius at these bkg locations --#
         def __maxBkgRadius (Bx, By):
