@@ -48,7 +48,7 @@ def reduceData_method (args):
     return print('\nHurray! reduceData Method Successfully ran.') 
     
     
-##-- the extractProds main function --##
+##-- the combineAndFind main function --##
 def combineAndFind_method (args):
 
     if args.bkgCircRadius is not None and len(args.bkgCircRadius)==1:
@@ -91,6 +91,46 @@ def combineAndFind_method (args):
         print('These obsIDs were excluded from analysis: ', obj.badObs)
 
     return True
+    
+    
+##-- the runIndiBkgCircFuncs main function --##
+def runIndiBkgCircFuncs_method (args):
+    
+    #-- create an object of class spectra --#
+    obj = epicSpectra(ra=args.ra, dec=args.dec, workdir=args.workdir, \
+                      sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
+                      saveFig=args.noSaveFig, showFig=args.showFig, \
+                      ignorePileup=args.ignorePileup, doNotOverwriteModel=args.doNotOverwriteModel)
+    
+    #-- get obsIDs and the objName --#
+    if args.objName == None:
+        try:
+            obj.findObsIDs()
+        except KeyError:
+            print('\nNo obsIDs found for the given location.')
+            print('Confirm that you are connected to the Internet!')
+    else:
+        obj.objName = args.objName
+
+    #-- check if obsID has been passed --#
+    if args.obsIDs!=None:
+        obj.obsIDs = args.obsIDs
+        print('Using the obsIDs passed.')
+
+    #-- run ``runIndiBkgCircFuncs`` functions and exit --#
+    print('\nrunIndiBkgCircFuncs flag is on.\n \
+           Running Individual Background Circle Functions.')
+    if args.inst is None:
+        return print('\nPlease provide an Instrument name to use!')
+    else:
+        obj.readCCDcoordsPickle()
+        obj.find_otherSources_indi(inst=args.inst)
+        obj.getBackgroundCircles_indi(inst=args.inst)
+        obj.updateCCDcoordsPickle(inst=args.inst)
+        message = '\nRan the IndiBkgCirc functions and obtained indi inst bkg circles.'+ \
+                  '\nThe CCDcoordsPickle file has also been updated with backgroundLocIndi key.'
+        return print(message)
+
 
 
 ##-- the extractProds main function --##
@@ -142,22 +182,6 @@ if __name__=="__main__":
     description = 'Download, Reduce and extract products from the XMM data of the object located at the given coordinates.'
     
     parser = argparse.ArgumentParser(description=description)   #--create a ArgumentParser object.
-
-    #-- general arguments --#
-    parser.add_argument('--ra', action='store', type=float, default=192.0625, \
-                        help='right ascension of the object. (default:%(default)s, ASASSN-14li)')
-    parser.add_argument('--dec', action='store', type=float, default=17.7739, \
-                        help='declination of the object. (default:%(default)s, ASASSN-14li)')   
-    parser.add_argument('--workdir', action='store', type=str, default='/media/suyog/DATA/xmm_obs', \
-                        help='directory where obsid folders will be stored. (default:%(default)s)')
-            
-    #-- arguments for running specific functions --#            
-    parser.add_argument('--method', action='store', type=str, #default='reduceData', \
-                        choices=['reduceData', 'combineAndFind', 'extractProds'], \
-                        help='the set of specific functions to be executed. Default method is set to None.')
-    parser.add_argument('--obsIDs', nargs='+', action='store', default=None, #['0831790201'], \
-                        help='''obsIDs for which some specific function has to executed. 
-                                Valid only when --method argument is specified. (default:%(default)s)''')
     
     #-- location paths arguments --#
     SAS_DIR = '/usr/local/xmmsas_20201028_0905'  
@@ -169,6 +193,36 @@ if __name__=="__main__":
                         help='HEADAS environment variable. (default:%(default)s)')
     parser.add_argument('--sas_ccfpath', action='store', type=str, default=SAS_CCFPATH, \
                         help='SAS_CCFPATH environment variable. (default:%(default)s)')
+
+    #-- general arguments --#
+    parser.add_argument('--ra', action='store', type=float, default=192.0625, \
+                        help='right ascension of the object. (default:%(default)s, ASASSN-14li)')
+    parser.add_argument('--dec', action='store', type=float, default=17.7739, \
+                        help='declination of the object. (default:%(default)s, ASASSN-14li)')   
+    parser.add_argument('--workdir', action='store', type=str, default='/media/suyog/DATA/xmm_obs', \
+                        help='directory where obsid folders will be stored. (default:%(default)s)')
+            
+    #-- arguments for running specific functions --#            
+    parser.add_argument('--method', action='store', type=str, #default='reduceData', \
+                        choices=['reduceData', 'combineAndFind', 'extractProds', 'runIndiBkgCircFuncs'], \
+                        help='the set of specific functions to be executed. Default method is set to None. \
+                              runIndiBkgCircFuncs option is same as using the eponymous flag.')
+    parser.add_argument('--obsIDs', nargs='+', action='store', default=None, #['0831790201'], \
+                        help='''obsIDs for which some specific function has to executed. 
+                                Valid only when --method argument is specified. (default:%(default)s)''')
+
+    parser.add_argument('--inst', action='store', default=None, \
+                        help='Spectral Analysis requires the three EPIC camera data \
+                              to be separately processed. For this individual instrument \
+                              background circles are required. Use this to pass the \
+                              individual instrument for which bkgCircs have to be found. \
+                              Also updates CCDcoordsPickle. (default:%(default)s)')
+    parser.add_argument('--runIndiBkgCircFuncs', action='store_true', default=False, \
+                        help='Spectral Analysis requires the three EPIC camera data \
+                              to be separately processed. For this individual instrument \
+                              background circles are required. Use this flag to run the \
+                              functions in epicObj to find indi inst bkgCircs, which \
+                              are then updated in the CCDcoordsPickle.')
 
     #-- optional arguments for function parameters --#
     group = parser.add_argument_group('function parameters')
@@ -200,6 +254,7 @@ if __name__=="__main__":
     group.add_argument('--binBkglc', action='store', default='no', \
                         help='whether to bin background light curve or not? (default:%(default)s)')
 
+    #-- flags --#
     parser.add_argument('--noSaveFig', action='store_false', default=True, \
                         help='do not save the matplotlib plots? (default:%(default)s)')
     parser.add_argument('--showFig', action='store_true', default=False, \
@@ -222,6 +277,8 @@ if __name__=="__main__":
         combineAndFind_method(args)
     elif args.method == 'extractProds':
         extractProds_method(args)
+    elif args.method == 'runIndiBkgCircFuncs' or args.runIndiBkgCircFuncs:
+        runIndiBkgCircFuncs_method(args)
     elif args.saveResults:
         extractProds_method(args)
     else:
@@ -234,6 +291,5 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
-
 
 

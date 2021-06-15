@@ -414,21 +414,6 @@ def main (args):
         obj.save_spectraResults()
         return True
 
-    #-- if ``runIndiBkgCircFuncs``, then run them and exit --#
-    if args.runIndiBkgCircFuncs:
-        print('\nrunIndiBkgCircFuncs flag is on.\n \
-               Running Individual Background Circle Functions.')
-        if args.inst is None:
-            return print('\nPlease provide an Instrument name to use!')
-        else:
-            obj.readCCDcoordsPickle()
-            obj.find_otherSources_indi(inst=args.inst)
-            obj.getBackgroundCircles_indi(inst=args.inst)
-            obj.updateCCDcoordsPickle(inst=args.inst)
-            message = '\nRan the IndiBkgCirc functions and obtained indi inst bkg circles.'+ \
-                      '\nThe CCDcoordsPickle file has also been updated with backgroundLocIndi key.'
-            return print(message)
-
     #-- run the spectra functions --#
     obj.readCCDcoordsPickle()
     if args.method == 'extractSpectra':
@@ -467,13 +452,6 @@ if __name__=="__main__":
     parser.add_argument('--objName', action='store', default=None, \
                         help='name of the obj used to locate the xmmObj pickle file. \
                               (default:%(default)s)')
-
-    parser.add_argument('--inst', action='store', default=None, \
-                        help='Spectral Analysis requires the three EPIC camera data \
-                              to be separately processed. For this individual instrument \
-                              background circles are required. Use this to pass the \
-                              individual instrument for which bkgCircs have to be found. \
-                              Also updates CCDcoordsPickle. (default:%(default)s)')
     
     #-- location paths arguments --#
     SAS_DIR = '/usr/local/xmmsas_20201028_0905'  
@@ -501,13 +479,6 @@ if __name__=="__main__":
                               If the model is already present in the file, it is not \
                               overwritten by appending 1 to the new model name. \
                               (default:%(default)s)')
-    
-    parser.add_argument('--runIndiBkgCircFuncs', action='store_true', default=False, \
-                        help='Spectral Analysis requires the three EPIC camera data \
-                              to be separately processed. For this individual instrument \
-                              background circles are required. Use this flag to run the \
-                              functions in epicObj to find indi inst bkgCircs, which \
-                              are then updated in the CCDcoordsPickle.')
 
     #-- methods --#
     parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
