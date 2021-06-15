@@ -750,7 +750,7 @@ class findOverlap:
 
 
     ##-- function to find some background circles --##
-    def backgroundCircles_indi (self, ax, inst):
+    def backgroundCircles_indi (self, ax, inst, nBkgCircs=3):
         """
         Automatically finds Background Circles in the instrument data passed.
         Modified the function a great deal from the earlier naive `backgroundCircles` function.
@@ -765,6 +765,7 @@ class findOverlap:
         Args:
             ax (obj): `matplotlib.pyplot.subplots` object for plotting the images.
             inst (str): name of the instrument of use.
+            nBkgCircs (int): number of background circles to detect. Defaults to 3. (Optional)
 
         :Output: Coordinates and Radii of the Background Circles.
 
@@ -926,7 +927,6 @@ class findOverlap:
         #print(len(xUseN), len(yUseN))
         
         ##-- recursively find random background points --##
-        nBkgCircs = 3
         globalBx, globalBy = [], []                 #--need to define these before `__backgroundPt()` 
 
         def __backgroundPt (xToUse=xUseN, yToUse=yUseN, ax=None):
