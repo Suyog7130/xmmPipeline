@@ -202,7 +202,7 @@ class findOverlap:
         self.srcThreshold = srcThreshold  #--threshold distance from Source passed by the user, arcsec.
         self.gap = gap                    #--gap to have around the circles, in pixels.
 
-        self.bCircles = []     #--list of list for [x,y,r] of each found background circles.
+        self.bCircles = []       #--list of list for [x,y,r] of each found background circles.
         self.correctSrc = None   #--corrected main source coordinates.
 
         self.axlims = {'xlim':None, 'ylim':None}    #--four corners of the PNMOS12 image, for setting the axis limits.
@@ -1090,13 +1090,13 @@ class findOverlap:
             self.obtainOverlap(axes=axes)
             self.backgroundCircles(axes=axes)
             self.createOutputImages()
-            return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR, self.isSmallMode)
+            return (self.bCircles, self.correctSrc, self.srcR, self.isSmallMode)
         
         #-- for individual instrument --#
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
         self.backgroundCircles_indi(ax=ax, inst=inst)
         self.createOutputImages(inst=inst)
-        return (self.bCircle1, self.bCircle2, self.correctSrc, self.srcR)
+        return (self.bCircles, self.correctSrc, self.srcR)
 
 
 

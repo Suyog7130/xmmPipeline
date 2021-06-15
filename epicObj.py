@@ -847,11 +847,12 @@ class epicObj:
             findOverlapObj = findOverlap(workdir=workdir, obsID=obsID, pnCCD=pnCCD, srcCoords=srcCoords, otherSrc=otherSrc, \
                                          srcR=self.srcCircRadius, bkgR=self.bkgCircRadius, srcThreshold=self.dSrcThreshold, \
                                          gap=self.bkgCircGap, saveFig=self.saveFig, showFig=self.showFig)
-            bCircle1, bCircle2, correctSrc, srcR, isSmallMode = findOverlapObj.main()
+            bCircles, correctSrc, srcR, isSmallMode = findOverlapObj.main()
             
             #-- save the background circle parameters --#
-            bLocParams['Bx1'], bLocParams['By1'], bLocParams['Br1'] = bCircle1[0], bCircle1[1], bCircle1[2]
-            bLocParams['Bx2'], bLocParams['By2'], bLocParams['Br2'] = bCircle2[0], bCircle2[1], bCircle2[2]
+            for i, bCircle in enumerate(bCircles):
+                xKey, yKey, rKey = [key+str(i+1) for key in ['Bx', 'By', 'Br']]
+                bLocParams[xKey], bLocParams[yKey], bLocParams[rKey] = bCircle[0], bCircle[1], bCircle[2]
             self.backgroundLoc[obsID] = bLocParams
 
             #-- save the corrected main source coordinates --#
@@ -1026,12 +1027,13 @@ class epicObj:
             findOverlapObj = findOverlap(workdir=workdir, obsID=obsID, pnCCD=instCCD, srcCoords=srcCoords, otherSrc=otherSrc, \
                                          srcR=self.srcCircRadius, bkgR=self.bkgCircRadius, srcThreshold=self.dSrcThreshold, \
                                          gap=self.bkgCircGap, saveFig=self.saveFig, showFig=self.showFig)
-            bCircle1, bCircle2, correctSrc, srcR = findOverlapObj.main(inst=inst)
+            bCircles, correctSrc, srcR = findOverlapObj.main(inst=inst)
             
             #-- save the background circle parameters --#
-            bLocParams = {'Bx1':0, 'By1':0, 'Br1':0, 'Bx2':0, 'By2':0, 'Br2':0}
-            bLocParams['Bx1'], bLocParams['By1'], bLocParams['Br1'] = bCircle1[0], bCircle1[1], bCircle1[2]
-            bLocParams['Bx2'], bLocParams['By2'], bLocParams['Br2'] = bCircle2[0], bCircle2[1], bCircle2[2]
+            bLocParams = {}
+            for i, bCircle in enumerate(bCircles):
+                xKey, yKey, rKey = [key+str(i+1) for key in ['Bx', 'By', 'Br']]
+                bLocParams[xKey], bLocParams[yKey], bLocParams[rKey] = bCircle[0], bCircle[1], bCircle[2]
             self.backgroundLocIndi[obsID][inst] = bLocParams
 
             #-- save the corrected main source coordinates --#
@@ -1498,6 +1500,5 @@ class epicObj:
 
 #################### End of Program #########################
 #############################################################
-
 
 

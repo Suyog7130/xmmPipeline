@@ -425,8 +425,9 @@ def main (args):
             obj.find_otherSources_indi(inst=args.inst)
             obj.getBackgroundCircles_indi(inst=args.inst)
             obj.updateCCDcoordsPickle(inst=args.inst)
-            print('\nRan the IndiBkgCirc functions and obtained indi inst bkg circles.')
-            return print('\nThe CCDcoordsPickle file has also been updated with backgroundLocIndi key.')
+            message = '\nRan the IndiBkgCirc functions and obtained indi inst bkg circles.'+ \
+                      'The CCDcoordsPickle file has also been updated with backgroundLocIndi key.'
+            return print(message)
 
     #-- run the spectra functions --#
     obj.readCCDcoordsPickle()
