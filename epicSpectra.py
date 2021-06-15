@@ -62,74 +62,7 @@ class epicSpectra (epicObj):
     def __init__ (self, doNotOverwriteModel=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.doNotOverwriteModel = doNotOverwriteModel
-
-
-    ##-- update location parameters in the pickle file --##
-    def updateCCDcoordsPickle (self, inst=None):
-        """
-        Writes the background location parameter dictionary for individual instruments
-        ``backgroundLoc_indi``  to `ccd_coords_info.pickle` file.
-        If the file is already present in the directory, then the values for the 
-        corresponding keys are updated.
-    
-        Args:
-            inst (str): name of the instrument of use.
-
-        :Input: ``backgroundLoc_indi`` dictionary containing the location parameters.
-        :Output: Updated ``ccd_coords_info.pickle`` file.
-
-        NOTES
-        -----
-        If no CCDcoordsPickle file is available in the ``workdir``, then the whole
-        file is created with other values been saved as well.
-        """
-        maindir = self.workdir
-        print('\nWriting indi inst bkgCircs data to ccd_coords_info.pickle file.\n')
-
-        #-- iterating for all the obsIDs --#      
-        for obsID in self.obsIDs:
-            print('Saving pickle for obsID {}.'.format(obsID))
-            workdir = maindir+'/'+obsID+'/work'
-            fname = workdir+'/'+'ccd_coords_info.pickle'
-
-            #-- load the `ccd_coords_info.pickle` if already present --#
-            if os.path.isfile(fname):
-                result = pickle.load(open(fname, 'rb'))
-                    #-- create a backup file --#
-                subprocess.run("cd "+workdir+";"+ \
-                               "cp ccd_coords_info.pickle ccd_coords_info.bak;"
-                               , shell=True)
-            else:
-                result = {}
-            
-                    #-- save the CCD and coords info in a pickle file --#
-                result['sourceCCDs'] = self.sourceCCDs[obsID]
-                result['sourceLoc'] = self.sourceLoc[obsID]
-                result['backgroundLoc'] = self.backgroundLoc[obsID]
-                result['otherSources'] = self.otherSources[obsID]
-                result['smallMode'] = self.smallMode[obsID]
-                if obsID in self.badObs:
-                    result['badObs'] = True
-                else:
-                    result['badObs'] = False
-
-            #-- save ``backgroundLoc_indi`` dictionary --#
-            if result.get('backgroundLoc_indi', None) is None:
-                result['backgroundLoc_indi'] = {}
-            result['backgroundLoc_indi'][inst] = self.backgroundLocIndi[obsID][inst]
-
-            #-- save ``otherSources_indi`` dictionary --#
-            if result.get('otherSources_indi', None) is None:
-                result['otherSources_indi'] = {}
-            result['otherSources_indi'][inst] = self.otherSourcesIndi[obsID][inst]
-
-            #-- dump to the pickle file --#
-            outfile = open(fname, 'wb')
-            pickle.dump(result, outfile)
-            outfile.close()
-
-        return print('\nWrote location parameters to the pickle file.')
-
+        
 
     ##-- extract the Spectra in Image Mode --##
     def extractSpectra_imageMode (self):
@@ -511,3 +444,4 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
+

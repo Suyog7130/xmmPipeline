@@ -97,7 +97,7 @@ def combineAndFind_method (args):
 def runIndiBkgCircFuncs_method (args):
     
     #-- create an object of class spectra --#
-    obj = epicSpectra(ra=args.ra, dec=args.dec, workdir=args.workdir, \
+    obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                       sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
                       saveFig=args.noSaveFig, showFig=args.showFig, \
                       ignorePileup=args.ignorePileup, doNotOverwriteModel=args.doNotOverwriteModel)
@@ -291,5 +291,6 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
+
 
 
