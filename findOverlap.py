@@ -685,9 +685,11 @@ class findOverlap:
             else:
                 img = self.overlap
             fname = 'source_background_circles.png'
+            bCircles = [self.bCircle1, self.bCircle2]
         else:
             img = self.imgInst
             fname = 'srcBkg_circs_'+inst+'.png'
+            bCircles = self.bCircles
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
         ax.imshow(img, cmap='afmhot', origin='lower')
@@ -717,7 +719,7 @@ class findOverlap:
         #    ax.add_artist( plt.Circle((other[0], other[1]), srcR, color='blue', fill=False) )
 
         #-- plot the background circles --#
-        for i, bCircle in enumerate([self.bCircle1, self.bCircle2]):
+        for i, bCircle in enumerate(bCircles):
             Bx, By = bCircle[0], bCircle[1]
             Bx, By = np.array([Bx, By])/header['CDELT2L']
             Br = bCircle[2]/header['CDELT2L']  #--converting from log pixel scale.
@@ -1040,7 +1042,7 @@ class findOverlap:
         for i, bx, by, br in zip(range(len(Br)), globalBx, globalBy, Br):
             if i==0:
                 print('')
-            print(f'Background circle {i}:\t{bx} {by} {br}')
+            print(f'Background circle {i+1}:\t{bx} {by} {br}')
 
         globalBr = np.array(globalBr)*header['CDELT2L']  #--radius in log-pixel for FITS overlay plot.
         for bx, by, br in zip(globalBx, globalBy, globalBr):
@@ -1140,4 +1142,3 @@ if __name__=="__main__":
     
     
     
-
