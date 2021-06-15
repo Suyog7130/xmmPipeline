@@ -119,9 +119,9 @@ class epicSpectra (epicObj):
             result['backgroundLoc_indi'][inst] = self.backgroundLocIndi[obsID][inst]
 
             #-- save ``otherSources_indi`` dictionary --#
-            if result.get('backgroundLoc_indi', None) is None:
-                result['backgroundLoc_indi'] = {}
-            result['backgroundLoc_indi'][inst] = self.backgroundLocIndi[obsID][inst]
+            if result.get('otherSources_indi', None) is None:
+                result['otherSources_indi'] = {}
+            result['otherSources_indi'][inst] = self.otherSourcesIndi[obsID][inst]
 
             #-- dump to the pickle file --#
             outfile = open(fname, 'wb')
@@ -426,7 +426,7 @@ def main (args):
             obj.getBackgroundCircles_indi(inst=args.inst)
             obj.updateCCDcoordsPickle(inst=args.inst)
             message = '\nRan the IndiBkgCirc functions and obtained indi inst bkg circles.'+ \
-                      'The CCDcoordsPickle file has also been updated with backgroundLocIndi key.'
+                      '\nThe CCDcoordsPickle file has also been updated with backgroundLocIndi key.'
             return print(message)
 
     #-- run the spectra functions --#
