@@ -99,7 +99,7 @@ def runIndiBkgCircFuncs_method (args):
     #-- create an object of class spectra --#
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                       sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
-                      saveFig=args.noSaveFig, showFig=args.showFig)
+                      saveFig=args.noSaveFig, showFig=args.showFig, ignorePileup=args.ignorePileup)
     
     #-- get obsIDs and the objName --#
     if args.objName == None:
@@ -263,6 +263,8 @@ if __name__=="__main__":
                         help='show the matplotlib plots or not? (default:%(default)s)')
     parser.add_argument('--saveResults', action='store_true', default=False, \
                         help='run only save_results function. (default:%(default)s)')
+    parser.add_argument('--ignorePileup', action='store_true', default=False, \
+                        help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
     
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.

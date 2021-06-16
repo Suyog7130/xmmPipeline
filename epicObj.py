@@ -1533,7 +1533,7 @@ class epicObj:
             srcFiles = glob.glob(workdir+'/*source*.fits')
             bkgFiles = glob.glob(workdir+'/*background*.fits')
             pngFiles = glob.glob(workdir+'/*overlap*.png') + glob.glob(workdir+'/*circles*.png') \
-                        + glob.glob(workdir+'/*lightcurve*.png')
+                        + glob.glob(workdir+'/*lightcurve*.png') + glob.glob(workdir+'/*srcBkg_circs*.png')
             jpegFiles = glob.glob(workdir+'/*.jpeg')
             csvFiles = glob.glob(workdir+'/*.csv')
             pickleFile = glob.glob(workdir+'/*ccd*.pickle')
