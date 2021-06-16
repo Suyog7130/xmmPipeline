@@ -99,8 +99,7 @@ def runIndiBkgCircFuncs_method (args):
     #-- create an object of class spectra --#
     obj = epicObj(ra=args.ra, dec=args.dec, workdir=args.workdir, \
                       sas_dir=args.sas_dir, headas=args.headas, sas_ccfpath=args.sas_ccfpath, \
-                      saveFig=args.noSaveFig, showFig=args.showFig, \
-                      ignorePileup=args.ignorePileup, doNotOverwriteModel=args.doNotOverwriteModel)
+                      saveFig=args.noSaveFig, showFig=args.showFig)
     
     #-- get obsIDs and the objName --#
     if args.objName == None:
@@ -210,6 +209,9 @@ if __name__=="__main__":
     parser.add_argument('--obsIDs', nargs='+', action='store', default=None, #['0831790201'], \
                         help='''obsIDs for which some specific function has to executed. 
                                 Valid only when --method argument is specified. (default:%(default)s)''')
+    parser.add_argument('--objName', action='store', default=None, \
+                        help='name of the obj used to locate the xmmObj pickle file. \
+                              (default:%(default)s)')
 
     parser.add_argument('--inst', action='store', default=None, \
                         help='Spectral Analysis requires the three EPIC camera data \
@@ -261,8 +263,6 @@ if __name__=="__main__":
                         help='show the matplotlib plots or not? (default:%(default)s)')
     parser.add_argument('--saveResults', action='store_true', default=False, \
                         help='run only save_results function. (default:%(default)s)')
-    parser.add_argument('--ignorePileup', action='store_true', default=False, \
-                        help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
     
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
