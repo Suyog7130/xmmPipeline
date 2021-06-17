@@ -399,7 +399,7 @@ def main (args):
                       ignorePileup=args.ignorePileup, doNotOverwriteModel=args.doNotOverwriteModel)
     
     #-- get obsIDs and the objName --#
-    if args.objName == None:
+    if args.objName is None:
         try:
             obj.findObsIDs()
         except KeyError:
@@ -409,7 +409,7 @@ def main (args):
         obj.objName = args.objName
 
     #-- check if obsID has been passed --#
-    if args.obsIDs!=None:
+    if args.obsIDs is not None:
         obj.obsIDs = args.obsIDs
         print('Using the obsIDs passed.')
     
