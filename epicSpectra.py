@@ -33,6 +33,11 @@ Completing the SpecModel fitting now.
 ---
 Completing the work for obtaining individual instrument bkgCircs.
     * Adding `runIndiBkgCircFuncs` to the main function.
+
+17th June 2021:
+---
+Adding features to read individual instrument bkgCircs from ccdCoordsPickle file.
+And finally starting the manual specModel fits.
 """
 
 import os
@@ -62,6 +67,44 @@ class epicSpectra (epicObj):
     def __init__ (self, doNotOverwriteModel=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.doNotOverwriteModel = doNotOverwriteModel
+
+    
+    ##-- read indi inst bkgCircs from updated pickle file --##
+    def readUpdatedCCDcoordsPickle (self):
+        """
+        Reads the individual instrument bkgCircs keywords from the updated 
+        `ccd_coords_info.pickle` file which contains the location parameters.
+        """
+        workdir = self.workdir
+        print('\nLoading the ccd_coords_info.pickle file.')
+
+        #-- iterating for all the obsIDs --#      
+        for obsID in self.obsIDs:
+            print('\nReading indi inst bkgCircs for obsID {}.'.format(obsID))
+            fname = workdir+'/'+obsID+'/work/ccd_coords_info.pickle'
+
+            #-- check for the pickle file --#
+            if not os.path.isfile(fname):
+                print(f'\nFile {fname} not found!\n')
+                self.badObs.append(obsID)
+                continue
+
+            #-- load the ccd_coords_info.pickle --#
+            result = pickle.load(open(fname, 'rb'))
+
+            #-- save ``backgroundLoc_indi`` dictionary --#
+            if result.get('backgroundLoc_indi', None) is not None:
+                self.backgroundLocIndi[obsID] = result['backgroundLoc_indi']
+            else:
+                self.backgroundLocIndi[obsID] = None
+
+            #-- save ``otherSources_indi`` dictionary --#
+            if result.get('otherSources_indi', None) is not None:
+                self.otherSourcesIndi[obsID] = result['otherSources_indi']
+            else:
+                self.otherSourcesIndi[obsID] = None
+
+        return print('Read indi inst bkgCircs from the pickle files.')
         
 
     ##-- extract the Spectra in Image Mode --##
@@ -71,11 +114,14 @@ class epicSpectra (epicObj):
         See: https://www.cosmos.esa.int/web/xmm-newton/sas-thread-mos-spectrum,
              https://www.cosmos.esa.int/web/xmm-newton/sas-thread-pn-spectrum
 
-        :Input: Flared Background filtered PN, MOS1&2 Event Lists, `PNclean.ds`, `MOS1clean.ds` and
-               `MOS2clean.ds`. Alongwith SrcBkg coordinates and SourceCCDs resulting from `epicPipeline.py`
+        :Input: Flared Background filtered PN, MOS1&2 Event Lists, 
+               `PNclean.ds`, `MOS1clean.ds` and `MOS2clean.ds`. 
+               Alongwith SrcBkg coordinates and SourceCCDs resulting from `epicPipeline.py`
         :Output: MOS12 and PN SrcBkg Spectra in Image Mode, a Redistribution Matrix (`rmf`) file and
                 an Effective Area Vector (`arf`) file.
 
+        NOTES
+        -----
         Note that for Small Mode obsIDs, since the background is taken from PN image data,
         instead of the overlap region data b'cuz MOS12 region was of small size, the background
         region will lie outside of the image. Thus, only the Source Spectra can possibly be 
@@ -84,8 +130,15 @@ class epicSpectra (epicObj):
         as of now, I am completely skipping getting the MOS12 Spectra for Small mode obsIDs.
 
         20th May 2021: Now works with Pile-up corrected obsIDs.
-        Separate Source Spectrum file is generated for Piled-up cases, `inst_spectrum_source_annulus_obsID.fits`
+        Separate Source Spectrum file is generated for Piled-up cases, 
+        `inst_spectrum_source_annulus_obsID.fits`
         All the other file names, including the Grouped Spectra is not altered.
+
+        17th June 2021: Adding feature for individual instrument bkgCircs.
+
+        If the total area of indi inst bkgCircs is greater than that of the overlap bkgCircs,
+        or if the former is not available for any given obsID, the overlap bkgCircs
+        are used.
         """
         print('\nStarting Spectra extraction for MOS12 and PN in Image Mode.')
         
@@ -99,14 +152,9 @@ class epicSpectra (epicObj):
             print('\nExtracting Image Mode Spectra for obsID {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
             
-            #-- get the location parameters --#
+            #-- get the source location parameters --#
             locParams = self.sourceLoc[obsID]
             srcX, srcY, srcR = str(locParams['x']), str(locParams['y']), str(locParams['r'])
-            
-            bLocParams = self.backgroundLoc[obsID]
-            Bx1, By1, Br1 = str(bLocParams['Bx1']), str(bLocParams['By1']), str(bLocParams['Br1'])
-            Bx2, By2, Br2 = str(bLocParams['Bx2']), str(bLocParams['By2']), str(bLocParams['Br2'])
-            #print(srcX, srcY, srcR, '\n', Bx1, By1, Br1, '\n', Bx2, By2, Br2)
             
             #-- Piled-up cases --#
             srcRin = locParams.get('rIn', None)
@@ -119,6 +167,62 @@ class epicSpectra (epicObj):
             else:
                 srcSpectrumSet = "spectrum_source_"+obsID+".fits"
                 srcFilterExp = "((X, Y) IN circle("+srcX+","+srcY+","+srcR+"))';"
+            
+            #-- get the background location parameters --#
+            bLocParams = self.backgroundLoc[obsID]
+            Bx1, By1, Br1 = str(bLocParams['Bx1']), str(bLocParams['By1']), str(bLocParams['Br1'])
+            Bx2, By2, Br2 = str(bLocParams['Bx2']), str(bLocParams['By2']), str(bLocParams['Br2'])
+            #print(srcX, srcY, srcR, '\n', Bx1, By1, Br1, '\n', Bx2, By2, Br2)
+
+            bLocParamsIndi = self.backgroundLocIndi[obsID]
+            bkgFilterExp = {'PN':None, 'MOS1':None, 'MOS2':None}
+
+            for inst in ['PN', 'MOS1', 'MOS2']:
+                if bLocParamsIndi is not None:
+                    print('\nUsing individual instrument bkgCircs.')
+                    bkgCircs = bLocParamsIndi.get(inst, None)
+                    if bkgCircs is None: #--if particular inst is not present.
+                        print(f'\nIndi inst bkgCircs not found for {inst}')
+                        bkgCircs = bLocParams
+                else:
+                    bkgCircs = bLocParams
+                    print('\nIndi inst bkgCircs not found. Using overlap bkgCircs.')
+
+                bkgFlist = []
+                for i in len(bkgCircs):  #--for nBkgCircs.
+                    xKey, yKey, rKey = [key+str(i+1) for key in ['Bx', 'By', 'Br']]
+                    Bx, By, Br = str(bkgCircs[xKey]), str(bkgCircs[yKey]), str(bkgCircs[rKey])
+                    bkgFlist.append( "((X,Y) in CIRCLE("+Bx+","+By+","+Br+"))" )
+                bkgFilterExp[inst] = "||".join(bkgFlist)
+            print(bkgFilterExp)
+
+            #-- extract PN Spectra --#
+            subprocess.run("cd "+workdir+";"+ \
+                           ". $HEADAS/headas-init.sh;"+ \
+                           ". $SAS_DIR/setsas.sh;"+ \
+                           '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
+                           "evselect table=PNclean.ds"+ \
+                               " withspectrumset=yes spectrumset=PN_"+srcSpectrumSet+ \
+                               " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
+                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && "+srcFilterExp+ \
+                           "evselect table=PNclean.ds"+ \
+                               " withspectrumset=yes spectrumset=PN_spectrum_background_"+obsID+".fits"+ \
+                               " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
+                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && ((X,Y) in CIRCLE("+ \
+                               Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
+                           "backscale spectrumset=PN_"+srcSpectrumSet+" badpixlocation=PNclean.ds;"+ \
+                           "backscale spectrumset=PN_spectrum_background_"+obsID+".fits badpixlocation=PNclean.ds;"+ \
+                           "rmfgen spectrumset=PN_"+srcSpectrumSet+" rmfset=PN_"+obsID+".rmf;"+ \
+                           "arfgen spectrumset=PN_"+srcSpectrumSet+ \
+                               " arfset=PN_"+obsID+".arf withrmfset=yes rmfset=PN_"+obsID+".rmf"+ \
+                               " badpixlocation=PNclean.ds detmaptype=psf;"+ \
+                           "specgroup spectrumset=PN_"+srcSpectrumSet+ \
+                               " mincounts=20 oversample=3 rmfset=PN_"+obsID+".rmf"+ \
+                               " arfset=PN_"+obsID+".arf backgndset=PN_spectrum_background_"+obsID+".fits"+ \
+                               " groupedset=PN_spectrum_grouped_"+obsID+".fits;"
+                           #"fv PN_spectrum_grouped_"+obsID+".fits;"
+                           , shell=True)
+            print('\nPN Spectra extracted.')
 
             #-- extract MOS1 Spectra --#
             if self.smallMode[obsID]:
@@ -181,34 +285,6 @@ class epicSpectra (epicObj):
                                #"fv MOS2_spectrum_grouped_"+obsID+".fits;"
                                , shell=True)
                 print('\nMOS2 Spectra extracted.')
-
-            #-- extract PN Spectra --#
-            subprocess.run("cd "+workdir+";"+ \
-                           ". $HEADAS/headas-init.sh;"+ \
-                           ". $SAS_DIR/setsas.sh;"+ \
-                           '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                           "evselect table=PNclean.ds"+ \
-                               " withspectrumset=yes spectrumset=PN_"+srcSpectrumSet+ \
-                               " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
-                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && "+srcFilterExp+ \
-                           "evselect table=PNclean.ds"+ \
-                               " withspectrumset=yes spectrumset=PN_spectrum_background_"+obsID+".fits"+ \
-                               " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
-                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && ((X,Y) in CIRCLE("+ \
-                               Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
-                           "backscale spectrumset=PN_"+srcSpectrumSet+" badpixlocation=PNclean.ds;"+ \
-                           "backscale spectrumset=PN_spectrum_background_"+obsID+".fits badpixlocation=PNclean.ds;"+ \
-                           "rmfgen spectrumset=PN_"+srcSpectrumSet+" rmfset=PN_"+obsID+".rmf;"+ \
-                           "arfgen spectrumset=PN_"+srcSpectrumSet+ \
-                               " arfset=PN_"+obsID+".arf withrmfset=yes rmfset=PN_"+obsID+".rmf"+ \
-                               " badpixlocation=PNclean.ds detmaptype=psf;"+ \
-                           "specgroup spectrumset=PN_"+srcSpectrumSet+ \
-                               " mincounts=20 oversample=3 rmfset=PN_"+obsID+".rmf"+ \
-                               " arfset=PN_"+obsID+".arf backgndset=PN_spectrum_background_"+obsID+".fits"+ \
-                               " groupedset=PN_spectrum_grouped_"+obsID+".fits;"
-                           #"fv PN_spectrum_grouped_"+obsID+".fits;"
-                           , shell=True)
-            print('\nPN Spectra extracted.')
             print('\nExtracting Image Mode Spectra for obsID {} finished.'.format(obsID)) 
 
         return print('\nCompleted extracting Spectra in Image Mode.')
@@ -349,6 +425,7 @@ def main (args):
 
     #-- run the spectra functions --#
     obj.readCCDcoordsPickle()
+    obj.readUpdatedCCDcoordsPickle()
     if args.method == 'extractSpectra':
         obj.extractSpectra_imageMode()
     if args.method == 'fitSpectra':
@@ -420,6 +497,7 @@ if __name__=="__main__":
                               the Spectra. (default:%(default)s)')
 
     #-- fitSpectra arguments --#
+    group = parser.add_argument_group('function parameters')
     #parser.add_argument('--instName', action='store', default='PN', \
     #                    help='the instrument to use. (default:%(default)s)')
     parser.add_argument('--model', action='store', default='tbabs*zashift*(powerlaw)', \
@@ -432,7 +510,6 @@ if __name__=="__main__":
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
     #print('{}\n{}'.format(args, args.modelParams))
-    args.runIndiBkgCircFuncs = strToBool(args.runIndiBkgCircFuncs)
 
     #-- call the main function --#
     main(args)
