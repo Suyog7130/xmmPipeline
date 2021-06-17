@@ -475,34 +475,36 @@ if __name__=="__main__":
                         help='SAS_CCFPATH environment variable. (default:%(default)s)')
 
     #-- flags --#
-    parser.add_argument('--noSaveFig', action='store_false', default=True, \
-                        help='do not save the matplotlib plots? (default:%(default)s)')
-    parser.add_argument('--showFig', action='store_true', default=False, \
-                        help='show the matplotlib plots or not? (default:%(default)s)')
-    parser.add_argument('--saveResults', action='store_true', default=False, \
-                        help='run only save_spectraResults function. (default:%(default)s)')   
-    parser.add_argument('--ignorePileup', action='store_true', default=False, \
-                        help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
-    parser.add_argument('--doNotOverwriteModel', action='store_true', default=False, \
-                        help='save the specModelParams for the current model as a new \
-                              dictionary in specModelParams.json. \
-                              If the model is already present in the file, it is not \
-                              overwritten by appending 1 to the new model name. \
-                              (default:%(default)s)')
+    flagGroup = parser.add_argument_group('flags')
+    flagGroup.add_argument('--noSaveFig', action='store_false', default=True, \
+                           help='do not save the matplotlib plots? (default:%(default)s)')
+    flagGroup.add_argument('--showFig', action='store_true', default=False, \
+                           help='show the matplotlib plots or not? (default:%(default)s)')
+    flagGroup.add_argument('--saveResults', action='store_true', default=False, \
+                           help='run only save_spectraResults function. (default:%(default)s)')   
+    flagGroup.add_argument('--ignorePileup', action='store_true', default=False, \
+                           help='ignore Pile-up in Piled-up obsIDs. (default:%(default)s)')
+    flagGroup.add_argument('--doNotOverwriteModel', action='store_true', default=False, \
+                           help='save the specModelParams for the current model as a new \
+                                 dictionary in specModelParams.json. \
+                                 If the model is already present in the file, it is not \
+                                 overwritten by appending 1 to the new model name. \
+                                 (default:%(default)s)')
 
     #-- methods --#
-    parser.add_argument('--method', action='store', type=str, default='extractSpectra', \
-                        choices=['extractSpectra', 'fitSpectra'], \
-                        help='what to do? `fitSpectra` calls pyXspec to fit models to \
-                              the Spectra. (default:%(default)s)')
+    methodGroup = parser.add_argument_group('methods')
+    methodGroup.add_argument('--method', action='store', type=str, default='extractSpectra', \
+                             choices=['extractSpectra', 'fitSpectra'], \
+                             help='what to do? `fitSpectra` calls pyXspec to fit models to \
+                                   the Spectra. (default:%(default)s)')
 
     #-- fitSpectra arguments --#
-    group = parser.add_argument_group('function parameters')
-    #parser.add_argument('--instName', action='store', default='PN', \
+    group = parser.add_argument_group('fitSpectra parameters')
+    #group.add_argument('--instName', action='store', default='PN', \
     #                    help='the instrument to use. (default:%(default)s)')
-    parser.add_argument('--model', action='store', default='tbabs*zashift*(powerlaw)', \
+    group.add_argument('--model', action='store', default='tbabs*zashift*(powerlaw)', \
                         help='name of the model to be used. (default:%(default)s)')
-    parser.add_argument('--modelParams', action='store', type=eval, default={}, \
+    group.add_argument('--modelParams', action='store', type=eval, default={}, \
                         help='give a dictionary of model parameter values to use. \
                               Put double quotes for str values and enclose the dict \
                               within single quotes at the end.')
