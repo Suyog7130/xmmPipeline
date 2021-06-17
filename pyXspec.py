@@ -47,6 +47,10 @@ the Sigma values of the parameters should be the Errors in them, isn't it?
 
 See: `https://heasarc.gsfc.nasa.gov/docs/xanadu/xspec/python/html/spectrum.html#xspec.Spectrum`
 for the units in which the Flux and Lumin tuples are returned.
+
+17th June 2021:
+---
+Finally doing the manual specModel fitting.
 """
 
 import os
@@ -142,10 +146,11 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     else:
         resultDict = {}
 
-    if freeze is not None and doNotOverwriteModel:
-        mName = model +'_'+ 'p'.join( [str(i) for i in freeze] ) + 'frozen'
-    else:
-        mName = model
+    #if freeze is not None and doNotOverwriteModel:
+    #    mName = model +'_'+ 'p'.join( [str(i) for i in freeze] ) + 'frozen'
+    #else:
+    #    mName = model
+    mName = model
     if doNotOverwriteModel:
         mName = mName + '_1'
         print(f'\n--doNotOverwriteModel flag is ON\nmodel name is {mName}')
