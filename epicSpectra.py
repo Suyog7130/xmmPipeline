@@ -163,23 +163,20 @@ class epicSpectra (epicObj):
                 srcRout = str(locParams['rOut'])
                 print('\nThis observation was piled-up. Using ANNULUS for Source.')
                 srcSpectrumSet = "spectrum_source_annulus_"+obsID+".fits"
-                srcFilterExp = "((X,Y) in ANNULUS("+srcX+","+srcY+","+srcRin+","+srcRout+"))';"
+                srcFilterExp = "((X,Y) in ANNULUS("+srcX+","+srcY+","+srcRin+","+srcRout+"))"
             else:
                 srcSpectrumSet = "spectrum_source_"+obsID+".fits"
-                srcFilterExp = "((X, Y) IN circle("+srcX+","+srcY+","+srcR+"))';"
+                srcFilterExp = "((X, Y) IN circle("+srcX+","+srcY+","+srcR+"))"
+            print(f'\nsrcFilterExp:\n{srcFilterExp}')
             
             #-- get the background location parameters --#
             bLocParams = self.backgroundLoc[obsID]
-            Bx1, By1, Br1 = str(bLocParams['Bx1']), str(bLocParams['By1']), str(bLocParams['Br1'])
-            Bx2, By2, Br2 = str(bLocParams['Bx2']), str(bLocParams['By2']), str(bLocParams['Br2'])
-            #print(srcX, srcY, srcR, '\n', Bx1, By1, Br1, '\n', Bx2, By2, Br2)
-
             bLocParamsIndi = self.backgroundLocIndi[obsID]
             bkgFilterExp = {'PN':None, 'MOS1':None, 'MOS2':None}
 
             for inst in ['PN', 'MOS1', 'MOS2']:
                 if bLocParamsIndi is not None:
-                    print('\nUsing individual instrument bkgCircs.')
+                    print(f'\nUsing {inst} bkgCircs.')
                     bkgCircs = bLocParamsIndi.get(inst, None)
                     if bkgCircs is None: #--if particular inst is not present.
                         print(f'\nIndi inst bkgCircs not found for {inst}')
@@ -194,7 +191,7 @@ class epicSpectra (epicObj):
                     Bx, By, Br = str(bkgCircs[xKey]), str(bkgCircs[yKey]), str(bkgCircs[rKey])
                     bkgFlist.append( "((X,Y) in CIRCLE("+Bx+","+By+","+Br+"))" )
                 bkgFilterExp[inst] = "||".join(bkgFlist)
-                print(f'\n{inst} bkgFilterExp {bkgFilterExp[inst]}')
+                print(f'\n{inst} bkgFilterExp:\n{bkgFilterExp[inst]}')
 
             #-- extract PN Spectra --#
             subprocess.run("cd "+workdir+";"+ \
@@ -204,7 +201,7 @@ class epicSpectra (epicObj):
                            "evselect table=PNclean.ds"+ \
                                " withspectrumset=yes spectrumset=PN_"+srcSpectrumSet+ \
                                " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
-                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && "+srcFilterExp+ \
+                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && "+srcFilterExp+"';" \
                            "evselect table=PNclean.ds"+ \
                                " withspectrumset=yes spectrumset=PN_spectrum_background_"+obsID+".fits"+ \
                                " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
@@ -222,7 +219,6 @@ class epicSpectra (epicObj):
                            #"fv PN_spectrum_grouped_"+obsID+".fits;"
                            , shell=True)
             print('\nPN Spectra extracted.')
-            return print('Hurray!')
 
             #-- extract MOS1 Spectra --#
             if self.smallMode[obsID]:
@@ -235,12 +231,11 @@ class epicSpectra (epicObj):
                                "evselect table=MOS1clean.ds"+ \
                                    " withspectrumset=yes spectrumset=MOS1_"+srcSpectrumSet+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
-                                   " expression='#XMMEA_EM && (PATTERN<=12) && "+srcFilterExp+ \
+                                   " expression='#XMMEA_EM && (PATTERN<=12) && "+srcFilterExp+"';" \
                                "evselect table=MOS1clean.ds"+ \
                                    " withspectrumset=yes spectrumset=MOS1_spectrum_background_"+obsID+".fits"+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
-                                   " expression='#XMMEA_EM && (PATTERN<=12) && ((X,Y) in CIRCLE("+ \
-                                   Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
+                                   " expression='#XMMEA_EM && (PATTERN<=12) && "+bkgFilterExp['MOS1']+"';"
                                "backscale spectrumset=MOS1_"+srcSpectrumSet+" badpixlocation=MOS1clean.ds;"+ \
                                "backscale spectrumset=MOS1_spectrum_background_"+obsID+".fits badpixlocation=MOS1clean.ds;"+ \
                                "rmfgen spectrumset=MOS1_"+srcSpectrumSet+" rmfset=MOS1_"+obsID+".rmf;"+ \
@@ -266,12 +261,11 @@ class epicSpectra (epicObj):
                                "evselect table=MOS2clean.ds"+ \
                                    " withspectrumset=yes spectrumset=MOS2_"+srcSpectrumSet+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
-                                   " expression='#XMMEA_EM && (PATTERN<=12) && "+srcFilterExp+ \
+                                   " expression='#XMMEA_EM && (PATTERN<=12) && "+srcFilterExp+"';" \
                                "evselect table=MOS2clean.ds"+ \
                                    " withspectrumset=yes spectrumset=MOS2_spectrum_background_"+obsID+".fits"+ \
                                    " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=11999"+ \
-                                   " expression='#XMMEA_EM && (PATTERN<=12) && ((X,Y) in CIRCLE("+ \
-                                   Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
+                                   " expression='#XMMEA_EM && (PATTERN<=12) && "+bkgFilterExp['MOS2']+"';"
                                "backscale spectrumset=MOS2_"+srcSpectrumSet+" badpixlocation=MOS2clean.ds;"+ \
                                "backscale spectrumset=MOS2_spectrum_background_"+obsID+".fits badpixlocation=MOS2clean.ds;"+ \
                                "rmfgen spectrumset=MOS2_"+srcSpectrumSet+" rmfset=MOS2_"+obsID+".rmf;"+ \
