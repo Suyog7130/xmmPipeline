@@ -189,12 +189,12 @@ class epicSpectra (epicObj):
                     print('\nIndi inst bkgCircs not found. Using overlap bkgCircs.')
 
                 bkgFlist = []
-                for i in len(bkgCircs):  #--for nBkgCircs.
+                for i in range( len(bkgCircs)//3 ):  #--for nBkgCircs.
                     xKey, yKey, rKey = [key+str(i+1) for key in ['Bx', 'By', 'Br']]
                     Bx, By, Br = str(bkgCircs[xKey]), str(bkgCircs[yKey]), str(bkgCircs[rKey])
                     bkgFlist.append( "((X,Y) in CIRCLE("+Bx+","+By+","+Br+"))" )
                 bkgFilterExp[inst] = "||".join(bkgFlist)
-            print(bkgFilterExp)
+                print(f'\n{inst} bkgFilterExp {bkgFilterExp[inst]}')
 
             #-- extract PN Spectra --#
             subprocess.run("cd "+workdir+";"+ \
@@ -208,8 +208,7 @@ class epicSpectra (epicObj):
                            "evselect table=PNclean.ds"+ \
                                " withspectrumset=yes spectrumset=PN_spectrum_background_"+obsID+".fits"+ \
                                " energycolumn=PI spectralbinsize=5 withspecranges=yes specchannelmin=0 specchannelmax=20479"+ \
-                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && ((X,Y) in CIRCLE("+ \
-                               Bx1+","+By1+","+Br1+"))||((X,Y) in CIRCLE("+Bx2+","+By2+","+Br2+"))';"+ \
+                               " expression='#XMMEA_EP && (FLAG==0) && (PATTERN<=4) && "+bkgFilterExp['PN']+"';"
                            "backscale spectrumset=PN_"+srcSpectrumSet+" badpixlocation=PNclean.ds;"+ \
                            "backscale spectrumset=PN_spectrum_background_"+obsID+".fits badpixlocation=PNclean.ds;"+ \
                            "rmfgen spectrumset=PN_"+srcSpectrumSet+" rmfset=PN_"+obsID+".rmf;"+ \
@@ -223,6 +222,7 @@ class epicSpectra (epicObj):
                            #"fv PN_spectrum_grouped_"+obsID+".fits;"
                            , shell=True)
             print('\nPN Spectra extracted.')
+            return print('Hurray!')
 
             #-- extract MOS1 Spectra --#
             if self.smallMode[obsID]:
