@@ -501,7 +501,8 @@ if __name__=="__main__":
     group.add_argument('--modelParams', action='store', type=eval, default={}, \
                         help='give a dictionary of model parameter values to use. \
                               Put double quotes for str values and enclose the dict \
-                              within single quotes at the end.')
+                              within single quotes at the end. \
+                              Eg: \'{1:xx, 2:yy, "freeze":[1]}\'')
 
     #-- parse the arguments --#
     args = parser.parse_args()   #--parse all the arguments.
@@ -517,4 +518,3 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
-
