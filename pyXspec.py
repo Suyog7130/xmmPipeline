@@ -51,6 +51,10 @@ for the units in which the Flux and Lumin tuples are returned.
 17th June 2021:
 ---
 Finally doing the manual specModel fitting.
+
+18th June 2021:
+---
+Changed to the output of a 4-panel plot.
 """
 
 import os
@@ -200,64 +204,83 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     #Plot("model")
     #Plot("data", "model", "residuals")
     #Plot("ldata", "residuals", "background")
-    Plot("ldata", "del", "background")
+    Plot("ldata", "background", "del", "residuals")
     
-    #-- make the matplotlib plot --#
-    fig, ax = plt.subplots(3, 1, figsize=(10, 10))
+    ##-- make the matplotlib plot --##
+    fig, ax = plt.subplots(2, 2, figsize=(12, 12))
 
     if smallMode:
         plotGroups, colors, labels = [1], ['black'], ['PN']
     else:
         plotGroups, colors, labels = [1, 2, 3], ['black', 'red', 'green'], ['PN', 'MOS1', 'MOS2']
     
+    #-- iterate for the instruments --#
     for pG, color, label in zip(plotGroups, colors, labels):
+        
+        #-- ldata --#
         Sx, Sy = Plot.x(plotWindow=1, plotGroup=pG), Plot.y(plotWindow=1, plotGroup=pG)
         SxErr, SyErr = Plot.xErr(plotWindow=1, plotGroup=pG), Plot.yErr(plotWindow=1, plotGroup=pG)
         foldedS = Plot.model(plotWindow=1, plotGroup=pG)
-        
-        resiX, resiY = Plot.x(plotWindow=2, plotGroup=pG), Plot.y(plotWindow=2, plotGroup=pG)
-        resiXerr, resiYerr = Plot.xErr(plotWindow=2, plotGroup=pG), Plot.yErr(plotWindow=2, plotGroup=pG)
-    
-        Bx, By = Plot.x(plotWindow=3, plotGroup=pG), Plot.y(plotWindow=3, plotGroup=pG)
-        BxErr, ByErr = Plot.xErr(plotWindow=3, plotGroup=pG), Plot.yErr(plotWindow=3, plotGroup=pG)
-        
-        ax[0].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
+
+        ax[0][0].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
                        marker='.', markersize=3, label=label, \
                        ls='none', color=color, linewidth=0.5)
-        ax[0].plot(Sx, foldedS, drawstyle='steps-pre', color=color)
-        ax[1].errorbar(x=resiX, y=resiY, xerr=resiXerr, yerr=resiYerr, \
-                       marker='.', markersize=3, label=label, \
-                       ls='none', color=color, linewidth=0.5)
-        ax[1].plot([0, resiX[-1]], [0,0], 'c', color='lightgreen')
-        ax[2].errorbar(x=Bx, y=By, xerr=BxErr, yerr=ByErr, \
+        ax[0][0].plot(Sx, foldedS, drawstyle='steps-pre', color=color)
+
+        #-- background --#
+        Bx, By = Plot.x(plotWindow=2, plotGroup=pG), Plot.y(plotWindow=2, plotGroup=pG)
+        BxErr, ByErr = Plot.xErr(plotWindow=2, plotGroup=pG), Plot.yErr(plotWindow=2, plotGroup=pG)
+
+        ax[1][0].errorbar(x=Bx, y=By, xerr=BxErr, yerr=ByErr, \
                        marker='.', markersize=3, label=label, \
                        ls='none', color=color, linewidth=1.0)
-        #ax[2].plot(Bx, foldedS, drawstyle='steps-pre', color=color, \
+        #ax[1][0].plot(Bx, foldedS, drawstyle='steps-pre', color=color, \
         #           linewidth=0.5, alpha=0.75)
-        ax[2].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
+        ax[1][0].errorbar(x=Sx, y=Sy, xerr=SxErr, yerr=SyErr, \
                        marker='.', markersize=3, label=label+' data', \
                        ls='none', color=color, linewidth=0.5, alpha=0.5)
+
+        #-- del --#
+        delX, delY = Plot.x(plotWindow=3, plotGroup=pG), Plot.y(plotWindow=3, plotGroup=pG)
+        delXerr, delYerr = Plot.xErr(plotWindow=3, plotGroup=pG), Plot.yErr(plotWindow=3, plotGroup=pG)
+
+        ax[0][1].errorbar(x=delX, y=delY, xerr=delXerr, yerr=delYerr, \
+                       marker='.', markersize=3, label=label, \
+                       ls='none', color=color, linewidth=0.5)
+        ax[0][1].plot([0, delX[-1]], [0,0], 'c', color='lightgreen')
+        
+        #-- residual --#
+        resiX, resiY = Plot.x(plotWindow=4, plotGroup=pG), Plot.y(plotWindow=4, plotGroup=pG)
+        resiXerr, resiYerr = Plot.xErr(plotWindow=4, plotGroup=pG), Plot.yErr(plotWindow=4, plotGroup=pG)
+
+        ax[1][1].errorbar(x=resiX, y=resiY, xerr=resiXerr, yerr=resiYerr, \
+                       marker='.', markersize=3, label=label, \
+                       ls='none', color=color, linewidth=0.5)
+        ax[1][1].plot([0, resiX[-1]], [0,0], 'c', color='lightgreen')
         
     #-- annotations to the plot --#
-    for i in range(3):
-        ax[i].set_xscale('log')
-        ax[i].legend(loc='upper right')
-    ax[0].set_yscale('log')
-    ax[2].set_yscale('log')
+    for i in range(2):
+        for j in range(2):
+            ax[i][j].set_xscale('log')
+            ax[i][j].legend(loc='upper right')
+    ax[0][0].set_yscale('log')
+    ax[1][0].set_yscale('log')
     
-    ax[0].set_title('data and folded model')
-    #ax[1].set_title('residual')
-    ax[1].set_title('square root of chiSq for each channel (del)')
-    ax[2].set_title('background')
+    ax[0][0].set_title('data and folded model')
+    ax[1][0].set_title('background')
+    ax[0][1].set_title('square root of chiSq for each channel (del)')
+    ax[1][1].set_title('residuals')
     
-    ax[0].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
-    ax[1].set_ylabel('(data-model)/error')
-    ax[2].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
-    ax[2].set_xlabel('Energy (KeV)')
+    ax[0][0].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
+    ax[1][0].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
+    ax[0][1].set_ylabel('(data-model)/error')
+    ax[1][1].set_ylabel('normalized counts s$^{-1}$ KeV$^{-1}$')
+    ax[1][0].set_xlabel('Energy (KeV)')
+    ax[1][1].set_xlabel('Energy (KeV)')
     
     plt.suptitle(f'{obsID}\n{model}', x=0.05, y=0.98, horizontalalignment='left')
     plotAnal.beautifyPlot(ax, minor=True, logXformat='scalar', logXminorLabel=True)
-    plt.tight_layout()
+    plt.tight_layout(h_pad=0.25, w_pad=0.25)
 
     #-- savefile names --#
     if saveFig:
@@ -265,8 +288,8 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
             savename = 'PN_spectra_'+model.replace('*','-')
         else:
             savename = 'EPIC_spectra_'+model.replace('*','-')
-        if freeze is not None:
-            savename = savename +'_'+ 'p'.join( [str(i) for i in freeze] ) + 'frozen'
+        #if freeze is not None:
+        #    savename = savename +'_'+ 'p'.join( [str(i) for i in freeze] ) + 'frozen'
         plt.savefig(savename+'.png', dpi=300)
 
     if showFig:
