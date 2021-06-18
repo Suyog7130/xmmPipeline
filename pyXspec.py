@@ -280,7 +280,7 @@ def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
     
     plt.suptitle(f'{obsID}\n{model}', x=0.05, y=0.98, horizontalalignment='left')
     plotAnal.beautifyPlot(ax, minor=True, logXformat='scalar', logXminorLabel=True)
-    plt.tight_layout(h_pad=0.25, w_pad=0.25)
+    plt.tight_layout(h_pad=1.15, w_pad=1.15)
 
     #-- savefile names --#
     if saveFig:
