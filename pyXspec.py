@@ -70,7 +70,8 @@ from plotAnal import plotAnal
 
 
 ##-- fit Spectra for all instruments together --##
-def allSpec (workdir, obsID, model="tbabs*zashift*(bbodyrad+powerlaw)", \
+def allSpec (workdir, obsID, eMin=0.3, eMax=1.5, \
+             model="tbabs*zashift*(bbodyrad+powerlaw)", \
              modelParams=None, smallMode=False, grouped=True, \
              saveFig=True, showFig=True, doNotOverwriteModel=False):
 
@@ -439,31 +440,42 @@ if __name__=="__main__":
                         help='directory where obsid folders will be stored. (default:%(default)s)')
     parser.add_argument('--obsID', action='store', default=None, #['0810200701'], \
                         help='obsID to fit the Spectra for. (default:%(default)s)')
-    parser.add_argument('--instName', action='store', default='PN', \
+
+    #-- fitSpectra arguments --#
+    group = parser.add_argument_group('fitSpectra parameters')
+    group.add_argument('--instName', action='store', default='PN', \
                         help='the instrument to use. (default:%(default)s)')
-    parser.add_argument('--model', action='store', default="tbabs*zashift*(powerlaw)", \
+    group.add_argument('--eMin', action='store', type=float, default=0.3, \
+                        help='minimum value of energy in KeV. (default:%(default)s) \
+                              All data for energies below this value are ignored.')
+    group.add_argument('--eMax', action='store', type=float, default=1.5, \
+                        help='maximum value of energy in KeV. (default:%(default)s) \
+                              All data for energies above this value are ignored.')
+    group.add_argument('--model', action='store', default="tbabs*zashift*(powerlaw)", \
                         help='what model to use for fitting. (default:%(default)s)')
-    parser.add_argument('--modelParams', action='store', type=eval, default={}, \
+    group.add_argument('--modelParams', action='store', type=eval, default={}, \
                         help='give a dictionary of model parameter values to use. \
                               Put double quotes for str values and enclose the dict \
                               within single quotes at the end. \
                               Use freeze=[a, b] to freeze parameters a and b.')
 
-    parser.add_argument('--grouped', action='store', default='yes', \
-                        help='whether to use grouped spectra data or not? (default:%(default)s)')
-    parser.add_argument('--smallMode', action='store', default='no', \
-                        help='is the obsID in Small-mode? (default:%(default)s)')
+    #-- flags --#
+    flagGroup = parser.add_argument_group('flags')
+    flagGroup.add_argument('--grouped', action='store', default='yes', \
+                           help='whether to use grouped spectra data or not? (default:%(default)s)')
+    flagGroup.add_argument('--smallMode', action='store', default='no', \
+                           help='is the obsID in Small-mode? (default:%(default)s)')
 
-    parser.add_argument('--showFig', action='store', default='no', \
-                        help='show the matplotlib plots or not? (default:%(default)s)')
-    parser.add_argument('--saveFig', action='store', default='yes', \
-                        help='do not save the matplotlib plots? (default:%(default)s)')
-    parser.add_argument('--doNotOverwriteModel', action='store', default='no', \
-                        help='save the specModelParams for the current model as a new \
-                              dictionary in specModelParams.json. \
-                              If the model is already present in the file, it is not \
-                              overwritten by appending 1 to the new model name. \
-                              (default:%(default)s)')
+    flagGroup.add_argument('--showFig', action='store', default='no', \
+                           help='show the matplotlib plots or not? (default:%(default)s)')
+    flagGroup.add_argument('--saveFig', action='store', default='yes', \
+                           help='do not save the matplotlib plots? (default:%(default)s)')
+    flagGroup.add_argument('--doNotOverwriteModel', action='store', default='no', \
+                           help='save the specModelParams for the current model as a new \
+                                 dictionary in specModelParams.json. \
+                                 If the model is already present in the file, it is not \
+                                 overwritten by appending 1 to the new model name. \
+                                 (default:%(default)s)')
 
     #-- parse the arguments --#
     args = parser.parse_args()

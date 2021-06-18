@@ -315,6 +315,7 @@ class epicSpectra (epicObj):
             doNotOverwriteModel = strToBool(self.doNotOverwriteModel, inverse=True)
 
             #-- read a modelParams dict --#
+            eMin, eMax = str(self.eMin), str(self.eMax)
             model = self.model.replace(')', '\)').replace('(', '\(')
             modelParams = "'" + str(self.modelParams).replace("'", '"') + "'"
             #print(model, modelParams)
@@ -326,6 +327,7 @@ class epicSpectra (epicObj):
                             #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
                             "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+ \
                                 " --instName all --showFig "+showFig+" --smallMode "+smallMode+ \
+                                " --eMin "+eMin+" --eMax "+eMax+ \
                                 " --model "+model+" --modelParams "+modelParams+ \
                                 " --doNotOverwriteModel "+doNotOverwriteModel+";"
                             , shell=True)
@@ -423,6 +425,7 @@ def main (args):
     if args.method == 'extractSpectra':
         obj.extractSpectra_imageMode()
     if args.method == 'fitSpectra':
+        obj.eMin, obj.eMax = args.eMin, args.eMax
         obj.model, obj.modelParams = args.model, args.modelParams
         #print(obj.__dict__)
         obj.xspec_fitSpectra()
@@ -496,6 +499,12 @@ if __name__=="__main__":
     group = parser.add_argument_group('fitSpectra parameters')
     #group.add_argument('--instName', action='store', default='PN', \
     #                    help='the instrument to use. (default:%(default)s)')
+    group.add_argument('--eMin', action='store', type=float, default=0.3, \
+                        help='minimum value of energy in KeV. (default:%(default)s) \
+                              All data for energies below this value are ignored.')
+    group.add_argument('--eMax', action='store', type=float, default=1.5, \
+                        help='maximum value of energy in KeV. (default:%(default)s) \
+                              All data for energies above this value are ignored.')
     group.add_argument('--model', action='store', default='tbabs*zashift*(powerlaw)', \
                         help='name of the model to be used. (default:%(default)s)')
     group.add_argument('--modelParams', action='store', type=eval, default={}, \
@@ -518,3 +527,4 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
+
