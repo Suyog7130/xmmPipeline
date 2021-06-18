@@ -22,10 +22,13 @@ separate ``specResultsTable``.
 18th June 2021:
 ---
 Finishing up the manual specModel fitting.
+
 NOTE: Be wary of the specModel name with single additive model component
 when it has parentheses around it. The model name saved in the JSON file
 and that been given as input, should exactly match.
 See issue #31 in regard to this. https://github.com/Suyog7130/xmmPipeline/issues/31
+
+Swaping the Row of the `specResultsTable` with the columns will take sometime.
 """
 
 import os
@@ -224,3 +227,4 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
+
