@@ -106,11 +106,12 @@ def allSpec (workdir, obsID, eMin=0.3, eMax=1.5, \
     Plot.xAxis = "KeV"
     
     #-- `xspec ignore` --#
+    eMin, eMax = str(eMin), str(eMax)
     AllData.ignore("bad")
-    pnS.ignore("**-0.3 1.5-**")
+    pnS.ignore("**-"+eMin+" "+eMax+"-**")   #--"**-0.3 1.5-**"
     if not smallMode:
-        mos1S.ignore("**-0.3 1.5-**")
-        mos2S.ignore("**-0.3 1.5-**")
+        mos1S.ignore("**-"+eMin+" "+eMax+"-**")
+        mos2S.ignore("**-"+eMin+" "+eMax+"-**")
     
     #-- `xspec model` --#
     m1 = Model(model)
@@ -139,8 +140,8 @@ def allSpec (workdir, obsID, eMin=0.3, eMax=1.5, \
     #Fit.error("2.706 4")          #--doesn't work.
 
     #-- `xspec lumin, flux` --#
-    AllModels.calcFlux("0.3 1.5")                 #--("0.3 1.5 err")
-    AllModels.calcLumin("0.3 1.5 0.02")           #--("0.3 1.5 0.02 err")
+    AllModels.calcFlux(eMin+" "+eMax)                 #--("0.3 1.5 err")
+    AllModels.calcLumin(eMin+" "+eMax+" 0.02")           #--("0.3 1.5 0.02 err")
     #print(pnS.flux, pnS.lumin)
 
     #-- load the JSON file if already present --#
@@ -489,7 +490,8 @@ if __name__=="__main__":
     doNotOverwriteModel = strToBool(args.doNotOverwriteModel)
     
     if instName == 'all':
-        allSpec(workdir, obsID=obsID, model=model, modelParams=modelParams,
+        allSpec(workdir, obsID=obsID, eMin=args.eMin, eMax=args.eMax, \
+                model=model, modelParams=modelParams,
                 grouped=grouped, smallMode=smallMode, \
                 saveFig=saveFig, showFig=showFig, doNotOverwriteModel=doNotOverwriteModel)
     else:
