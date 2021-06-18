@@ -18,6 +18,10 @@ Anyway.
 ---
 The primary ``for`` loop should be for model since each model will have a
 separate ``specResultsTable``.
+
+18th June 2021:
+---
+Finishing up the manual specModel fitting.
 """
 
 import os
@@ -189,8 +193,8 @@ if __name__=="__main__":
     parser.add_argument('--workdir', action='store', type=str, default='/media/suyog/DATA/xmm_obs', \
                         help='directory where obsid folders will be stored. (default:%(default)s)')
     parser.add_argument('--obsIDs', nargs='+', action='store', default=None, #['0831790201'], \
-                        help='''obsIDs for which some specific function has to executed. 
-                                Valid only when --method argument is specified. (default:%(default)s)''')
+                        help='''obsIDs for which the \'specResultsTable\' has to obtained. 
+                                (default:%(default)s)''')
     parser.add_argument('--objName', action='store', default=None, \
                         help='name of the obj used to locate the xmmObj pickle file.')
 
