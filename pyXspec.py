@@ -134,6 +134,7 @@ def allSpec (workdir, obsID, eMin=0.3, eMax=1.5, \
     Xset.abund = "wilm"
     
     #-- `xspec fit` --#
+    Fit.query = "yes"
     Fit.nIterations = 100
     Fit.criticalDelta = 1e-1
     Fit.perform()
@@ -501,7 +502,6 @@ if __name__=="__main__":
     
 #################### End of Program #########################
 #############################################################
-
 
 
 
