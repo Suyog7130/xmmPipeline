@@ -22,6 +22,10 @@ A seperate function `extract_flareGTI` will also be added.
 9th~13th June 2021:
 ---
 Starting to write the functions for obtaining individual background circles.
+
+20th Jan 2023:
+---
+Making the code compatible with Mac.
 """
 
 import os
@@ -81,7 +85,7 @@ class epicObj:
     
         self.ra = ra
         self.dec = dec
-        self.workdir = workdir
+        self.workdir = f"'{workdir}'"
         
         self.sas_dir = sas_dir
         self.headas = headas
@@ -127,25 +131,27 @@ class epicObj:
         print('\nLooking for obsIDs at RA={} and DEC={}\nWORKDIR is set at {}'.format(ra,dec,workdir))
         
         #-- check if workdir exists --#
-        if not os.path.isdir(workdir):
+        if not os.path.isdir(str(workdir).strip("'")):
             subprocess.run("sudo mkdir "+workdir, shell=True)
             
         #-- check if browse_extract_wget.pl file exists --#
         if not os.path.isfile(workdir+"/"+"browse_extract_wget.pl"):
             print('\nbrowse_extract_wget.pl not found.')
-            subprocess.run("cd "+workdir+";"+
+            subprocess.run("cd "+f"{workdir}"+";"+ \
                            "sudo wget -q https://heasarc.gsfc.nasa.gov/FTP/heasarc/software/web_batch/browse_extract_wget.pl", shell=True)
             
             print('browse_extract_wget.pl downloaded.')
             print('\nPlease check the PERL path in the file. If required, correct the path given in first line and save the file.')
-            subprocess.run("cd "+workdir+";"+
-                           "sudo gedit browse_extract_wget.pl", shell=True)
+            subprocess.run(f"cd {workdir}; "+ \
+                           "sudo gedit browse_extract_wget.pl &", shell=True)
             
         #-- download and save parts of xmmmaster table --##
+        print('checking this')
         subprocess.run("cd "+workdir+";"+ \
                        "sudo chmod +x browse_extract_wget.pl;"+ \
-                       "sudo ./browse_extract_wget.pl table=xmmmaster position='"+ ra+","+dec+ \
+                       "sudo ./browse_extract_wget.pl table=xmmmaster position='"+ra+","+dec+ \
                        "' coordinates=equatorial outfile=obsIDs_list.dat", shell=True)
+        print('checking done')
         
         #-- extract obsIDs from the file --#
         df = pd.read_csv(workdir+'/obsIDs_list.dat', sep='|', delim_whitespace=False, header=0)[:-1]  #--remove last line.
@@ -226,7 +232,7 @@ class epicObj:
         #-- iterate for all the obsIDs --#
         for obsID in self.obsIDs:
         
-            downPath = self.workdir+'/'+obsID+'/'
+            downPath = str(self.workdir).strip("'")+'/'+obsID+'/'
                 #-- check if already downloaded --#
             if os.path.isdir(downPath)==True:
                 alreadyDownSize = sum(d.stat().st_size for d in os.scandir(downPath) if d.is_dir())
@@ -279,7 +285,7 @@ class epicObj:
             print('\nReducing data for obsID {}.'.format(obsID))
             os.environ['SAS_ODF'] = workdir+'/'+obsID+'/ODF'
             
-            savedir = workdir+'/'+obsID+'/work'
+            savedir = str(workdir).strip("'")+'/'+obsID+'/work'
             if not os.path.isdir(savedir):
                 subprocess.run("sudo mkdir "+savedir, shell=True)
                 
@@ -1516,7 +1522,7 @@ class epicObj:
         """
         print('\nLastly saving results to a pickle file for each obsID.')
 
-        maindir = self.workdir
+        maindir = str(self.workdir).strip("'")
 
         #-- make the results directory --#
         if not os.path.isdir(maindir+'/results'):
@@ -1557,6 +1563,5 @@ class epicObj:
 
 #################### End of Program #########################
 #############################################################
-
 
 
