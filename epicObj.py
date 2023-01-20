@@ -26,6 +26,8 @@ Starting to write the functions for obtaining individual background circles.
 20th Jan 2023:
 ---
 Making the code compatible with Mac.
+If the path names are Windows like, containing white-spaces, then we need to have
+additional single quotes around them before calling the `subprocess.run` command.
 """
 
 import os
@@ -85,7 +87,7 @@ class epicObj:
     
         self.ra = ra
         self.dec = dec
-        self.workdir = f"'{workdir}'"
+        self.workdir = workdir
         
         self.sas_dir = sas_dir
         self.headas = headas
@@ -131,23 +133,23 @@ class epicObj:
         print('\nLooking for obsIDs at RA={} and DEC={}\nWORKDIR is set at {}'.format(ra,dec,workdir))
         
         #-- check if workdir exists --#
-        if not os.path.isdir(str(workdir).strip("'")):
-            subprocess.run("sudo mkdir "+workdir, shell=True)
+        if not os.path.isdir(workdir):
+            subprocess.run(f"sudo mkdir '{workdir}'", shell=True)
             
         #-- check if browse_extract_wget.pl file exists --#
         if not os.path.isfile(workdir+"/"+"browse_extract_wget.pl"):
             print('\nbrowse_extract_wget.pl not found.')
-            subprocess.run("cd "+f"{workdir}"+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            "sudo wget -q https://heasarc.gsfc.nasa.gov/FTP/heasarc/software/web_batch/browse_extract_wget.pl", shell=True)
             
             print('browse_extract_wget.pl downloaded.')
             print('\nPlease check the PERL path in the file. If required, correct the path given in first line and save the file.')
-            subprocess.run(f"cd {workdir}; "+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            "sudo gedit browse_extract_wget.pl &", shell=True)
             
         #-- download and save parts of xmmmaster table --##
         print('checking this')
-        subprocess.run("cd "+workdir+";"+ \
+        subprocess.run(f"cd '{workdir}';"+ \
                        "sudo chmod +x browse_extract_wget.pl;"+ \
                        "sudo ./browse_extract_wget.pl table=xmmmaster position='"+ra+","+dec+ \
                        "' coordinates=equatorial outfile=obsIDs_list.dat", shell=True)
@@ -171,7 +173,7 @@ class epicObj:
         print(f'The object at (RA,DEC) = ({ra},{dec}) is {objName}')
 
         #-- copy and append objName to the file --#
-        subprocess.run("cd "+workdir+";"+ \
+        subprocess.run(f"cd '{workdir}';"+ \
                        "cp obsIDs_list.dat obsIDs_list_"+objName+".dat;", shell=True) 
         
         return print('\nFound '+str(len(obsIDs))+' obsIDs for the object at given position.')
@@ -232,7 +234,7 @@ class epicObj:
         #-- iterate for all the obsIDs --#
         for obsID in self.obsIDs:
         
-            downPath = str(self.workdir).strip("'")+'/'+obsID+'/'
+            downPath = workdir+'/'+obsID+'/'
                 #-- check if already downloaded --#
             if os.path.isdir(downPath)==True:
                 alreadyDownSize = sum(d.stat().st_size for d in os.scandir(downPath) if d.is_dir())
@@ -245,12 +247,12 @@ class epicObj:
             url = "https://heasarc.gsfc.nasa.gov/FTP/xmm/data/rev0//"+obsID+"/."
             wgetFull = wgetRef + url
             print('\nDownloading data for obsID {} using wget.'.format(obsID))
-            subprocess.run("cd "+workdir+";"+wgetFull, shell=True)
+            subprocess.run(f"cd '{workdir}';"+wgetFull, shell=True)
             
             #-- unzip downloaded files --#
             print('\nUnzipping the downloaded ODF tar files.')
             odfPath = downPath+'ODF'
-            subprocess.run("cd "+odfPath+";"+
+            subprocess.run(f"cd '{odfPath}';"+
                            "sudo gunzip *.gz", shell=True)
             print('Data download for obsID {} finished.'.format(obsID))
                 
@@ -285,11 +287,11 @@ class epicObj:
             print('\nReducing data for obsID {}.'.format(obsID))
             os.environ['SAS_ODF'] = workdir+'/'+obsID+'/ODF'
             
-            savedir = str(workdir).strip("'")+'/'+obsID+'/work'
+            savedir = workdir+'/'+obsID+'/work'
             if not os.path.isdir(savedir):
-                subprocess.run("sudo mkdir "+savedir, shell=True)
+                subprocess.run(f"sudo mkdir '{savedir}'", shell=True)
                 
-            subprocess.run("cd "+savedir+";"+ \
+            subprocess.run(f"cd '{savedir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            #sasversion;+ \
@@ -336,7 +338,7 @@ class epicObj:
             pnFile = glob.glob(workdir+'/*EPN*ImagingEvts*')[0]
             
             #-- filter EPIC PN data --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            #"fv "+pnFile+";"+ \
@@ -390,7 +392,7 @@ class epicObj:
             mos2File = glob.glob(workdir+'/*EMOS2*ImagingEvts*')[0]
             
             #-- filter EPIC PN data --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            "evselect table="+pnFile+ \
@@ -446,7 +448,7 @@ class epicObj:
             mos2File = glob.glob(workdir+'/*EMOS2*ImagingEvts*')[0]
             
             #-- find Source CCD in EPIC PN data --#
-            cmdOut = subprocess.run("cd "+workdir+";"+ \
+            cmdOut = subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
@@ -459,7 +461,7 @@ class epicObj:
             print('\nSource CCD in PN:', pnCCD)
             
             #-- find Source CCD in EPIC MOS1 data --#
-            cmdOut = subprocess.run("cd "+workdir+";"+ \
+            cmdOut = subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
@@ -472,7 +474,7 @@ class epicObj:
             print('Source CCD in MOS1:', mos1CCD)
             
             #-- find Source CCD in EPIC MOS2 data --#
-            cmdOut = subprocess.run("cd "+workdir+";"+ \
+            cmdOut = subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
@@ -526,7 +528,7 @@ class epicObj:
             workdir = self.workdir+'/'+obsID+'/work'
             
             #-- remove previously extracted files --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            "rm -rf pnGTI.fits;"+ \
                            "rm -rf mos1GTI.fits;"+ \
                            "rm -rf mos2GTI.fits;", shell=True)
@@ -542,7 +544,7 @@ class epicObj:
             mos2CCD = str(self.sourceCCDs[obsID]['MOS2'])
             
             #-- extract EPIC PN, MOS1 and MOS2 data --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            #"fv "+pnFile+";"+ \
@@ -590,11 +592,11 @@ class epicObj:
             workdir = self.workdir+'/'+obsID+'/work'
             
             #-- remove previously combined data files --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            "rm -rf combinedGTI_"+obsID+".fits;", shell=True)
                            
             #-- combine the GTIs --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            "mgtime "+workdir+"/pnGTI.fits,"+workdir+"/mos1GTI.fits,"+workdir+"/mos2GTI.fits,"+ \
@@ -650,7 +652,7 @@ class epicObj:
             workdir = self.workdir+'/'+obsID+'/work'
             
             #-- remove previously combined data files --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            "rm -rf MOS12.evts;"+ \
                            "rm -rf PNMOS12.evts;", shell=True)
             
@@ -665,7 +667,7 @@ class epicObj:
             mos2CCD = str(self.sourceCCDs[obsID]['MOS2'])
             
             #-- extract corresponding CCD data --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            "evselect table="+pnFile+ \
@@ -681,7 +683,7 @@ class epicObj:
             print('\nEPIC PN, MOS1 and MOS2 data from corresponding CCD extracted.')
             
             #-- combine MOS1 and MOS2 data --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            "merge set1="+workdir+"/MOS1_CCD"+mos1CCD+".evts set2="+workdir+"/MOS2_CCD"+mos2CCD+".evts"+ \
@@ -689,7 +691,7 @@ class epicObj:
             print('\nMOS1_CCD and MOS2_CCD data combined.')
                         
             #-- combine MOS12 and PN data --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            "merge set1="+workdir+"/MOS12.evts set2="+workdir+"/PN_CCD"+pnCCD+".evts"+ \
@@ -744,7 +746,7 @@ class epicObj:
             #-- grab Attitude File --#
             AttFile = glob.glob(workdir+'/*AttHk*.ds')[0]
             """
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
@@ -778,7 +780,7 @@ class epicObj:
                                withregionfile=true regionfile=allSources.reg;"
                            , shell=True)
             """
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
@@ -946,7 +948,7 @@ class epicObj:
             AttFile = glob.glob(workdir+'/*AttHk*.ds')[0]
 
             #-- run the functions --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            '''export SAS_CCF="`pwd`/ccf.cif";'''+ \
@@ -1075,7 +1077,7 @@ class epicObj:
             if os.path.isfile(fname):
                 result = pickle.load(open(fname, 'rb'))
                     #-- create a backup file --#
-                subprocess.run("cd "+workdir+";"+ \
+                subprocess.run(f"cd '{workdir}';"+ \
                                "cp ccd_coords_info.pickle ccd_coords_info.bak;"
                                , shell=True)
             else:
@@ -1131,7 +1133,7 @@ class epicObj:
             if os.path.isfile(fname):
                 result = pickle.load(open(fname, 'rb'))
                     #-- create a backup file --#
-                subprocess.run("cd "+workdir+";"+ \
+                subprocess.run(f"cd '{workdir}';"+ \
                                "cp ccd_coords_info.pickle ccd_coords_info.bak;"
                                , shell=True)
             else:
@@ -1235,7 +1237,7 @@ class epicObj:
                 srcFilterExp = "'((X,Y) in CIRCLE("+srcX+","+srcY+","+srcR+"))'"
             
             #-- extract Source Event list --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            #"fv PNMOS12.evts;"+ \
@@ -1250,7 +1252,7 @@ class epicObj:
             Bx2, By2, Br2 = str(bLocParams['Bx2']), str(bLocParams['By2']), str(bLocParams['Br2'])
                            
             #-- extract the Background Event list --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            "evselect table="+workdir+"/PNMOS12.evts"+ \
@@ -1304,7 +1306,7 @@ class epicObj:
             srcFilterExp = "'((X,Y) in CIRCLE("+srcX+","+srcY+","+srcR+"))'"
             
         #-- extract Source Event list --#
-        subprocess.run("cd "+workdir+";"+ \
+        subprocess.run(f"cd '{workdir}';"+ \
                        ". $HEADAS/headas-init.sh;"+ \
                        ". $SAS_DIR/setsas.sh;"+ \
                        #"fv PN_CCD"+pnCCD+".evts;"+ \
@@ -1396,7 +1398,7 @@ class epicObj:
                 srcFilterSet = workdir+"/source_PNMOS12_"+obsID+".evts"
             
             #-- extract Source and Background light curve --#
-            subprocess.run("cd "+workdir+";"+ \
+            subprocess.run(f"cd '{workdir}';"+ \
                            ". $HEADAS/headas-init.sh;"+ \
                            ". $SAS_DIR/setsas.sh;"+ \
                            "evselect table="+srcFilterSet+" withrateset=Y \
@@ -1522,11 +1524,11 @@ class epicObj:
         """
         print('\nLastly saving results to a pickle file for each obsID.')
 
-        maindir = str(self.workdir).strip("'")
+        maindir = self.workdir
 
         #-- make the results directory --#
         if not os.path.isdir(maindir+'/results'):
-            subprocess.run("cd "+maindir+";"+ \
+            subprocess.run(f"cd '{maindir}';"+ \
                            "mkdir results/", shell=True)
         resultdir = maindir+'/results'
 
@@ -1550,7 +1552,7 @@ class epicObj:
                 fname = fname.replace('_'+obsID, '')   #--remove obsID from file name, if it is already there.
                 fname = obsID +'_'+ fname              #--add the obsID at the start of file name.
 
-                subprocess.run("cp "+file+" "+resultdir+"/"+fname, shell=True)
+                subprocess.run("cp "+file+f" '{resultdir}'/"+fname, shell=True)
 
             print(f'Save for obsID {obsID} done.')
 
