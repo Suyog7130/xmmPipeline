@@ -1,10 +1,11 @@
 
-from epicObj import *
-from epicPipeline import *
-from epicPileup import *
-from epicSpectra import *
+from . import *
+from .epicObj import *
+from .epicPipeline import *
+from .epicPileup import *
+from .epicSpectra import *
 
-from plotAnal import *
-from convert import *
+from .plotAnal import *
+from .convert import *
 
-#__all__ = ['xmmPipeline']
+__all__ = ['xmmPipeline']
