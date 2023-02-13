@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>xmmPipeline</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/epub.css" /> 
+  </head><body>
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <section id="xmmpipeline">
+<h1>xmmPipeline</h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="xmmPipeline.xhtml">xmmPipeline package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.convert">xmmPipeline.convert module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.epicObj">xmmPipeline.epicObj module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj"><code class="docutils literal notranslate"><span class="pre">epicObj</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.combineEPICdata"><code class="docutils literal notranslate"><span class="pre">epicObj.combineEPICdata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.combineGTIs"><code class="docutils literal notranslate"><span class="pre">epicObj.combineGTIs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.downloadData"><code class="docutils literal notranslate"><span class="pre">epicObj.downloadData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.extract_InstrumentalGTIs"><code class="docutils literal notranslate"><span class="pre">epicObj.extract_InstrumentalGTIs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.extract_flareGTI"><code class="docutils literal notranslate"><span class="pre">epicObj.extract_flareGTI()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.extract_srcBkg_eventLists"><code class="docutils literal notranslate"><span class="pre">epicObj.extract_srcBkg_eventLists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.findObsIDs"><code class="docutils literal notranslate"><span class="pre">epicObj.findObsIDs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.findSourceCCD"><code class="docutils literal notranslate"><span class="pre">epicObj.findSourceCCD()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.find_otherSources"><code class="docutils literal notranslate"><span class="pre">epicObj.find_otherSources()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.find_otherSources_indi"><code class="docutils literal notranslate"><span class="pre">epicObj.find_otherSources_indi()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.getBackgroundCircles"><code class="docutils literal notranslate"><span class="pre">epicObj.getBackgroundCircles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.getBackgroundCircles_indi"><code class="docutils literal notranslate"><span class="pre">epicObj.getBackgroundCircles_indi()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.obtain_lightCurves"><code class="docutils literal notranslate"><span class="pre">epicObj.obtain_lightCurves()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.readCCDcoordsPickle"><code class="docutils literal notranslate"><span class="pre">epicObj.readCCDcoordsPickle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.reduceEPICdata"><code class="docutils literal notranslate"><span class="pre">epicObj.reduceEPICdata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.removeFlareBackground"><code class="docutils literal notranslate"><span class="pre">epicObj.removeFlareBackground()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.save_results"><code class="docutils literal notranslate"><span class="pre">epicObj.save_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.sortObsIDs"><code class="docutils literal notranslate"><span class="pre">epicObj.sortObsIDs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.updateCCDcoordsPickle"><code class="docutils literal notranslate"><span class="pre">epicObj.updateCCDcoordsPickle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.epicObj.writeCCDcoordsPickle"><code class="docutils literal notranslate"><span class="pre">epicObj.writeCCDcoordsPickle()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.printErrorMessage"><code class="docutils literal notranslate"><span class="pre">printErrorMessage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicObj.strToBool"><code class="docutils literal notranslate"><span class="pre">strToBool()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.epicPileup">xmmPipeline.epicPileup module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPileup.epicPileup"><code class="docutils literal notranslate"><span class="pre">epicPileup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPileup.epicPileup.checkPileUp"><code class="docutils literal notranslate"><span class="pre">epicPileup.checkPileUp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPileup.epicPileup.correctPileUp"><code class="docutils literal notranslate"><span class="pre">epicPileup.correctPileUp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPileup.epicPileup.save_pileUpResults"><code class="docutils literal notranslate"><span class="pre">epicPileup.save_pileUpResults()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPileup.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.epicPipeline">xmmPipeline.epicPipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPipeline.combineAndFind_method"><code class="docutils literal notranslate"><span class="pre">combineAndFind_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPipeline.extractProds_method"><code class="docutils literal notranslate"><span class="pre">extractProds_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPipeline.reduceData_method"><code class="docutils literal notranslate"><span class="pre">reduceData_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicPipeline.runIndiBkgCircFuncs_method"><code class="docutils literal notranslate"><span class="pre">runIndiBkgCircFuncs_method()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.epicSpectra">xmmPipeline.epicSpectra module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicSpectra.epicSpectra"><code class="docutils literal notranslate"><span class="pre">epicSpectra</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicSpectra.epicSpectra.extractSpectra_imageMode"><code class="docutils literal notranslate"><span class="pre">epicSpectra.extractSpectra_imageMode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicSpectra.epicSpectra.readUpdatedCCDcoordsPickle"><code class="docutils literal notranslate"><span class="pre">epicSpectra.readUpdatedCCDcoordsPickle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicSpectra.epicSpectra.save_spectraResults"><code class="docutils literal notranslate"><span class="pre">epicSpectra.save_spectraResults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicSpectra.epicSpectra.xspec_fitSpectra"><code class="docutils literal notranslate"><span class="pre">epicSpectra.xspec_fitSpectra()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.epicSpectra.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.findOverlap">xmmPipeline.findOverlap module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.findOverlap"><code class="docutils literal notranslate"><span class="pre">findOverlap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.findOverlap.backgroundCircles"><code class="docutils literal notranslate"><span class="pre">findOverlap.backgroundCircles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.findOverlap.backgroundCircles_indi"><code class="docutils literal notranslate"><span class="pre">findOverlap.backgroundCircles_indi()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.findOverlap.createOutputImages"><code class="docutils literal notranslate"><span class="pre">findOverlap.createOutputImages()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.findOverlap.main"><code class="docutils literal notranslate"><span class="pre">findOverlap.main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.findOverlap.obtainOverlap"><code class="docutils literal notranslate"><span class="pre">findOverlap.obtainOverlap()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.imageMOS12"><code class="docutils literal notranslate"><span class="pre">imageMOS12()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.imageMOS12_soft"><code class="docutils literal notranslate"><span class="pre">imageMOS12_soft()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.imagePN"><code class="docutils literal notranslate"><span class="pre">imagePN()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.imagePNMOS12"><code class="docutils literal notranslate"><span class="pre">imagePNMOS12()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.imagePNMOS12_soft"><code class="docutils literal notranslate"><span class="pre">imagePNMOS12_soft()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.findOverlap.imagePN_soft"><code class="docutils literal notranslate"><span class="pre">imagePN_soft()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.getSpectraFitsTable">xmmPipeline.getSpectraFitsTable module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.getSpectraFitsTable.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.plotAnal">xmmPipeline.plotAnal module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal"><code class="docutils literal notranslate"><span class="pre">plotAnal</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.PSNR"><code class="docutils literal notranslate"><span class="pre">plotAnal.PSNR()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.SSIM"><code class="docutils literal notranslate"><span class="pre">plotAnal.SSIM()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.SSIM_value"><code class="docutils literal notranslate"><span class="pre">plotAnal.SSIM_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.beautifyPlot"><code class="docutils literal notranslate"><span class="pre">plotAnal.beautifyPlot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.linearFit"><code class="docutils literal notranslate"><span class="pre">plotAnal.linearFit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.linearFit_plotCal"><code class="docutils literal notranslate"><span class="pre">plotAnal.linearFit_plotCal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.pearson"><code class="docutils literal notranslate"><span class="pre">plotAnal.pearson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.pearson_spearman"><code class="docutils literal notranslate"><span class="pre">plotAnal.pearson_spearman()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.rSquared"><code class="docutils literal notranslate"><span class="pre">plotAnal.rSquared()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.plotAnal.plotAnal.spearman"><code class="docutils literal notranslate"><span class="pre">plotAnal.spearman()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#xmmpipeline-pyxspec-module">xmmPipeline.pyXspec module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline.rgsPipeline">xmmPipeline.rgsPipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.rgsPipeline.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.rgsPipeline.printErrorMessage"><code class="docutils literal notranslate"><span class="pre">printErrorMessage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.rgsPipeline.rgsObj"><code class="docutils literal notranslate"><span class="pre">rgsObj</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.rgsPipeline.rgsObj.findObsIDs"><code class="docutils literal notranslate"><span class="pre">rgsObj.findObsIDs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.rgsPipeline.rgsObj.readPickleFile"><code class="docutils literal notranslate"><span class="pre">rgsObj.readPickleFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.rgsPipeline.rgsObj.reduceRGSdata"><code class="docutils literal notranslate"><span class="pre">rgsObj.reduceRGSdata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.rgsPipeline.rgsObj.save_results"><code class="docutils literal notranslate"><span class="pre">rgsObj.save_results()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="xmmPipeline.xhtml#xmmPipeline.rgsPipeline.strToBool"><code class="docutils literal notranslate"><span class="pre">strToBool()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xmmPipeline.xhtml#module-xmmPipeline">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

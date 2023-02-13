@@ -1,11 +1,23 @@
 
-from . import *
-from .epicObj import *
-from .epicPipeline import *
-from .epicPileup import *
-from .epicSpectra import *
+import os
+import sys
 
-from .plotAnal import *
-from .convert import *
+# Add directory to path so that Python can find it.
+# This also resolves the "module not found" error
+# during import from outside the directory (e.g. in Sphinx-autodoc)
+# and the error in absolute imports among scripts within directory.
 
-__all__ = ['xmmPipeline']
+CURR_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(CURR_DIR)
+
+#from . import *
+from epicObj import *
+from epicPipeline import *
+from epicPileup import *
+from epicSpectra import *
+
+from findOverlap import *
+from plotAnal import *
+from convert import *
+
+#__all__ = ['xmmPipeline']

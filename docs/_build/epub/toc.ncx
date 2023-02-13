@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ncx version="2005-1" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+  <head>
+    <meta name="dtb:uid" content="unknown"/>
+    <meta name="dtb:depth" content="3"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle>
+    <text>xmmPipeline</text>
+  </docTitle>
+  <navMap>    
+    <navPoint id="navPoint1" playOrder="1">
+      <navLabel>
+        <text>Welcome to xmmPipeline’s documentation!</text>
+      </navLabel>
+      <content src="index.xhtml" />  
+    </navPoint>
+    <navPoint id="navPoint2" playOrder="2">
+      <navLabel>
+        <text>xmmPipeline</text>
+      </navLabel>
+      <content src="modules.xhtml" />  
+      <navPoint id="navPoint3" playOrder="2">
+        <navLabel>
+          <text>xmmPipeline</text>
+        </navLabel>
+        <content src="modules.xhtml" />  
+      </navPoint>
+      <navPoint id="navPoint4" playOrder="3">
+        <navLabel>
+          <text>xmmPipeline package</text>
+        </navLabel>
+        <content src="xmmPipeline.xhtml" />  
+        <navPoint id="navPoint5" playOrder="3">
+          <navLabel>
+            <text>xmmPipeline package</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml" />  
+        </navPoint>
+        <navPoint id="navPoint6" playOrder="4">
+          <navLabel>
+            <text>Submodules</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#submodules" />  
+        </navPoint>
+        <navPoint id="navPoint7" playOrder="5">
+          <navLabel>
+            <text>xmmPipeline.convert module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.convert" />  
+        </navPoint>
+        <navPoint id="navPoint8" playOrder="6">
+          <navLabel>
+            <text>xmmPipeline.epicObj module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.epicObj" />  
+        </navPoint>
+        <navPoint id="navPoint9" playOrder="7">
+          <navLabel>
+            <text>xmmPipeline.epicPileup module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.epicPileup" />  
+        </navPoint>
+        <navPoint id="navPoint10" playOrder="8">
+          <navLabel>
+            <text>xmmPipeline.epicPipeline module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.epicPipeline" />  
+        </navPoint>
+        <navPoint id="navPoint11" playOrder="9">
+          <navLabel>
+            <text>xmmPipeline.epicSpectra module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.epicSpectra" />  
+        </navPoint>
+        <navPoint id="navPoint12" playOrder="10">
+          <navLabel>
+            <text>xmmPipeline.findOverlap module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.findOverlap" />  
+        </navPoint>
+        <navPoint id="navPoint13" playOrder="11">
+          <navLabel>
+            <text>xmmPipeline.getSpectraFitsTable module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.getSpectraFitsTable" />  
+        </navPoint>
+        <navPoint id="navPoint14" playOrder="12">
+          <navLabel>
+            <text>xmmPipeline.plotAnal module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.plotAnal" />  
+        </navPoint>
+        <navPoint id="navPoint15" playOrder="13">
+          <navLabel>
+            <text>xmmPipeline.pyXspec module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#xmmpipeline-pyxspec-module" />  
+        </navPoint>
+        <navPoint id="navPoint16" playOrder="14">
+          <navLabel>
+            <text>xmmPipeline.rgsPipeline module</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline.rgsPipeline" />  
+        </navPoint>
+        <navPoint id="navPoint17" playOrder="15">
+          <navLabel>
+            <text>Module contents</text>
+          </navLabel>
+          <content src="xmmPipeline.xhtml#module-xmmPipeline" />  
+        </navPoint>
+      </navPoint>
+    </navPoint>
+  </navMap>
+</ncx>

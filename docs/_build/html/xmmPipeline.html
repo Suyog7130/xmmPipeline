@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>xmmPipeline package &#8212; xmmPipeline v1.3 documentation</title>
+    <title>xmmPipeline package &#8212; xmmPipeline  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -65,7 +65,7 @@ additional single quotes around them before calling the <cite>subprocess.run</ci
 <dl class="py class">
 <dt class="sig sig-object py" id="xmmPipeline.epicObj.epicObj">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xmmPipeline.epicObj.</span></span><span class="sig-name descname"><span class="pre">epicObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sas_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sas_ccfpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srcCircRadius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkgCircRadius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dSrcThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">70</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkgCircGap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edetectmode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'chain'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">esp_nsplinenodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gti_indiThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gti_combThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lcBinSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binBkglc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveFig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showFig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignorePileup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.epicObj.epicObj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xmmPipeline.epicObj.epicObj.combineEPICdata">
 <span class="sig-name descname"><span class="pre">combineEPICdata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.epicObj.epicObj.combineEPICdata" title="Permalink to this definition">¶</a></dt>
@@ -231,7 +231,7 @@ that would require changes in the createOutputImages() function below.</p>
 See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep">https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inst</strong> (<em>str</em>) – name of the instrument of use.</p>
+<dd class="field-odd"><p><strong>inst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – name of the instrument of use.</p>
 </dd>
 <dt class="field-even">Input<span class="colon">:</span></dt>
 <dd class="field-even"><p><cite>inst_CCD##.evts</cite> Event list.</p>
@@ -259,6 +259,11 @@ of <code class="docutils literal notranslate"><span class="pre">edetect_chain</s
 So <cite>emllist.csv</cite> should be used for the overlap cases.
 And anyway, another run of the original <cite>find_otherSources</cite> will update the said file.</p></li>
 </ul>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Check is using <code class="docutils literal notranslate"><span class="pre">PATTERN</span> <span class="pre">in</span> <span class="pre">[0:12]</span></code> in <code class="docutils literal notranslate"><span class="pre">evselect</span> <span class="pre">expression</span></code> for PN is correct?
+For data extraction elsewhere, the expression for PN reads, <code class="docutils literal notranslate"><span class="pre">(PATTERN</span> <span class="pre">&lt;=</span> <span class="pre">4)</span></code></p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -287,7 +292,7 @@ parameters.</p>
 find 2 background cicles in the data of the instrument passed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inst</strong> (<em>str</em>) – name of the instrument of use.</p>
+<dd class="field-odd"><p><strong>inst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – name of the instrument of use.</p>
 </dd>
 <dt class="field-even">Input<span class="colon">:</span></dt>
 <dd class="field-even"><p><cite>inst_CCD##_image.fits</cite> files containing the extracted image data of the instrument.</p>
@@ -403,7 +408,7 @@ If the file is already present in the directory, then the values for the
 corresponding keys are updated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inst</strong> (<em>str</em>) – name of the instrument of use.</p>
+<dd class="field-odd"><p><strong>inst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – name of the instrument of use.</p>
 </dd>
 <dt class="field-even">Input<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">backgroundLoc_indi</span></code> dictionary containing the location parameters.</p>
@@ -449,7 +454,7 @@ corresponding keys will be updated.</p>
 For clearing the EPIC Pile-up in early time obsIDs.
 See: <cite>https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epatplot</cite></p>
 <p>This would be used to correct for the Pile-up seperately for individual
-obsIDs. Thus, the <cite>workdir</cite> is changed to <a href="#id1"><span class="problematic" id="id2">`</span></a>workdir`+’/work’ folder.</p>
+obsIDs. Thus, the <cite>workdir</cite> is changed to <a href="#id2"><span class="problematic" id="id3">`</span></a>workdir`+’/work’ folder.</p>
 <p>This procedure will give the Source Annulus radii for which Pile-up is
 negligible for any particular obsIDs. Henceforth, it is this Source region
 for which the Light Curve and the Spectra extraction should be done.</p>
@@ -479,7 +484,7 @@ Gotta get this discrepancy cleared up.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="xmmPipeline.epicPileup.epicPileup">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xmmPipeline.epicPileup.</span></span><span class="sig-name descname"><span class="pre">epicPileup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sas_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sas_ccfpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srcCircRadius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkgCircRadius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dSrcThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">70</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkgCircGap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edetectmode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'chain'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">esp_nsplinenodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">14</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gti_indiThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gti_combThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lcBinSize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binBkglc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'no'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveFig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showFig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignorePileup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.epicPileup.epicPileup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#xmmPipeline.epicObj.epicObj" title="xmmPipeline.epicObj.epicObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">epicObj</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">epicObj</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xmmPipeline.epicPileup.epicPileup.checkPileUp">
 <span class="sig-name descname"><span class="pre">checkPileUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.epicPileup.epicPileup.checkPileUp" title="Permalink to this definition">¶</a></dt>
@@ -637,7 +642,7 @@ And finally starting the manual specModel fits.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="xmmPipeline.epicSpectra.epicSpectra">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xmmPipeline.epicSpectra.</span></span><span class="sig-name descname"><span class="pre">epicSpectra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doNotOverwriteModel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.epicSpectra.epicSpectra" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#xmmPipeline.epicObj.epicObj" title="xmmPipeline.epicObj.epicObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">epicObj</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">epicObj</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xmmPipeline.epicSpectra.epicSpectra.extractSpectra_imageMode">
 <span class="sig-name descname"><span class="pre">extractSpectra_imageMode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.epicSpectra.epicSpectra.extractSpectra_imageMode" title="Permalink to this definition">¶</a></dt>
@@ -797,7 +802,7 @@ not possible to obtain more than 2 bkgCircs, the user can find 2 bkgCircs atleas
 <dl class="py class">
 <dt class="sig sig-object py" id="xmmPipeline.findOverlap.findOverlap">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xmmPipeline.findOverlap.</span></span><span class="sig-name descname"><span class="pre">findOverlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NA'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pnCCD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'4'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srcCoords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">otherSrc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srcR</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bkgR</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srcThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saveFig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showFig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.findOverlap.findOverlap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xmmPipeline.findOverlap.findOverlap.backgroundCircles">
 <span class="sig-name descname"><span class="pre">backgroundCircles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.findOverlap.findOverlap.backgroundCircles" title="Permalink to this definition">¶</a></dt>
@@ -829,8 +834,8 @@ Modified the function a great deal from the earlier naive <cite>backgroundCircle
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ax</strong> (<em>obj</em>) – <cite>matplotlib.pyplot.subplots</cite> object for plotting the images.</p></li>
-<li><p><strong>inst</strong> (<em>str</em>) – name of the instrument of use.</p></li>
-<li><p><strong>nBkgCircs</strong> (<em>int</em>) – number of background circles to detect. Defaults to 3. (Optional)</p></li>
+<li><p><strong>inst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – name of the instrument of use.</p></li>
+<li><p><strong>nBkgCircs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – number of background circles to detect. Defaults to 3. (Optional)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Output<span class="colon">:</span></dt>
@@ -853,7 +858,7 @@ and the cicles are found using that overlap data.
 Otherwise, <cite>inst_CCD##_image</cite> is used as the backdrop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>inst</strong> (<em>str</em>) – Name of the instrument to use. Defaults to None.
+<dd class="field-odd"><p><strong>inst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the instrument to use. Defaults to None.
 If None then it is assumed at the overlap detected is
 performed.</p>
 </dd>
@@ -894,7 +899,7 @@ See issue #28 in the xmmPipeline repository in this regard,
 </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bCircle1 (tuple)</p>
+<dd class="field-even"><p>bCircle1 (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)">tuple</a>)</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1004,7 +1009,7 @@ Adding modifications to the beautifyPlot function.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="xmmPipeline.plotAnal.plotAnal">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xmmPipeline.plotAnal.</span></span><span class="sig-name descname"><span class="pre">plotAnal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">figure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.plotAnal.plotAnal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xmmPipeline.plotAnal.plotAnal.PSNR">
 <span class="sig-name descname"><span class="pre">PSNR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xloc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yloc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decPlace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.plotAnal.plotAnal.PSNR" title="Permalink to this definition">¶</a></dt>
@@ -1106,7 +1111,7 @@ For extraction of RGS light curves.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="xmmPipeline.rgsPipeline.rgsObj">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xmmPipeline.rgsPipeline.</span></span><span class="sig-name descname"><span class="pre">rgsObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sas_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sas_ccfpath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.rgsPipeline.rgsObj" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xmmPipeline.rgsPipeline.rgsObj.findObsIDs">
 <span class="sig-name descname"><span class="pre">findObsIDs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xmmPipeline.rgsPipeline.rgsObj.findObsIDs" title="Permalink to this definition">¶</a></dt>
@@ -1227,7 +1232,7 @@ See: <a class="reference external" href="https://www.cosmos.esa.int/web/xmm-newt
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2021, Suyog Garg.
+      &copy;2023, Suyog.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
