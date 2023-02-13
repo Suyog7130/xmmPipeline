@@ -1,4 +1,4 @@
-
+[![PDF](https://img.shields.io/badge/xmmPipeline-PDF-brightgreen?style=plastic)](https://github.com/Suyog7130/xmmPipeline/blob/main/docs/_build/latex/xmmpipeline.pdf)
 
 - ***epicObj.py***, contains the main **epicObj** class which would be used by the rest of the programs. 
 
