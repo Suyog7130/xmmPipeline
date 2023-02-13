@@ -4,6 +4,14 @@
 \ifdefined\pdfpxdimen
    \let\sphinxpxdimen\pdfpxdimen\else\newdimen\sphinxpxdimen
 \fi \sphinxpxdimen=.75bp\relax
+\ifdefined\pdfimageresolution
+    \pdfimageresolution= \numexpr \dimexpr1in\relax/\sphinxpxdimen\relax
+\fi
+%% let collapsible pdf bookmarks panel have high depth per default
+\PassOptionsToPackage{bookmarksdepth=5}{hyperref}
+
+\PassOptionsToPackage{booktabs}{sphinx}
+\PassOptionsToPackage{colorrows}{sphinx}
 
 \PassOptionsToPackage{warn}{textcomp}
 \usepackage[utf8]{inputenc}
@@ -28,34 +36,16 @@
 
 
 
-\usepackage{times}
-\expandafter\ifx\csname T@LGR\endcsname\relax
-\else
-% LGR was declared as font encoding
-  \substitutefont{LGR}{\rmdefault}{cmr}
-  \substitutefont{LGR}{\sfdefault}{cmss}
-  \substitutefont{LGR}{\ttdefault}{cmtt}
-\fi
-\expandafter\ifx\csname T@X2\endcsname\relax
-  \expandafter\ifx\csname T@T2A\endcsname\relax
-  \else
-  % T2A was declared as font encoding
-    \substitutefont{T2A}{\rmdefault}{cmr}
-    \substitutefont{T2A}{\sfdefault}{cmss}
-    \substitutefont{T2A}{\ttdefault}{cmtt}
-  \fi
-\else
-% X2 was declared as font encoding
-  \substitutefont{X2}{\rmdefault}{cmr}
-  \substitutefont{X2}{\sfdefault}{cmss}
-  \substitutefont{X2}{\ttdefault}{cmtt}
-\fi
+\usepackage{tgtermes}
+\usepackage{tgheros}
+\renewcommand{\ttdefault}{txtt}
+
 
 
 \usepackage[Bjarne]{fncychap}
 \usepackage{sphinx}
 
-\fvset{fontsize=\small}
+\fvset{fontsize=auto}
 \usepackage{geometry}
 
 
@@ -65,6 +55,7 @@
 \usepackage{hypcap}% it must be loaded after hyperref.
 % Set up styles of URL: it should be placed after hyperref.
 \urlstyle{same}
+
 \addto\captionsenglish{\renewcommand{\contentsname}{Contents:}}
 
 \usepackage{sphinxmessages}
@@ -73,13 +64,18 @@
 
 
 \title{xmmPipeline}
-\date{Jun 13, 2021}
-\release{v1.3}
-\author{Suyog Garg}
+\date{Feb 13, 2023}
+\release{}
+\author{Suyog}
 \newcommand{\sphinxlogo}{\vbox{}}
-\renewcommand{\releasename}{Release}
+\renewcommand{\releasename}{}
 \makeindex
 \begin{document}
+
+\ifdefined\shorthandoff
+  \ifnum\catcode`\=\string=\active\shorthandoff{=}\fi
+  \ifnum\catcode`\"=\active\shorthandoff{"}\fi
+\fi
 
 \pagestyle{empty}
 \sphinxmaketitle
@@ -89,112 +85,157 @@
 \phantomsection\label{\detokenize{index::doc}}
 
 
+\sphinxstepscope
 
-\chapter{githubRepo}
-\label{\detokenize{modules:githubrepo}}\label{\detokenize{modules::doc}}
 
-\section{githubRepo package}
-\label{\detokenize{githubRepo:githubrepo-package}}\label{\detokenize{githubRepo::doc}}
+\chapter{xmmPipeline}
+\label{\detokenize{modules:xmmpipeline}}\label{\detokenize{modules::doc}}
+\sphinxstepscope
+
+
+\section{xmmPipeline package}
+\label{\detokenize{xmmPipeline:xmmpipeline-package}}\label{\detokenize{xmmPipeline::doc}}
 
 \subsection{Submodules}
-\label{\detokenize{githubRepo:submodules}}
+\label{\detokenize{xmmPipeline:submodules}}
 
-\subsection{githubRepo.convert module}
-\label{\detokenize{githubRepo:module-githubRepo.convert}}\label{\detokenize{githubRepo:githubrepo-convert-module}}\index{module@\spxentry{module}!githubRepo.convert@\spxentry{githubRepo.convert}}\index{githubRepo.convert@\spxentry{githubRepo.convert}!module@\spxentry{module}}
+\subsection{xmmPipeline.convert module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.convert}}\label{\detokenize{xmmPipeline:xmmpipeline-convert-module}}\index{module@\spxentry{module}!xmmPipeline.convert@\spxentry{xmmPipeline.convert}}\index{xmmPipeline.convert@\spxentry{xmmPipeline.convert}!module@\spxentry{module}}
+\sphinxAtStartPar
 For conversion of the RA and DEC.
 
 
-\subsection{githubRepo.epicObj module}
-\label{\detokenize{githubRepo:module-githubRepo.epicObj}}\label{\detokenize{githubRepo:githubrepo-epicobj-module}}\index{module@\spxentry{module}!githubRepo.epicObj@\spxentry{githubRepo.epicObj}}\index{githubRepo.epicObj@\spxentry{githubRepo.epicObj}!module@\spxentry{module}}
+\subsection{xmmPipeline.epicObj module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.epicObj}}\label{\detokenize{xmmPipeline:xmmpipeline-epicobj-module}}\index{module@\spxentry{module}!xmmPipeline.epicObj@\spxentry{xmmPipeline.epicObj}}\index{xmmPipeline.epicObj@\spxentry{xmmPipeline.epicObj}!module@\spxentry{module}}
+\sphinxAtStartPar
 10th May 2021:
 —
 Am making several changes to the code procedure arrangements.
 See the GitHub repo, the Notes on Google Docs and the documentation for more information.
 For previous docstring comments, see earlier code files, namely \sphinxtitleref{xmmPipeline.py}
 
+\sphinxAtStartPar
 18th and 19th May 2021:
 —
 Adding options for Pile\sphinxhyphen{}up obsIDs.
 
+\sphinxAtStartPar
 21st May 2021:
 —
 Editing the \sphinxtitleref{removeFlareBackground} function.
 A seperate function \sphinxtitleref{extract\_flareGTI} will also be added.
 
-9th June 2021:
+\sphinxAtStartPar
+9th\textasciitilde{}13th June 2021:
 —
 Starting to write the functions for obtaining individual background circles.
-\index{epicObj (class in githubRepo.epicObj)@\spxentry{epicObj}\spxextra{class in githubRepo.epicObj}}
+
+\sphinxAtStartPar
+20th Jan 2023:
+—
+Making the code compatible with Mac.
+If the path names are Windows like, containing white\sphinxhyphen{}spaces, then we need to have
+additional single quotes around them before calling the \sphinxtitleref{subprocess.run} command.
+\index{epicObj (class in xmmPipeline.epicObj)@\spxentry{epicObj}\spxextra{class in xmmPipeline.epicObj}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{githubRepo.epicObj.}}\sphinxbfcode{\sphinxupquote{epicObj}}}{\emph{\DUrole{n}{ra}}, \emph{\DUrole{n}{dec}}, \emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{sas\_dir}}, \emph{\DUrole{n}{headas}}, \emph{\DUrole{n}{sas\_ccfpath}}, \emph{\DUrole{n}{srcCircRadius}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{bkgCircRadius}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{dSrcThreshold}\DUrole{o}{=}\DUrole{default_value}{70}}, \emph{\DUrole{n}{bkgCircGap}\DUrole{o}{=}\DUrole{default_value}{2.5}}, \emph{\DUrole{n}{edetectmode}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}chain\textquotesingle{}}}, \emph{\DUrole{n}{esp\_nsplinenodes}\DUrole{o}{=}\DUrole{default_value}{14}}, \emph{\DUrole{n}{gti\_indiThreshold}\DUrole{o}{=}\DUrole{default_value}{500}}, \emph{\DUrole{n}{gti\_combThreshold}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{lcBinSize}\DUrole{o}{=}\DUrole{default_value}{25}}, \emph{\DUrole{n}{binBkglc}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}no\textquotesingle{}}}, \emph{\DUrole{n}{saveFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{showFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{ignorePileup}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
-Bases: \sphinxcode{\sphinxupquote{object}}
-\index{combineEPICdata() (githubRepo.epicObj.epicObj method)@\spxentry{combineEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{xmmPipeline.epicObj.}}\sphinxbfcode{\sphinxupquote{epicObj}}}{\emph{\DUrole{n}{ra}}, \emph{\DUrole{n}{dec}}, \emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{sas\_dir}}, \emph{\DUrole{n}{headas}}, \emph{\DUrole{n}{sas\_ccfpath}}, \emph{\DUrole{n}{srcCircRadius}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{bkgCircRadius}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{dSrcThreshold}\DUrole{o}{=}\DUrole{default_value}{70}}, \emph{\DUrole{n}{bkgCircGap}\DUrole{o}{=}\DUrole{default_value}{2.5}}, \emph{\DUrole{n}{edetectmode}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}chain\textquotesingle{}}}, \emph{\DUrole{n}{esp\_nsplinenodes}\DUrole{o}{=}\DUrole{default_value}{14}}, \emph{\DUrole{n}{gti\_indiThreshold}\DUrole{o}{=}\DUrole{default_value}{500}}, \emph{\DUrole{n}{gti\_combThreshold}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{lcBinSize}\DUrole{o}{=}\DUrole{default_value}{25}}, \emph{\DUrole{n}{binBkglc}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}no\textquotesingle{}}}, \emph{\DUrole{n}{saveFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{showFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{ignorePileup}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Bases: \sphinxhref{https://docs.python.org/3/library/functions.html\#object}{\sphinxcode{\sphinxupquote{object}}}
+\index{combineEPICdata() (xmmPipeline.epicObj.epicObj method)@\spxentry{combineEPICdata()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.combineEPICdata}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{combineEPICdata}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.combineEPICdata}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{combineEPICdata}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Combines EPIC PN, MOS1 and MOS2 Event lists data corresponding to the CCD
 where the Source is located.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 EPIC concatenated and calibrated Event lists obtained by running
 emproc and epproc.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Combined PNMOS12.evts and MOS12.evts Event lists.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{combineGTIs() (githubRepo.epicObj.epicObj method)@\spxentry{combineGTIs()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{combineGTIs() (xmmPipeline.epicObj.epicObj method)@\spxentry{combineGTIs()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.combineGTIs}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{combineGTIs}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.combineGTIs}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{combineGTIs}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Combines Flare and Instrumental GTIs.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Flare, EPIC PN, MOS1 and MOS2 GTIs.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Combined Flare and Instrumental GTI FITS file.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{downloadData() (githubRepo.epicObj.epicObj method)@\spxentry{downloadData()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{downloadData() (xmmPipeline.epicObj.epicObj method)@\spxentry{downloadData()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.downloadData}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{downloadData}}}{}{}~\begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.downloadData}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{downloadData}}}{}{}
+\pysigstopsignatures\begin{quote}\begin{description}
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 List of obsIDs for which data has to be downloaded.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 None.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 First it is checked is the the downloading has been done before.
 If yes, then if the size of the obsID folder is large, it’s downloading is skipped.
 
 \end{fulllineitems}
 
-\index{extract\_InstrumentalGTIs() (githubRepo.epicObj.epicObj method)@\spxentry{extract\_InstrumentalGTIs()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{extract\_InstrumentalGTIs() (xmmPipeline.epicObj.epicObj method)@\spxentry{extract\_InstrumentalGTIs()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.extract_InstrumentalGTIs}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_InstrumentalGTIs}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.extract_InstrumentalGTIs}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_InstrumentalGTIs}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Extracts Instrumental GTIs from EPIC data using ‘fextract’ command.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 EPIC concatenated and calibrated Event lists obtained by running
 emproc and epproc.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Intrumental GTI FITS files for EPIC PN, MOS1 and MOS2.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 ‘fextract’ command can’t overwrite the extracted file if it already exists
 in the work directory, so they are deleted using ‘rm \sphinxhyphen{}rf’, which doesn’t
 raises any error even if no such files are found for deleting during the
@@ -202,160 +243,231 @@ first run.
 
 \end{fulllineitems}
 
-\index{extract\_flareGTI() (githubRepo.epicObj.epicObj method)@\spxentry{extract\_flareGTI()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{extract\_flareGTI() (xmmPipeline.epicObj.epicObj method)@\spxentry{extract\_flareGTI()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.extract_flareGTI}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_flareGTI}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.extract_flareGTI}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_flareGTI}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Runs the XMMSAS commands to extract Flare GTI from PN Event List.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Unfiltered EPIC PN and MOS1\&2 Events lists.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 \sphinxtitleref{flareGTI} file for the obsIDs.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 This function largely follows the following SAS thread:
 \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground}
 
+\sphinxAtStartPar
 Only one of either EPIC PN or MOS Flare Background filtering is required
 since the Flare affects the whole telescope.
 
 \end{fulllineitems}
 
-\index{extract\_srcBkg\_eventLists() (githubRepo.epicObj.epicObj method)@\spxentry{extract\_srcBkg\_eventLists()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{extract\_srcBkg\_eventLists() (xmmPipeline.epicObj.epicObj method)@\spxentry{extract\_srcBkg\_eventLists()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.extract_srcBkg_eventLists}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_srcBkg\_eventLists}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.extract_srcBkg_eventLists}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_srcBkg\_eventLists}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Extracts Source and Background Event list from the combined PNMOS12 data file,
 using the Source and Background location parameters given as Input.
 These Event lists will then be used for getting source images in JPEG using DS9.
 
+\sphinxAtStartPar
 19th May 2021: Added options for Pile\sphinxhyphen{}up obsIDs.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Combined PNMOS12 Event list, Source and Background X, Y in Sky coords and
 rIn, rOut, the radii of the circles.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Extracted Source and Background Event lists.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{findObsIDs() (githubRepo.epicObj.epicObj method)@\spxentry{findObsIDs()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{findObsIDs() (xmmPipeline.epicObj.epicObj method)@\spxentry{findObsIDs()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.findObsIDs}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{findObsIDs}}}{}{}~\begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.findObsIDs}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{findObsIDs}}}{}{}
+\pysigstopsignatures\begin{quote}\begin{description}
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Coordinates of the object and path to work directory.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 List of obsIDs.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{findSourceCCD() (githubRepo.epicObj.epicObj method)@\spxentry{findSourceCCD()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{findSourceCCD() (xmmPipeline.epicObj.epicObj method)@\spxentry{findSourceCCD()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.findSourceCCD}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{findSourceCCD}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.findSourceCCD}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{findSourceCCD}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Uses ‘ecoordconv’ command of SAS to find which CCD contains the Source
 in each of the EPIC’s three cameras.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 EPIC concatenated and calibrated Event lists obtained by running
 emproc and epproc.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 None.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 self.sourceCCDs is updated as a dictionary of dictionaries containing the
 Source CCD number for PN, MOS1 and MOS2 cameras for all the obsIDs.
 
 \end{fulllineitems}
 
-\index{find\_otherSources() (githubRepo.epicObj.epicObj method)@\spxentry{find\_otherSources()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{find\_otherSources() (xmmPipeline.epicObj.epicObj method)@\spxentry{find\_otherSources()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.find_otherSources}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{find\_otherSources}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.find_otherSources}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{find\_otherSources}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Function to find all the other Sources, in addition to the main Source, lying within the region of interest.
 See: \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep}
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 PNMOS12.evts and PN\_CCD\#\#.evts and corresponding extracted images in the Energy band 0.3\sphinxhyphen{}10 KeV
 using evselect.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
 apart from the region file from DS9.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 Note that other sources may be found within any of the regions using different input files,
 for instance ‘PN\_image\_full.fits’ obtained from ‘PNclean.ds’ etc.
 
+\sphinxAtStartPar
 However, only the sources within the PNMOS12 overlap region or the PN region, in case of small mode,
 are of interest. Since, the PN region necessarily contains the overlap region within it regardless of
 the mode of observation, this should have been sufficient to get other sources. However, the MOS data adds
 some of its own sources and ‘edetect\_chain’ is easier to use and can be used with multiple imagesets,
 so both ‘PNMOS12’ and ‘PN\_CCD\#\#’ are being used to get the sources.
 
+\sphinxAtStartPar
 Further, right now the SAS command ‘edetect\_chain’, which is pretty slow when number of sources is large,
 is been used. Individual tasks within ‘edetect\_chain’ can be run separately to fasten this up, although
 that would require changes in the createOutputImages() function below.
 
 \end{fulllineitems}
 
-\index{find\_otherSources\_indi() (githubRepo.epicObj.epicObj method)@\spxentry{find\_otherSources\_indi()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{find\_otherSources\_indi() (xmmPipeline.epicObj.epicObj method)@\spxentry{find\_otherSources\_indi()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.find_otherSources_indi}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{find\_otherSources\_indi}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}PN\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.find_otherSources_indi}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{find\_otherSources\_indi}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}PN\textquotesingle{}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Function to find all the other Sources, in addition to the main Source, lying within the region of interest.
 See: \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-src-find-stepbystep}
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of the instrument of use.
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} name of the instrument of use.
 
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 \sphinxtitleref{inst\_CCD\#\#.evts} Event list.
 
-\item[{Raises}] \leavevmode
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Error}} \textendash{} if \sphinxtitleref{inst} is not in {[}‘PN’, ‘MOS1’, ‘MOS2’{]}
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Exposer maps, masks, the csv file containing the x and y coordinates of the other Sources,
 apart from the region file from DS9.
+Also extracts \sphinxtitleref{inst\_image\_CCD\#\#.fits} file which is later used to find srcBkg circs.
 Updates the \sphinxcode{\sphinxupquote{otherSourceIndi}} dictionary for each of the obsIDs in \sphinxcode{\sphinxupquote{self.obsIDs}}
 
 \end{description}\end{quote}
 \subsubsection*{Notes}
 
+\sphinxAtStartPar
 This separate function based on \sphinxtitleref{find\_otherSources} is meant to be used for
 finding individual instrument other sources. It uses \sphinxcode{\sphinxupquote{edetect\_chain}} function
 from XMMSAS for detecting the Sources.
 \sphinxtitleref{inst\_CCD\#\#.evts} is required to extract corresponding images in the Energy band
 0.3\sphinxhyphen{}10 KeV using \sphinxcode{\sphinxupquote{evselect}}.
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+The indi inst files have \sphinxcode{\sphinxupquote{inst}} appended at the end of their names.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxtitleref{emllist.fits} originally found for the overlap is rewritten with every run
+of \sphinxcode{\sphinxupquote{edetect\_chain}}. However, the \sphinxtitleref{emllist.csv} is not b’cuz of the above point
+So \sphinxtitleref{emllist.csv} should be used for the overlap cases.
+And anyway, another run of the original \sphinxtitleref{find\_otherSources} will update the said file.
+
+\end{itemize}
+
+\begin{sphinxadmonition}{note}{\label{\detokenize{xmmPipeline:id1}}Todo:}
+\sphinxAtStartPar
+Check is using \sphinxcode{\sphinxupquote{PATTERN in {[}0:12{]}}} in \sphinxcode{\sphinxupquote{evselect expression}} for PN is correct?
+For data extraction elsewhere, the expression for PN reads, \sphinxcode{\sphinxupquote{(PATTERN \textless{}= 4)}}
+\end{sphinxadmonition}
 
 \end{fulllineitems}
 
-\index{getBackgroundCircles() (githubRepo.epicObj.epicObj method)@\spxentry{getBackgroundCircles()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{getBackgroundCircles() (xmmPipeline.epicObj.epicObj method)@\spxentry{getBackgroundCircles()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.getBackgroundCircles}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{getBackgroundCircles}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.getBackgroundCircles}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{getBackgroundCircles}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calls \sphinxtitleref{findOverlap.py} functions to automatically detect the overlap PNMOS12 region and
 find 2 background cicles in it.
 If the MOS mode is \sphinxtitleref{small}, then the PN image is used for getting the background circles.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 PN\_image.fits, MOS12\_image.fits and PNMOS12\_image.fits to get the overlap from.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 x, y coords of the background circles alongwith the radii of these circles and the
 source circle. Units of radii are pixels or Sky Coord units.
 Updates the \sphinxcode{\sphinxupquote{sourceLoc}} and \sphinxcode{\sphinxupquote{backgroundLoc}} dictionaries with the location
@@ -365,27 +477,36 @@ parameters.
 
 \end{fulllineitems}
 
-\index{getBackgroundCircles\_indi() (githubRepo.epicObj.epicObj method)@\spxentry{getBackgroundCircles\_indi()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{getBackgroundCircles\_indi() (xmmPipeline.epicObj.epicObj method)@\spxentry{getBackgroundCircles\_indi()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.getBackgroundCircles_indi}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{getBackgroundCircles\_indi}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}PN\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.getBackgroundCircles_indi}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{getBackgroundCircles\_indi}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}PN\textquotesingle{}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calls the \sphinxtitleref{backgroundCircles} function in \sphinxtitleref{findOverlap.py} to automatically
 find 2 background cicles in the data of the instrument passed.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of the instrument of use.
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} name of the instrument of use.
 
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 \sphinxtitleref{inst\_CCD\#\#\_image.fits} files containing the extracted image data of the instrument.
 
-\item[{Requires}] \leavevmode
+\sphinxlineitem{Requires}
+\sphinxAtStartPar
 Call to \sphinxtitleref{find\_otherSources\_indi} function for the dictionary of
 other Sources.
 
-\item[{Raises}] \leavevmode
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Error}} \textendash{} if \sphinxtitleref{inst} is not in {[}‘PN’, ‘MOS1’, ‘MOS2’{]}
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 x, y coords of the background circles alongwith the radii of these circles.
 Units of radii are pixels or Sky Coord units.
 Updates the \sphinxcode{\sphinxupquote{backgroundLocIndi}} dictionaries with the background location
@@ -394,96 +515,129 @@ parameters.
 \end{description}\end{quote}
 \subsubsection*{Notes}
 
-\sphinxcode{\sphinxupquote{small\sphinxhyphen{}mode}} MOS checking is invalid here since overlap is not found.
+\sphinxAtStartPar
+\sphinxcode{\sphinxupquote{small\sphinxhyphen{}mode}} MOS checking is invalid here since overlap is not been detected.
 The CCD argument in \sphinxcode{\sphinxupquote{findOverlap}} class is named \sphinxcode{\sphinxupquote{pnCCD}}.
 
 \end{fulllineitems}
 
-\index{obtain\_lightCurves() (githubRepo.epicObj.epicObj method)@\spxentry{obtain\_lightCurves()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{obtain\_lightCurves() (xmmPipeline.epicObj.epicObj method)@\spxentry{obtain\_lightCurves()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.obtain_lightCurves}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{obtain\_lightCurves}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.obtain_lightCurves}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{obtain\_lightCurves}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Obtains the light curves from the Source and Background Event lists.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Source and Background Event lists.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Corresponding light curves.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 By default, the background light curve is not binned.
 
 \end{fulllineitems}
 
-\index{readCCDcoordsPickle() (githubRepo.epicObj.epicObj method)@\spxentry{readCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{readCCDcoordsPickle() (xmmPipeline.epicObj.epicObj method)@\spxentry{readCCDcoordsPickle()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.readCCDcoordsPickle}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{readCCDcoordsPickle}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.readCCDcoordsPickle}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{readCCDcoordsPickle}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Reads \sphinxtitleref{ccd\_coords\_info.pickle} file which contains the location parameters.
 
 \end{fulllineitems}
 
-\index{reduceEPICdata() (githubRepo.epicObj.epicObj method)@\spxentry{reduceEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{reduceEPICdata() (xmmPipeline.epicObj.epicObj method)@\spxentry{reduceEPICdata()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.reduceEPICdata}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{reduceEPICdata}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.reduceEPICdata}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{reduceEPICdata}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Runs the XMMSAS commands on the shell to reduce EPIC data.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 SAS Summary file in the work directory, that is downloaded alongwith the data.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 EPIC PN and MOS1\&2 calibrated and concatenated Event lists
 produced by SAS tasks \sphinxtitleref{epproc} and \sphinxtitleref{emproc}.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 These event lists contain Instrumental GTI for each of the CCDs.
 See Notes and \sphinxurl{http://xmm-tools.cosmos.esa.int/external/sas/current/doc/epicproc/node17.html}
 
+\sphinxAtStartPar
 This function largely follows the following SAS thread:
 \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-reprocessing}
 
 \end{fulllineitems}
 
-\index{removeFlareBackground() (githubRepo.epicObj.epicObj method)@\spxentry{removeFlareBackground()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{removeFlareBackground() (xmmPipeline.epicObj.epicObj method)@\spxentry{removeFlareBackground()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.removeFlareBackground}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{removeFlareBackground}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.removeFlareBackground}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{removeFlareBackground}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Runs the XMMSAS commands to remove Flare background from EPIC Event List
 and obtained cleaned event lists for each EPIC instrument.
 The Flare GTI file extracted previously using \sphinxtitleref{extract\_flareGTI} is used.
 Since the Flare Background is same for all the instruments onboard,
 this same \sphinxtitleref{flareGTI} file can be used for them all.
 
+\sphinxAtStartPar
 Note that these Flare Background filtered Event Lists are only used for
 Spectral Analysis, since for Light Curve extraction, \sphinxtitleref{combinedGTI} file
 and combined \sphinxtitleref{PNMOS12.evts} EPIC data is used.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Unfiltered EPIC PN and MOS1\&2 Events lists and \sphinxtitleref{flareGTI} file.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Flare Background filtered Event Lists for each EPIC instrument.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 This function largely follows the following SAS thread:
 \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epic-filterbackground}
 
 \end{fulllineitems}
 
-\index{save\_results() (githubRepo.epicObj.epicObj method)@\spxentry{save\_results()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{save\_results() (xmmPipeline.epicObj.epicObj method)@\spxentry{save\_results()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.save_results}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_results}}}{}{}~\begin{description}
-\item[{Does two tasks,}] \leavevmode\begin{description}
-\item[{One, saves a pickle file at each obsID directory containing}] \leavevmode
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.save_results}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_results}}}{}{}
+\pysigstopsignatures\begin{description}
+\sphinxlineitem{Does two tasks,}\begin{description}
+\sphinxlineitem{One, saves a pickle file at each obsID directory containing}
+\sphinxAtStartPar
 sourceCCDs, sourceLoc, backgroundLoc and otherSources for it.
 
-\item[{Two, copies the Source, Background Events lists and other output files}] \leavevmode
+\sphinxlineitem{Two, copies the Source, Background Events lists and other output files}
+\sphinxAtStartPar
 from each obsID directory to a results folder in the main directory.
 
 \end{description}
@@ -492,23 +646,66 @@ from each obsID directory to a results folder in the main directory.
 
 \end{fulllineitems}
 
-\index{sortObsIDs() (githubRepo.epicObj.epicObj method)@\spxentry{sortObsIDs()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{sortObsIDs() (xmmPipeline.epicObj.epicObj method)@\spxentry{sortObsIDs()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.sortObsIDs}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{sortObsIDs}}}{\emph{\DUrole{n}{objName}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.sortObsIDs}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{sortObsIDs}}}{\emph{\DUrole{n}{objName}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 To sort the obsIDs in \sphinxtitleref{obsIDs\_list.dat} by reading it into a pandas dataframe.
 
 \end{fulllineitems}
 
-\index{writeCCDcoordsPickle() (githubRepo.epicObj.epicObj method)@\spxentry{writeCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}}
+\index{updateCCDcoordsPickle() (xmmPipeline.epicObj.epicObj method)@\spxentry{updateCCDcoordsPickle()}\spxextra{xmmPipeline.epicObj.epicObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.epicObj.writeCCDcoordsPickle}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{writeCCDcoordsPickle}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.updateCCDcoordsPickle}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{updateCCDcoordsPickle}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Writes the background location parameter dictionary for individual instruments
+\sphinxcode{\sphinxupquote{backgroundLoc\_indi}}  to \sphinxtitleref{ccd\_coords\_info.pickle} file.
+If the file is already present in the directory, then the values for the
+corresponding keys are updated.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} name of the instrument of use.
+
+\sphinxlineitem{Input}
+\sphinxAtStartPar
+\sphinxcode{\sphinxupquote{backgroundLoc\_indi}} dictionary containing the location parameters.
+
+\sphinxlineitem{Output}
+\sphinxAtStartPar
+Updated \sphinxcode{\sphinxupquote{ccd\_coords\_info.pickle}} file.
+
+\end{description}\end{quote}
+\subsubsection*{Notes}
+
+\sphinxAtStartPar
+If no CCDcoordsPickle file is available in the \sphinxcode{\sphinxupquote{workdir}}, then the whole
+file is created with other values been saved as well.
+
+\end{fulllineitems}
+
+\index{writeCCDcoordsPickle() (xmmPipeline.epicObj.epicObj method)@\spxentry{writeCCDcoordsPickle()}\spxextra{xmmPipeline.epicObj.epicObj method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.epicObj.writeCCDcoordsPickle}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{writeCCDcoordsPickle}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Writes the location parameters to \sphinxtitleref{ccd\_coords\_info.pickle} file.
 If the file is already present in the directory, then the values for the
 corresponding keys will be updated.
 \begin{description}
-\item[{21st May 2021: Added loading \sphinxtitleref{ccd\_coords\_info.pickle} file if it is already}] \leavevmode
+\sphinxlineitem{21st May 2021: Added loading \sphinxtitleref{ccd\_coords\_info.pickle} file if it is already}
+\sphinxAtStartPar
 present in the directory.
 
 \end{description}
@@ -518,47 +715,60 @@ present in the directory.
 
 \end{fulllineitems}
 
-\index{printErrorMessage() (in module githubRepo.epicObj)@\spxentry{printErrorMessage()}\spxextra{in module githubRepo.epicObj}}
+\index{printErrorMessage() (in module xmmPipeline.epicObj)@\spxentry{printErrorMessage()}\spxextra{in module xmmPipeline.epicObj}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.printErrorMessage}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.epicObj.}}\sphinxbfcode{\sphinxupquote{printErrorMessage}}}{\emph{\DUrole{n}{message}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.printErrorMessage}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.epicObj.}}\sphinxbfcode{\sphinxupquote{printErrorMessage}}}{\emph{\DUrole{n}{message}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{strToBool() (in module githubRepo.epicObj)@\spxentry{strToBool()}\spxextra{in module githubRepo.epicObj}}
+\index{strToBool() (in module xmmPipeline.epicObj)@\spxentry{strToBool()}\spxextra{in module xmmPipeline.epicObj}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicObj.strToBool}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.epicObj.}}\sphinxbfcode{\sphinxupquote{strToBool}}}{\emph{\DUrole{n}{s}}, \emph{\DUrole{n}{inverse}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicObj.strToBool}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.epicObj.}}\sphinxbfcode{\sphinxupquote{strToBool}}}{\emph{\DUrole{n}{s}}, \emph{\DUrole{n}{inverse}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
 
-\subsection{githubRepo.epicPileup module}
-\label{\detokenize{githubRepo:module-githubRepo.epicPileup}}\label{\detokenize{githubRepo:githubrepo-epicpileup-module}}\index{module@\spxentry{module}!githubRepo.epicPileup@\spxentry{githubRepo.epicPileup}}\index{githubRepo.epicPileup@\spxentry{githubRepo.epicPileup}!module@\spxentry{module}}
+\subsection{xmmPipeline.epicPileup module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.epicPileup}}\label{\detokenize{xmmPipeline:xmmpipeline-epicpileup-module}}\index{module@\spxentry{module}!xmmPipeline.epicPileup@\spxentry{xmmPipeline.epicPileup}}\index{xmmPipeline.epicPileup@\spxentry{xmmPipeline.epicPileup}!module@\spxentry{module}}
+\sphinxAtStartPar
 08 May 2021:
 —
 For clearing the EPIC Pile\sphinxhyphen{}up in early time obsIDs.
 See: \sphinxtitleref{https://www.cosmos.esa.int/web/xmm\sphinxhyphen{}newton/sas\sphinxhyphen{}thread\sphinxhyphen{}epatplot}
 
+\sphinxAtStartPar
 This would be used to correct for the Pile\sphinxhyphen{}up seperately for individual
 obsIDs. Thus, the \sphinxtitleref{workdir} is changed to {\color{red}\bfseries{}\textasciigrave{}}workdir\textasciigrave{}+’/work’ folder.
 
+\sphinxAtStartPar
 This procedure will give the Source Annulus radii for which Pile\sphinxhyphen{}up is
 negligible for any particular obsIDs. Henceforth, it is this Source region
 for which the Light Curve and the Spectra extraction should be done.
 \begin{description}
-\item[{So, I will have to:}] \leavevmode\begin{description}
-\item[{\sphinxhyphen{}\textgreater{} Modify \sphinxtitleref{xmmPipeline.py} so that it knows which obsIDs have the}] \leavevmode
+\sphinxlineitem{So, I will have to:}\begin{description}
+\sphinxlineitem{\sphinxhyphen{}\textgreater{} Modify \sphinxtitleref{xmmPipeline.py} so that it knows which obsIDs have the}
+\sphinxAtStartPar
 Pile\sphinxhyphen{}up issue and need the Source region to lie within an Annulus.
 
-\item[{\sphinxhyphen{}\textgreater{} Modify \sphinxtitleref{spectra.py} so that the Source Spectra are extracted from}] \leavevmode
+\sphinxlineitem{\sphinxhyphen{}\textgreater{} Modify \sphinxtitleref{spectra.py} so that the Source Spectra are extracted from}
+\sphinxAtStartPar
 within this Annulus.
 
 \end{description}
 
 \end{description}
 
+\sphinxAtStartPar
 See the notes of Google Doc for open questions.
 
+\sphinxAtStartPar
 09 May 2021:
 —
 \sphinxtitleref{epatplot} calculates two diagnostic numbers which may be used to assess
@@ -568,26 +778,37 @@ consistent with 1.0 within statistical errors (1 sigma errors are given).
 If pile\sphinxhyphen{}up is present, the singles ratio will be smaller than 1.0 and the
 doubles ratio will be larger than 1.0.
 
+\sphinxAtStartPar
 13 May 2021:
 —
 Adding \sphinxtitleref{correctPileUp} function.
 Some late\sphinxhyphen{}time obsIDs 0770981001, 0810200501 and 0810200701 also appear to be Piled\sphinxhyphen{}up!
 Gotta get this discrepancy cleared up.
-\index{epicPileup (class in githubRepo.epicPileup)@\spxentry{epicPileup}\spxextra{class in githubRepo.epicPileup}}
+\index{epicPileup (class in xmmPipeline.epicPileup)@\spxentry{epicPileup}\spxextra{class in xmmPipeline.epicPileup}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicPileup.epicPileup}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{githubRepo.epicPileup.}}\sphinxbfcode{\sphinxupquote{epicPileup}}}{\emph{\DUrole{n}{ra}}, \emph{\DUrole{n}{dec}}, \emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{sas\_dir}}, \emph{\DUrole{n}{headas}}, \emph{\DUrole{n}{sas\_ccfpath}}, \emph{\DUrole{n}{srcCircRadius}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{bkgCircRadius}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{dSrcThreshold}\DUrole{o}{=}\DUrole{default_value}{70}}, \emph{\DUrole{n}{bkgCircGap}\DUrole{o}{=}\DUrole{default_value}{2.5}}, \emph{\DUrole{n}{edetectmode}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}chain\textquotesingle{}}}, \emph{\DUrole{n}{esp\_nsplinenodes}\DUrole{o}{=}\DUrole{default_value}{14}}, \emph{\DUrole{n}{gti\_indiThreshold}\DUrole{o}{=}\DUrole{default_value}{500}}, \emph{\DUrole{n}{gti\_combThreshold}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{lcBinSize}\DUrole{o}{=}\DUrole{default_value}{25}}, \emph{\DUrole{n}{binBkglc}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}no\textquotesingle{}}}, \emph{\DUrole{n}{saveFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{showFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{ignorePileup}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
-Bases: \sphinxcode{\sphinxupquote{epicObj.epicObj}}
-\index{checkPileUp() (githubRepo.epicPileup.epicPileup method)@\spxentry{checkPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPileup.epicPileup}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{xmmPipeline.epicPileup.}}\sphinxbfcode{\sphinxupquote{epicPileup}}}{\emph{\DUrole{n}{ra}}, \emph{\DUrole{n}{dec}}, \emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{sas\_dir}}, \emph{\DUrole{n}{headas}}, \emph{\DUrole{n}{sas\_ccfpath}}, \emph{\DUrole{n}{srcCircRadius}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{bkgCircRadius}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{dSrcThreshold}\DUrole{o}{=}\DUrole{default_value}{70}}, \emph{\DUrole{n}{bkgCircGap}\DUrole{o}{=}\DUrole{default_value}{2.5}}, \emph{\DUrole{n}{edetectmode}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}chain\textquotesingle{}}}, \emph{\DUrole{n}{esp\_nsplinenodes}\DUrole{o}{=}\DUrole{default_value}{14}}, \emph{\DUrole{n}{gti\_indiThreshold}\DUrole{o}{=}\DUrole{default_value}{500}}, \emph{\DUrole{n}{gti\_combThreshold}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{lcBinSize}\DUrole{o}{=}\DUrole{default_value}{25}}, \emph{\DUrole{n}{binBkglc}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}no\textquotesingle{}}}, \emph{\DUrole{n}{saveFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{showFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{ignorePileup}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Bases: \sphinxcode{\sphinxupquote{epicObj}}
+\index{checkPileUp() (xmmPipeline.epicPileup.epicPileup method)@\spxentry{checkPileUp()}\spxextra{xmmPipeline.epicPileup.epicPileup method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicPileup.epicPileup.checkPileUp}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{checkPileUp}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPileup.epicPileup.checkPileUp}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{checkPileUp}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Uses \sphinxtitleref{epatplot} to check for the Pile\sphinxhyphen{}up issue.
 
+\sphinxAtStartPar
 First a GTI filtered Source Event list is extracted out of \sphinxtitleref{PN\_CCD\#.evts}
 and then \sphinxtitleref{epatplot} is run to check the observed Spectra with the expected
 pattern distribution function.
 
+\sphinxAtStartPar
 \sphinxtitleref{epatplot} calculates two diagnostic numbers which may be used to assess
 the presence of pile\sphinxhyphen{}up: In the absence of pile\sphinxhyphen{}up, the 0.5 \sphinxhyphen{} 2.0 keV (default)
 observed\sphinxhyphen{}to\sphinxhyphen{}model singles and doubles pattern fractions ratios should both be
@@ -596,76 +817,96 @@ If pile\sphinxhyphen{}up is present, the singles ratio will be smaller than 1.0 
 doubles ratio will be larger than 1.0.
 See: \sphinxtitleref{https://www.cosmos.esa.int/web/xmm\sphinxhyphen{}newton/sas\sphinxhyphen{}thread\sphinxhyphen{}epatplot}
 
+\sphinxAtStartPar
 Note that \sphinxtitleref{pnGTI.fits} GTI file is used instead of \sphinxtitleref{combinedGTI\_obsID.fits}
 because the latter results in very few useful data points.
 
+\sphinxAtStartPar
 If the obsID is found to be Piled\sphinxhyphen{}up then the user should run the \sphinxtitleref{correctPileUp}
 function to correct for it.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Concatenated and Calibrated Event list, pnGTI file,
 \sphinxtitleref{sourceCCDs} and the Source location parameters.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 The Source Annulus radii together with Filtered Event List
 \sphinxtitleref{source\_PN\_filtered\_obsID.evts} and the corresponding image
 \sphinxtitleref{source\_PN\_filteredPattern.ps}.
 
-\item[{Note}] \leavevmode
+\sphinxlineitem{Note}
+\sphinxAtStartPar
 The term \sphinxtitleref{filtered} means that the GTI have been applied.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{correctPileUp() (githubRepo.epicPileup.epicPileup method)@\spxentry{correctPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}}
+\index{correctPileUp() (xmmPipeline.epicPileup.epicPileup method)@\spxentry{correctPileUp()}\spxextra{xmmPipeline.epicPileup.epicPileup method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicPileup.epicPileup.correctPileUp}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{correctPileUp}}}{\emph{\DUrole{n}{srcRin}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPileup.epicPileup.correctPileUp}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{correctPileUp}}}{\emph{\DUrole{n}{srcRin}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Uses \sphinxtitleref{epatplot} to correct and check for the Pile\sphinxhyphen{}up issue by removing
 some pixels from the center of the Source circle.
 
+\sphinxAtStartPar
 The observation is corrected for Pile\sphinxhyphen{}up by removing some pixels from
 the center of the Source. Now, this checking for Pile\sphinxhyphen{}up need be done
 only once, for PN images, since, it will be the same for MOS, probably.
 
+\sphinxAtStartPar
 So, if Pile\sphinxhyphen{}up is found, one has to manually check for by iteratively
 removing more and more center pixels and find when the Pile\sphinxhyphen{}up becomes
 negligible. Then the Source circle would be an Annulus for this region.
 The same Annulus parameters can be repeated for MOS1\&2.
 See: \sphinxtitleref{https://www.cosmos.esa.int/web/xmm\sphinxhyphen{}newton/sas\sphinxhyphen{}thread\sphinxhyphen{}epatplot}
 
+\sphinxAtStartPar
 Note that \sphinxtitleref{pnGTI.fits} GTI file is used instead of \sphinxtitleref{combinedGTI\_obsID.fits}
 because the latter results in very few useful data points.
 
+\sphinxAtStartPar
 The result of this procedure would be the radii values of the Source
 Annulus for which Pile\sphinxhyphen{}up is negligible. These new found \sphinxtitleref{rIn} and \sphinxtitleref{rOut}
 are then saved into to the \sphinxtitleref{epicObj} and are written to \sphinxtitleref{ccd\_coords\_info.pickle}
 file. Henceforth, for these Pile\sphinxhyphen{}up obsIDs the Source region defined
 from \sphinxtitleref{rIn} to \sphinxtitleref{rOut} will be used for obtaing the Spectra.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Concatenated and Calibrated Event list, pnGTI file,
 \sphinxtitleref{sourceCCDs} and the Source location parameters.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 The Source Annulus radii together with Filtered Event List
 \sphinxtitleref{source\_PN\_filtered\_obsID.evts} and the corresponding image
 \sphinxtitleref{source\_PN\_filteredPattern.ps}, and the Annulus files
 \sphinxtitleref{source\_PN\_filteredAnnulus\_obsID.evts} and \sphinxtitleref{source\_PN\_filteredPattern\_Annulus.ps}
 showing resolution of the Pile\sphinxhyphen{}up issue.
 
-\item[{Note}] \leavevmode
+\sphinxlineitem{Note}
+\sphinxAtStartPar
 The term \sphinxtitleref{filtered} means that the GTI have been applied.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{save\_pileUpResults() (githubRepo.epicPileup.epicPileup method)@\spxentry{save\_pileUpResults()}\spxextra{githubRepo.epicPileup.epicPileup method}}
+\index{save\_pileUpResults() (xmmPipeline.epicPileup.epicPileup method)@\spxentry{save\_pileUpResults()}\spxextra{xmmPipeline.epicPileup.epicPileup method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicPileup.epicPileup.save_pileUpResults}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_pileUpResults}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPileup.epicPileup.save_pileUpResults}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_pileUpResults}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Saves the \sphinxtitleref{*filteredPattern.ps} and \sphinxtitleref{*filteredAnnulus*.ps}
 to the results directory.
 
@@ -674,99 +915,158 @@ to the results directory.
 
 \end{fulllineitems}
 
-\index{main() (in module githubRepo.epicPileup)@\spxentry{main()}\spxextra{in module githubRepo.epicPileup}}
+\index{main() (in module xmmPipeline.epicPileup)@\spxentry{main()}\spxextra{in module xmmPipeline.epicPileup}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicPileup.main}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.epicPileup.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{args}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPileup.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.epicPileup.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{args}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
 
-\subsection{githubRepo.epicPipeline module}
-\label{\detokenize{githubRepo:module-githubRepo.epicPipeline}}\label{\detokenize{githubRepo:githubrepo-epicpipeline-module}}\index{module@\spxentry{module}!githubRepo.epicPipeline@\spxentry{githubRepo.epicPipeline}}\index{githubRepo.epicPipeline@\spxentry{githubRepo.epicPipeline}!module@\spxentry{module}}
+\subsection{xmmPipeline.epicPipeline module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.epicPipeline}}\label{\detokenize{xmmPipeline:xmmpipeline-epicpipeline-module}}\index{module@\spxentry{module}!xmmPipeline.epicPipeline@\spxentry{xmmPipeline.epicPipeline}}\index{xmmPipeline.epicPipeline@\spxentry{xmmPipeline.epicPipeline}!module@\spxentry{module}}
+\sphinxAtStartPar
 10th May 2021:
 —
 Am making several changes to the code procedure arrangements.
 See the GitHub repo, the Notes on Google Docs and the documentation for more information.
 For previous docstring comments, see earlier code files, namely \sphinxtitleref{xmmPipeline.py}
-\index{combineAndFind\_method() (in module githubRepo.epicPipeline)@\spxentry{combineAndFind\_method()}\spxextra{in module githubRepo.epicPipeline}}
+\index{combineAndFind\_method() (in module xmmPipeline.epicPipeline)@\spxentry{combineAndFind\_method()}\spxextra{in module xmmPipeline.epicPipeline}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicPipeline.combineAndFind_method}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.epicPipeline.}}\sphinxbfcode{\sphinxupquote{combineAndFind\_method}}}{\emph{\DUrole{n}{args}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPipeline.combineAndFind_method}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.epicPipeline.}}\sphinxbfcode{\sphinxupquote{combineAndFind\_method}}}{\emph{\DUrole{n}{args}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{extractProds\_method() (in module githubRepo.epicPipeline)@\spxentry{extractProds\_method()}\spxextra{in module githubRepo.epicPipeline}}
+\index{extractProds\_method() (in module xmmPipeline.epicPipeline)@\spxentry{extractProds\_method()}\spxextra{in module xmmPipeline.epicPipeline}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicPipeline.extractProds_method}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.epicPipeline.}}\sphinxbfcode{\sphinxupquote{extractProds\_method}}}{\emph{\DUrole{n}{args}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPipeline.extractProds_method}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.epicPipeline.}}\sphinxbfcode{\sphinxupquote{extractProds\_method}}}{\emph{\DUrole{n}{args}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{reduceData\_method() (in module githubRepo.epicPipeline)@\spxentry{reduceData\_method()}\spxextra{in module githubRepo.epicPipeline}}
+\index{reduceData\_method() (in module xmmPipeline.epicPipeline)@\spxentry{reduceData\_method()}\spxextra{in module xmmPipeline.epicPipeline}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicPipeline.reduceData_method}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.epicPipeline.}}\sphinxbfcode{\sphinxupquote{reduceData\_method}}}{\emph{\DUrole{n}{args}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPipeline.reduceData_method}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.epicPipeline.}}\sphinxbfcode{\sphinxupquote{reduceData\_method}}}{\emph{\DUrole{n}{args}}}{}
+\pysigstopsignatures
+\end{fulllineitems}
+
+\index{runIndiBkgCircFuncs\_method() (in module xmmPipeline.epicPipeline)@\spxentry{runIndiBkgCircFuncs\_method()}\spxextra{in module xmmPipeline.epicPipeline}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicPipeline.runIndiBkgCircFuncs_method}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.epicPipeline.}}\sphinxbfcode{\sphinxupquote{runIndiBkgCircFuncs\_method}}}{\emph{\DUrole{n}{args}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
 
-\subsection{githubRepo.epicSpectra module}
-\label{\detokenize{githubRepo:module-githubRepo.epicSpectra}}\label{\detokenize{githubRepo:githubrepo-epicspectra-module}}\index{module@\spxentry{module}!githubRepo.epicSpectra@\spxentry{githubRepo.epicSpectra}}\index{githubRepo.epicSpectra@\spxentry{githubRepo.epicSpectra}!module@\spxentry{module}}
+\subsection{xmmPipeline.epicSpectra module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.epicSpectra}}\label{\detokenize{xmmPipeline:xmmpipeline-epicspectra-module}}\index{module@\spxentry{module}!xmmPipeline.epicSpectra@\spxentry{xmmPipeline.epicSpectra}}\index{xmmPipeline.epicSpectra@\spxentry{xmmPipeline.epicSpectra}!module@\spxentry{module}}
+\sphinxAtStartPar
 10th May 2021:
 —
 Am making several changes to the code procedure arrangements.
 See the GitHub repo, the Notes on Google Docs and the documentation for more information.
 For previous docstring comments, see earlier code files, namely \sphinxtitleref{spectra.py}
 
+\sphinxAtStartPar
 11th May 2021:
 —
 Since model fitting for individual obsIDs has to be done manually, I don’t think
 \sphinxtitleref{xspec\_fitSpectra} would be used now. \sphinxtitleref{pyXspec.py} will have to be run manually
 for each obsIDs with the different model parameters varrying.
 
+\sphinxAtStartPar
 20th May 2021:
 —
 Completing the pending work of fitting Models to the Spectra.
 Two criterions to be checked for each obsIDs:
 \begin{itemize}
 \item {} 
+\sphinxAtStartPar
 whether obsID is Piled\sphinxhyphen{}up? DONE!
 
 \item {} 
+\sphinxAtStartPar
 whether obsID is in Small\sphinxhyphen{}mode? DONE!
 
 \end{itemize}
 
+\sphinxAtStartPar
 21st May 2021:
 —
 Changed to using Flare Background filtered Event Lists for Spectra extraction.
 Found a way to save the output parameter values from \sphinxtitleref{pyXspec.py}.
 Completing the SpecModel fitting now.
-\index{epicSpectra (class in githubRepo.epicSpectra)@\spxentry{epicSpectra}\spxextra{class in githubRepo.epicSpectra}}
+
+\sphinxAtStartPar
+13th June 2021:
+—
+Completing the work for obtaining individual instrument bkgCircs.
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+Adding \sphinxtitleref{runIndiBkgCircFuncs} to the main function.
+
+\end{itemize}
+
+\sphinxAtStartPar
+17th June 2021:
+—
+Adding features to read individual instrument bkgCircs from ccdCoordsPickle file.
+And finally starting the manual specModel fits.
+\index{epicSpectra (class in xmmPipeline.epicSpectra)@\spxentry{epicSpectra}\spxextra{class in xmmPipeline.epicSpectra}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicSpectra.epicSpectra}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{githubRepo.epicSpectra.}}\sphinxbfcode{\sphinxupquote{epicSpectra}}}{\emph{\DUrole{n}{doNotOverwriteModel}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
-Bases: \sphinxcode{\sphinxupquote{epicObj.epicObj}}
-\index{extractSpectra\_imageMode() (githubRepo.epicSpectra.epicSpectra method)@\spxentry{extractSpectra\_imageMode()}\spxextra{githubRepo.epicSpectra.epicSpectra method}}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicSpectra.epicSpectra}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{xmmPipeline.epicSpectra.}}\sphinxbfcode{\sphinxupquote{epicSpectra}}}{\emph{\DUrole{n}{doNotOverwriteModel}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Bases: \sphinxcode{\sphinxupquote{epicObj}}
+\index{extractSpectra\_imageMode() (xmmPipeline.epicSpectra.epicSpectra method)@\spxentry{extractSpectra\_imageMode()}\spxextra{xmmPipeline.epicSpectra.epicSpectra method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicSpectra.epicSpectra.extractSpectra_imageMode}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extractSpectra\_imageMode}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicSpectra.epicSpectra.extractSpectra_imageMode}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extractSpectra\_imageMode}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Extracts the MOS12 and PN spectra in Image Mode.
 See: \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-mos-spectrum},
 \begin{quote}
 
+\sphinxAtStartPar
 \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-pn-spectrum}
 \end{quote}
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
-Flared Background filtered PN, MOS1\&2 Event Lists, \sphinxtitleref{PNclean.ds}, \sphinxtitleref{MOS1clean.ds} and
-\sphinxtitleref{MOS2clean.ds}. Alongwith SrcBkg coordinates and SourceCCDs resulting from \sphinxtitleref{epicPipeline.py}
+\sphinxlineitem{Input}
+\sphinxAtStartPar
+Flared Background filtered PN, MOS1\&2 Event Lists,
+\sphinxtitleref{PNclean.ds}, \sphinxtitleref{MOS1clean.ds} and \sphinxtitleref{MOS2clean.ds}.
+Alongwith SrcBkg coordinates and SourceCCDs resulting from \sphinxtitleref{epicPipeline.py}
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 MOS12 and PN SrcBkg Spectra in Image Mode, a Redistribution Matrix (\sphinxtitleref{rmf}) file and
 an Effective Area Vector (\sphinxtitleref{arf}) file.
 
 \end{description}\end{quote}
+\subsubsection*{Notes}
 
+\sphinxAtStartPar
 Note that for Small Mode obsIDs, since the background is taken from PN image data,
 instead of the overlap region data b’cuz MOS12 region was of small size, the background
 region will lie outside of the image. Thus, only the Source Spectra can possibly be
@@ -774,17 +1074,44 @@ extracted for Small Mode obsIDs. However, the ‘specgroup’ command requires b
 Source and the Background Spectra in order to create the grouped Spectrum. Therefore,
 as of now, I am completely skipping getting the MOS12 Spectra for Small mode obsIDs.
 
+\sphinxAtStartPar
 20th May 2021: Now works with Pile\sphinxhyphen{}up corrected obsIDs.
-Separate Source Spectrum file is generated for Piled\sphinxhyphen{}up cases, \sphinxtitleref{inst\_spectrum\_source\_annulus\_obsID.fits}
+Separate Source Spectrum file is generated for Piled\sphinxhyphen{}up cases,
+\sphinxtitleref{inst\_spectrum\_source\_annulus\_obsID.fits}
 All the other file names, including the Grouped Spectra is not altered.
+
+\sphinxAtStartPar
+17th June 2021: Adding feature for individual instrument bkgCircs.
+
+\sphinxAtStartPar
+If the total area of indi inst bkgCircs is greater than that of the overlap bkgCircs,
+or if the former is not available for any given obsID, the overlap bkgCircs
+are used.
 
 \end{fulllineitems}
 
-\index{save\_spectraResults() (githubRepo.epicSpectra.epicSpectra method)@\spxentry{save\_spectraResults()}\spxextra{githubRepo.epicSpectra.epicSpectra method}}
+\index{readUpdatedCCDcoordsPickle() (xmmPipeline.epicSpectra.epicSpectra method)@\spxentry{readUpdatedCCDcoordsPickle()}\spxextra{xmmPipeline.epicSpectra.epicSpectra method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicSpectra.epicSpectra.save_spectraResults}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_spectraResults}}}{}{}~\begin{description}
-\item[{Does one tasks}] \leavevmode
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicSpectra.epicSpectra.readUpdatedCCDcoordsPickle}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{readUpdatedCCDcoordsPickle}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Reads the individual instrument bkgCircs keywords from the updated
+\sphinxtitleref{ccd\_coords\_info.pickle} file which contains the location parameters.
+
+\end{fulllineitems}
+
+\index{save\_spectraResults() (xmmPipeline.epicSpectra.epicSpectra method)@\spxentry{save\_spectraResults()}\spxextra{xmmPipeline.epicSpectra.epicSpectra method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicSpectra.epicSpectra.save_spectraResults}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_spectraResults}}}{}{}
+\pysigstopsignatures\begin{description}
+\sphinxlineitem{Does one tasks}
+\sphinxAtStartPar
 Copies the Spectra images from each obsID directory to a results
 folder in the main directory.
 
@@ -792,23 +1119,30 @@ folder in the main directory.
 
 \end{fulllineitems}
 
-\index{xspec\_fitSpectra() (githubRepo.epicSpectra.epicSpectra method)@\spxentry{xspec\_fitSpectra()}\spxextra{githubRepo.epicSpectra.epicSpectra method}}
+\index{xspec\_fitSpectra() (xmmPipeline.epicSpectra.epicSpectra method)@\spxentry{xspec\_fitSpectra()}\spxextra{xmmPipeline.epicSpectra.epicSpectra method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicSpectra.epicSpectra.xspec_fitSpectra}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{xspec\_fitSpectra}}}{\emph{\DUrole{n}{instName}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}PN\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicSpectra.epicSpectra.xspec_fitSpectra}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{xspec\_fitSpectra}}}{\emph{\DUrole{n}{instName}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}PN\textquotesingle{}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Fits a model Spectra to the extracted Spectra data using \sphinxtitleref{pyXspec} package.
 Since, \sphinxtitleref{pyXspec} requires HEA initialisation, a separate routine \sphinxtitleref{pyXspec.py}
 is required to run it.
 See: \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-xspec}
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Extracted Spectra FITS file and input model parameters.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Spectra plots and \sphinxtitleref{specModelParams.json} file.
 
 \end{description}\end{quote}
 
+\sphinxAtStartPar
 20th May 2021: Adding feature to allow model parameter value inputs.
 
 \end{fulllineitems}
@@ -816,150 +1150,272 @@ Spectra plots and \sphinxtitleref{specModelParams.json} file.
 
 \end{fulllineitems}
 
-\index{main() (in module githubRepo.epicSpectra)@\spxentry{main()}\spxextra{in module githubRepo.epicSpectra}}
+\index{main() (in module xmmPipeline.epicSpectra)@\spxentry{main()}\spxextra{in module xmmPipeline.epicSpectra}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.epicSpectra.main}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.epicSpectra.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{args}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.epicSpectra.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.epicSpectra.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{args}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
 
-\subsection{githubRepo.findOverlap module}
-\label{\detokenize{githubRepo:module-githubRepo.findOverlap}}\label{\detokenize{githubRepo:githubrepo-findoverlap-module}}\index{module@\spxentry{module}!githubRepo.findOverlap@\spxentry{githubRepo.findOverlap}}\index{githubRepo.findOverlap@\spxentry{githubRepo.findOverlap}!module@\spxentry{module}}
+\subsection{xmmPipeline.findOverlap module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.findOverlap}}\label{\detokenize{xmmPipeline:xmmpipeline-findoverlap-module}}\index{module@\spxentry{module}!xmmPipeline.findOverlap@\spxentry{xmmPipeline.findOverlap}}\index{xmmPipeline.findOverlap@\spxentry{xmmPipeline.findOverlap}!module@\spxentry{module}}
+\sphinxAtStartPar
 08\sphinxhyphen{}12 February 2021:
 —
 New Python function to obtain the overlap region.
 
+\sphinxAtStartPar
 22 February 2021:
 —
 Completing the modifications to the codes that were discussed on 13th of this month.
 
+\sphinxAtStartPar
 26 February 2021:
 —
 Had the call with \sphinxhref{mailto:Dheeraj@MIT}{Dheeraj@MIT} yester. Finalizing the things about this pipeline now.
 
+\sphinxAtStartPar
 10 March 2021:
 —
 The radius of the Source and Background circles given as input to evselect have to be in Sky Coords
 or Pixel units and not arcsec, as I had been giving. Thus, the returned values from findOverlap.py
 have to be altered.
 
+\sphinxAtStartPar
 30 March 2021:
 —
 Was thinking of using numba to accelerate the code, but since most of the functions
 use matplotlib it is perhaps unfeasible.
 
+\sphinxAtStartPar
 29th April 2021:
 —
 The Background circles were too small in some cases.
 Modifying the criterion for background circles radius and threshold.
 
+\sphinxAtStartPar
 Instead of taking some random point from with the points that are a threshold distance
 away from other Sources, I can take the one with max radii. Currently, the Bkg radius is defined a\sphinxhyphen{}priori.
 
+\sphinxAtStartPar
 Tried using this, but there are so many complications.
 So, have simply added another function to find the max bkg radii possible within the threshold,
 to be used after the bkg coords have been found.
 
+\sphinxAtStartPar
 I think, I can have Bx1,By1 be found together with the xUseN,yUseN and continue having \sphinxtitleref{\_\_maxBkgRadius}
 function for the Radii.
 Yeah! This works. However, whether or not optimum radii are obtained, depends on which of the circles
 is taken as first and which as the second.
 
+\sphinxAtStartPar
 I can also try to have the \sphinxtitleref{xmmObj} class as a meta\sphinxhyphen{}class for the \sphinxtitleref{findOverlap} class.
 Nope! It’s better not to do this because I run \sphinxtitleref{findOverlap.py} for each obsID separately.
 
+\sphinxAtStartPar
 30th April 2021:
 —
 Made the second background point non\sphinxhyphen{}random as well.
 The program takes a little longer now, but both the circles are large sized.
 Gonna check if there’s any errors that come up because of this.
 Also lowered the Bkg Circle Gap to 2.5 pixels instead of 5 pixles.
-\index{findOverlap (class in githubRepo.findOverlap)@\spxentry{findOverlap}\spxextra{class in githubRepo.findOverlap}}
+
+\sphinxAtStartPar
+13th June 2021:
+—
+Writing the functions for obtaining individual background circles.
+Learned about this awesome algorithm, PolyLabel for finding the \sphinxtitleref{pole of inaccessibility}
+or the point of largest inscribed circle for any polygon. My problem of finding the Bkg
+circles is exactly the same.
+See: \sphinxurl{https://github.com/Twista/python-polylabel}
+
+\sphinxAtStartPar
+Damn! That polylabel requires the boundary of the polygon to be defined and hell,
+I have the whole points in the region. Running the \sphinxcode{\sphinxupquote{polylabel(points)}} on that full
+throttles the system. Hell!
+My own solution is pretty elegant then. Better suited for my purpose.
+
+\sphinxAtStartPar
+Wait a minute, what I can do to find more number of Bkg points is first find the first
+point and then remove all the points lying in the 2R distance from the center of this
+first Bkg point and repeat. Let’s try this!
+
+\sphinxAtStartPar
+Yosh! This works brilliantly. Both the BkgPts are now randomly generated in the given
+area satisfying the coditions.
+Now, I can theoretically iterate a few times until I get both the BkgCircs of sufficiently
+useful area. However, what my aim has been ever since the start was to have the algorithm
+automatically find two of the largest BkgCircs satisfying the coditions.
+Hhmm… I think that would be a pretty daunting task and a difficult one at that,
+since I haven’t go just what I have been wanting since a long time now.
+
+\sphinxAtStartPar
+What is much better in my opinion is that I can repeat the procedure of filtering out the
+last found BkgPt + 2R dist points n number of times to obtain n number of Bkg points.
+Let’s try that out now!
+
+\sphinxAtStartPar
+This recursive way of finding the background circles takes care of overlap between the
+circles all by itself, since the \sphinxcode{\sphinxupquote{xToUse}} and \sphinxcode{\sphinxupquote{yToUse}} are recursively filtered for
+the circle area.
+Yup! Have verified that most of the times, this recursive way works! Woohooo yayyy!
+Such a great thing.
+For the times when it doesn’t work, one of the bkgCirc overlaps with another bkgCircs,
+and consquensly the radius value for comes out to be negative.
+I am adding feature to raise a warning when this happens. A simple rerun of the code
+will remove the problem and yield correct bkgCircs, although yeah! I may need to check
+this up with all the obsIDs.
+And it would be better to have the user input the \sphinxcode{\sphinxupquote{nBkgCirc}} value, so that if it’s
+not possible to obtain more than 2 bkgCircs, the user can find 2 bkgCircs atleast.
+\index{findOverlap (class in xmmPipeline.findOverlap)@\spxentry{findOverlap}\spxextra{class in xmmPipeline.findOverlap}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{githubRepo.findOverlap.}}\sphinxbfcode{\sphinxupquote{findOverlap}}}{\emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{obsID}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}NA\textquotesingle{}}}, \emph{\DUrole{n}{pnCCD}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}4\textquotesingle{}}}, \emph{\DUrole{n}{srcCoords}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{otherSrc}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gap}\DUrole{o}{=}\DUrole{default_value}{2.5}}, \emph{\DUrole{n}{srcR}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{bkgR}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{srcThreshold}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{saveFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{showFig}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
-Bases: \sphinxcode{\sphinxupquote{object}}
-\index{backgroundCircles() (githubRepo.findOverlap.findOverlap method)@\spxentry{backgroundCircles()}\spxextra{githubRepo.findOverlap.findOverlap method}}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.findOverlap}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{xmmPipeline.findOverlap.}}\sphinxbfcode{\sphinxupquote{findOverlap}}}{\emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{obsID}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}NA\textquotesingle{}}}, \emph{\DUrole{n}{pnCCD}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}4\textquotesingle{}}}, \emph{\DUrole{n}{srcCoords}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{otherSrc}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gap}\DUrole{o}{=}\DUrole{default_value}{2.5}}, \emph{\DUrole{n}{srcR}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{bkgR}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{srcThreshold}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{saveFig}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{showFig}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Bases: \sphinxhref{https://docs.python.org/3/library/functions.html\#object}{\sphinxcode{\sphinxupquote{object}}}
+\index{backgroundCircles() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{backgroundCircles()}\spxextra{xmmPipeline.findOverlap.findOverlap method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.backgroundCircles}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{backgroundCircles}}}{\emph{\DUrole{n}{axes}}}{}~\begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.findOverlap.backgroundCircles}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{backgroundCircles}}}{\emph{\DUrole{n}{axes}}}{}
+\pysigstopsignatures\begin{quote}\begin{description}
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 The output from ‘obtainOverlap()’ function aka detected overlap region.,
 and the Source coordinates.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Coordinates and Radii of the Background Circles.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{backgroundCircles\_indi() (githubRepo.findOverlap.findOverlap method)@\spxentry{backgroundCircles\_indi()}\spxextra{githubRepo.findOverlap.findOverlap method}}
+\index{backgroundCircles\_indi() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{backgroundCircles\_indi()}\spxextra{xmmPipeline.findOverlap.findOverlap method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.backgroundCircles_indi}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{backgroundCircles\_indi}}}{\emph{\DUrole{n}{axes}}, \emph{\DUrole{n}{inst}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.findOverlap.backgroundCircles_indi}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{backgroundCircles\_indi}}}{\emph{\DUrole{n}{ax}}, \emph{\DUrole{n}{inst}}, \emph{\DUrole{n}{nBkgCircs}\DUrole{o}{=}\DUrole{default_value}{3}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Automatically finds Background Circles in the instrument data passed.
+Modified the function a great deal from the earlier naive \sphinxtitleref{backgroundCircles} function.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Input}
+\sphinxAtStartPar
+\sphinxtitleref{inst\_CCD\#\#\_image.fits} files containing the extracted image data of the instrument.
+\sphinxcode{\sphinxupquote{srcCoords}} dictionary containing coords of the main Source.
+\sphinxcode{\sphinxupquote{otherSrc}} dictionary containing coords of other Sources.
+
+\sphinxlineitem{Requires}
+\sphinxAtStartPar
+Call to \sphinxtitleref{epicObj.find\_otherSources\_indi} function.
+
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{axes}} (\sphinxstyleliteralemphasis{\sphinxupquote{obj}}) \textendash{} \sphinxtitleref{matplotlib.pyplot.axes} object for plotting the images.
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{ax}} (\sphinxstyleliteralemphasis{\sphinxupquote{obj}}) \textendash{} \sphinxtitleref{matplotlib.pyplot.subplots} object for plotting the images.
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of the instrument of use.
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} name of the instrument of use.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{nBkgCircs}} (\sphinxhref{https://docs.python.org/3/library/functions.html\#int}{\sphinxstyleliteralemphasis{\sphinxupquote{int}}}) \textendash{} number of background circles to detect. Defaults to 3. (Optional)
 
 \end{itemize}
 
-\item[{Input}] \leavevmode
-\sphinxtitleref{inst\_CCD\#\#\_image.fits} files containing the extracted image data of the instrument.
-
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Coordinates and Radii of the Background Circles.
 
 \end{description}\end{quote}
+\subsubsection*{Notes}
+
+\sphinxAtStartPar
+\sphinxcode{\sphinxupquote{small\sphinxhyphen{}mode}} MOS checking is invalid here since overlap is not been detected.
 
 \end{fulllineitems}
 
-\index{createOutputImages() (githubRepo.findOverlap.findOverlap method)@\spxentry{createOutputImages()}\spxextra{githubRepo.findOverlap.findOverlap method}}
+\index{createOutputImages() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{createOutputImages()}\spxextra{xmmPipeline.findOverlap.findOverlap method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.createOutputImages}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{createOutputImages}}}{}{}
-Creates two JPEG output images, one showing the other sources and
-the other showing the Source and the Background Circles.
-‘PNMOS12\_image\_full’ is used as the backdrop.
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.findOverlap.createOutputImages}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{createOutputImages}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Creates the \sphinxtitleref{source\_background\_circles.png} output image showing
+the other Sources and the Source and Background circles overlayed
+on top of the image.
+The overlap (‘PNMOS12\_image\_full’ for Small\sphinxhyphen{}Mode cases) is used
+as the backdrop for cases when the overlap detection is performed
+and the cicles are found using that overlap data.
+Otherwise, \sphinxtitleref{inst\_CCD\#\#\_image} is used as the backdrop.
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{inst}} (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#str}{\sphinxstyleliteralemphasis{\sphinxupquote{str}}}) \textendash{} Name of the instrument to use. Defaults to None.
+If None then it is assumed at the overlap detected is
+performed.
+
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 findOverlap object with all previous functions already run.
 
-\item[{Output}] \leavevmode
-Saved images in the workdir of the obsID.
+\sphinxlineitem{Output}
+\sphinxAtStartPar
+Output image saved in the workdir of the obsID.
+Image file name is \sphinxtitleref{source\_background\_circles.png} for the
+default case and \sphinxtitleref{srcBkg\_circs\_inst.png} for when individual
+instrument background circles are been found.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{main() (githubRepo.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{githubRepo.findOverlap.findOverlap method}}
+\index{main() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{xmmPipeline.findOverlap.findOverlap method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.main}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.findOverlap.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{inst}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 The main function to sequentially run the functions in \sphinxtitleref{findOverlap} class.
 \begin{quote}\begin{description}
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 
+\sphinxAtStartPar
 (x, y, r) coords and radius of first background circle.
 bCircle2 (tuple): (x, y, r) coords and radius of second background circle.
 \begin{description}
-\item[{correctSrc (tuple): corrected (x, y) coords of the main Source.}] \leavevmode
+\sphinxlineitem{correctSrc (tuple): corrected (x, y) coords of the main Source.}
+\sphinxAtStartPar
 The original main Source coords found by the \sphinxtitleref{epicObj.findSourceCCD}
 function using the XMMSAS \sphinxcode{\sphinxupquote{ecoordconv}} utility are a little bit shifted
 from what the main Source likely is as found from \sphinxcode{\sphinxupquote{edetect\_chain}} while
 finding other Sources. So, the main Source coords are changed to the coords
 of the nearest Source to it in the \sphinxcode{\sphinxupquote{otherSrc}} dictionary.
 
-\item[{srcR (float): radius of the Source circle or outer radius of the Source Annulus}] \leavevmode
+\sphinxlineitem{srcR (float): radius of the Source circle or outer radius of the Source Annulus}
+\sphinxAtStartPar
 for the Piled\sphinxhyphen{}up cases, although a full circle is detected here.
 
-\item[{isSmallMode (bool): True, if absolute difference between flattened MOS12 and}] \leavevmode
+\sphinxlineitem{isSmallMode (bool): True, if absolute difference between flattened MOS12 and}
+\sphinxAtStartPar
 PNMOS12 image arrays is less than 500. False otherwise.
 See issue \#28 in the xmmPipeline repository in this regard,
 \sphinxurl{https://github.com/Suyog7130/xmmPipeline/issues/28}
@@ -967,12 +1423,14 @@ See issue \#28 in the xmmPipeline repository in this regard,
 \end{description}
 
 
-\item[{Return type}] \leavevmode
-bCircle1 (tuple)
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+bCircle1 (\sphinxhref{https://docs.python.org/3/library/stdtypes.html\#tuple}{tuple})
 
 \end{description}\end{quote}
 \subsubsection*{Notes}
 
+\sphinxAtStartPar
 All returned coordinates are in \sphinxstylestrong{Physical Units}.
 These (x, y) are termed as (\sphinxstylestrong{RAWX}, \sphinxstylestrong{RAWY}) in DS9.
 The radius values are in \sphinxstylestrong{Sky Coordinates}, which I think is the name XMMSAS gives
@@ -982,14 +1440,19 @@ See issue \#24 for more details, \sphinxurl{https://github.com/Suyog7130/xmmPipe
 
 \end{fulllineitems}
 
-\index{obtainOverlap() (githubRepo.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{githubRepo.findOverlap.findOverlap method}}
+\index{obtainOverlap() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{xmmPipeline.findOverlap.findOverlap method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.findOverlap.obtainOverlap}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{obtainOverlap}}}{\emph{\DUrole{n}{axes}}}{}~\begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.findOverlap.obtainOverlap}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{obtainOverlap}}}{\emph{\DUrole{n}{axes}}}{}
+\pysigstopsignatures\begin{quote}\begin{description}
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 The workdir where the PN, MOS and PNMOS12 FITS files are located.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 The detected overlap region if it is larger in size than then MOS region,
 or else the PNMOS12 image data.
 
@@ -1000,135 +1463,202 @@ or else the PNMOS12 image data.
 
 \end{fulllineitems}
 
-\index{imageMOS12() (in module githubRepo.findOverlap)@\spxentry{imageMOS12()}\spxextra{in module githubRepo.findOverlap}}
+\index{imageMOS12() (in module xmmPipeline.findOverlap)@\spxentry{imageMOS12()}\spxextra{in module xmmPipeline.findOverlap}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.imageMOS12}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.findOverlap.}}\sphinxbfcode{\sphinxupquote{imageMOS12}}}{\emph{\DUrole{n}{workdir}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.imageMOS12}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.findOverlap.}}\sphinxbfcode{\sphinxupquote{imageMOS12}}}{\emph{\DUrole{n}{workdir}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{imageMOS12\_soft() (in module githubRepo.findOverlap)@\spxentry{imageMOS12\_soft()}\spxextra{in module githubRepo.findOverlap}}
+\index{imageMOS12\_soft() (in module xmmPipeline.findOverlap)@\spxentry{imageMOS12\_soft()}\spxextra{in module xmmPipeline.findOverlap}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.imageMOS12_soft}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.findOverlap.}}\sphinxbfcode{\sphinxupquote{imageMOS12\_soft}}}{\emph{\DUrole{n}{workdir}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.imageMOS12_soft}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.findOverlap.}}\sphinxbfcode{\sphinxupquote{imageMOS12\_soft}}}{\emph{\DUrole{n}{workdir}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{imagePN() (in module githubRepo.findOverlap)@\spxentry{imagePN()}\spxextra{in module githubRepo.findOverlap}}
+\index{imagePN() (in module xmmPipeline.findOverlap)@\spxentry{imagePN()}\spxextra{in module xmmPipeline.findOverlap}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.imagePN}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.findOverlap.}}\sphinxbfcode{\sphinxupquote{imagePN}}}{\emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{pnCCD}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.imagePN}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.findOverlap.}}\sphinxbfcode{\sphinxupquote{imagePN}}}{\emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{pnCCD}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{imagePNMOS12() (in module githubRepo.findOverlap)@\spxentry{imagePNMOS12()}\spxextra{in module githubRepo.findOverlap}}
+\index{imagePNMOS12() (in module xmmPipeline.findOverlap)@\spxentry{imagePNMOS12()}\spxextra{in module xmmPipeline.findOverlap}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.imagePNMOS12}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.findOverlap.}}\sphinxbfcode{\sphinxupquote{imagePNMOS12}}}{\emph{\DUrole{n}{workdir}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.imagePNMOS12}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.findOverlap.}}\sphinxbfcode{\sphinxupquote{imagePNMOS12}}}{\emph{\DUrole{n}{workdir}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{imagePNMOS12\_soft() (in module githubRepo.findOverlap)@\spxentry{imagePNMOS12\_soft()}\spxextra{in module githubRepo.findOverlap}}
+\index{imagePNMOS12\_soft() (in module xmmPipeline.findOverlap)@\spxentry{imagePNMOS12\_soft()}\spxextra{in module xmmPipeline.findOverlap}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.imagePNMOS12_soft}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.findOverlap.}}\sphinxbfcode{\sphinxupquote{imagePNMOS12\_soft}}}{\emph{\DUrole{n}{workdir}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.imagePNMOS12_soft}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.findOverlap.}}\sphinxbfcode{\sphinxupquote{imagePNMOS12\_soft}}}{\emph{\DUrole{n}{workdir}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{imagePN\_soft() (in module githubRepo.findOverlap)@\spxentry{imagePN\_soft()}\spxextra{in module githubRepo.findOverlap}}
+\index{imagePN\_soft() (in module xmmPipeline.findOverlap)@\spxentry{imagePN\_soft()}\spxextra{in module xmmPipeline.findOverlap}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.findOverlap.imagePN_soft}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.findOverlap.}}\sphinxbfcode{\sphinxupquote{imagePN\_soft}}}{\emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{pnCCD}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.findOverlap.imagePN_soft}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.findOverlap.}}\sphinxbfcode{\sphinxupquote{imagePN\_soft}}}{\emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{pnCCD}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
 
-\subsection{githubRepo.getSpectraFitsTable module}
-\label{\detokenize{githubRepo:module-githubRepo.getSpectraFitsTable}}\label{\detokenize{githubRepo:githubrepo-getspectrafitstable-module}}\index{module@\spxentry{module}!githubRepo.getSpectraFitsTable@\spxentry{githubRepo.getSpectraFitsTable}}\index{githubRepo.getSpectraFitsTable@\spxentry{githubRepo.getSpectraFitsTable}!module@\spxentry{module}}
+\subsection{xmmPipeline.getSpectraFitsTable module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.getSpectraFitsTable}}\label{\detokenize{xmmPipeline:xmmpipeline-getspectrafitstable-module}}\index{module@\spxentry{module}!xmmPipeline.getSpectraFitsTable@\spxentry{xmmPipeline.getSpectraFitsTable}}\index{xmmPipeline.getSpectraFitsTable@\spxentry{xmmPipeline.getSpectraFitsTable}!module@\spxentry{module}}
+\sphinxAtStartPar
 22nd May 2021:
 —
 Have completed much of the pending work regarding Spectral Analysis
 of ASASSN\sphinxhyphen{}14li. This Python routine is to read the \sphinxtitleref{specModelParams.json}
 files for each of the obsIDs and create a \sphinxtitleref{specResultsTable} using them.
 
+\sphinxAtStartPar
 I don’t the obsIDs thing will be valid here.
 Why would one not wanna include some obsIDs in the final table?
 Anyway.
 
+\sphinxAtStartPar
 23rd May 2021:
 —
 The primary \sphinxcode{\sphinxupquote{for}} loop should be for model since each model will have a
 separate \sphinxcode{\sphinxupquote{specResultsTable}}.
-\index{main() (in module githubRepo.getSpectraFitsTable)@\spxentry{main()}\spxextra{in module githubRepo.getSpectraFitsTable}}
+
+\sphinxAtStartPar
+18th June 2021:
+—
+Finishing up the manual specModel fitting.
+
+\sphinxAtStartPar
+NOTE: Be wary of the specModel name with single additive model component
+when it has parentheses around it. The model name saved in the JSON file
+and that been given as input, should exactly match.
+See issue \#31 in regard to this. \sphinxurl{https://github.com/Suyog7130/xmmPipeline/issues/31}
+
+\sphinxAtStartPar
+Swaping the Row of the \sphinxtitleref{specResultsTable} with the columns will take sometime.
+\index{main() (in module xmmPipeline.getSpectraFitsTable)@\spxentry{main()}\spxextra{in module xmmPipeline.getSpectraFitsTable}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.getSpectraFitsTable.main}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.getSpectraFitsTable.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{args}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.getSpectraFitsTable.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.getSpectraFitsTable.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{args}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
 
-\subsection{githubRepo.plotAnal module}
-\label{\detokenize{githubRepo:module-githubRepo.plotAnal}}\label{\detokenize{githubRepo:githubrepo-plotanal-module}}\index{module@\spxentry{module}!githubRepo.plotAnal@\spxentry{githubRepo.plotAnal}}\index{githubRepo.plotAnal@\spxentry{githubRepo.plotAnal}!module@\spxentry{module}}
+\subsection{xmmPipeline.plotAnal module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.plotAnal}}\label{\detokenize{xmmPipeline:xmmpipeline-plotanal-module}}\index{module@\spxentry{module}!xmmPipeline.plotAnal@\spxentry{xmmPipeline.plotAnal}}\index{xmmPipeline.plotAnal@\spxentry{xmmPipeline.plotAnal}!module@\spxentry{module}}
+\sphinxAtStartPar
 13th May 2020:
 A module to ease up beatifying the plots.
 
+\sphinxAtStartPar
 13th June 2020:
 Made changes on this.
 If the fit is linear regression then the rSquared coefficient of determination
 is the square of the pearson correlation coefficient.
 
+\sphinxAtStartPar
 20th August 2020:
 Adding keyword for number of ticks shown.
 
+\sphinxAtStartPar
 23rd September 2020:
 Adding keyword for axis colours via ax.spines{[}‘bottom’{]}.set\_color()
 \begin{quote}
 
+\sphinxAtStartPar
 NOTE: spines can only be used with figure and not subplots!
 \end{quote}
 
+\sphinxAtStartPar
 24th January 2021:
 Made modifications in the beautifyPlot().
 
+\sphinxAtStartPar
 14th April 2021:
 —
 Adding modifications to the beautifyPlot function.
-\index{plotAnal (class in githubRepo.plotAnal)@\spxentry{plotAnal}\spxextra{class in githubRepo.plotAnal}}
+\index{plotAnal (class in xmmPipeline.plotAnal)@\spxentry{plotAnal}\spxextra{class in xmmPipeline.plotAnal}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{githubRepo.plotAnal.}}\sphinxbfcode{\sphinxupquote{plotAnal}}}{\emph{\DUrole{n}{figure}}, \emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}}{}
-Bases: \sphinxcode{\sphinxupquote{object}}
-\index{PSNR() (githubRepo.plotAnal.plotAnal method)@\spxentry{PSNR()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{xmmPipeline.plotAnal.}}\sphinxbfcode{\sphinxupquote{plotAnal}}}{\emph{\DUrole{n}{figure}}, \emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Bases: \sphinxhref{https://docs.python.org/3/library/functions.html\#object}{\sphinxcode{\sphinxupquote{object}}}
+\index{PSNR() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{PSNR()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.PSNR}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{PSNR}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.PSNR}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{PSNR}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calculates Peak Signal\sphinxhyphen{}to\sphinxhyphen{}Noise Ratio between x and y and plots its value on the figure.
 
 \end{fulllineitems}
 
-\index{SSIM() (githubRepo.plotAnal.plotAnal method)@\spxentry{SSIM()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{SSIM() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{SSIM()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.SSIM}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{SSIM}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{scikit\_value}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.SSIM}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{SSIM}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{scikit\_value}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calculates the Structural SIMilarity index between two image data given by x and y.
 The calculated value is then plotted on the figure passed.
 
 \end{fulllineitems}
 
-\index{SSIM\_value() (githubRepo.plotAnal.plotAnal method)@\spxentry{SSIM\_value()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{SSIM\_value() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{SSIM\_value()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.SSIM_value}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{SSIM\_value}}}{\emph{\DUrole{n}{y}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{scikit\_value}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.SSIM_value}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{SSIM\_value}}}{\emph{\DUrole{n}{y}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{scikit\_value}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calculates the Structural SIMilarity index between two image data given by x and y.
 
 \end{fulllineitems}
 
-\index{beautifyPlot() (githubRepo.plotAnal.plotAnal method)@\spxentry{beautifyPlot()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{beautifyPlot() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{beautifyPlot()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.beautifyPlot}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{beautifyPlot}}}{\emph{\DUrole{n}{labelsize}\DUrole{o}{=}\DUrole{default_value}{11}}, \emph{\DUrole{n}{lengthMajor}\DUrole{o}{=}\DUrole{default_value}{10}}, \emph{\DUrole{n}{tickNum}\DUrole{o}{=}\DUrole{default_value}{10}}, \emph{\DUrole{n}{tickDirection}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}out\textquotesingle{}}}, \emph{\DUrole{n}{lengthMinor}\DUrole{o}{=}\DUrole{default_value}{5}}, \emph{\DUrole{n}{minor}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{grid}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{axisColor}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{yTicks}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{xTicks}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{logFormat}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{logXformat}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{logYformat}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{logMinor}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{minorLabel}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{logXminorLabel}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{logYminorLabel}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.beautifyPlot}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{beautifyPlot}}}{\emph{\DUrole{n}{labelsize}\DUrole{o}{=}\DUrole{default_value}{11}}, \emph{\DUrole{n}{lengthMajor}\DUrole{o}{=}\DUrole{default_value}{10}}, \emph{\DUrole{n}{tickNum}\DUrole{o}{=}\DUrole{default_value}{10}}, \emph{\DUrole{n}{tickDirection}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}out\textquotesingle{}}}, \emph{\DUrole{n}{lengthMinor}\DUrole{o}{=}\DUrole{default_value}{5}}, \emph{\DUrole{n}{minor}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{grid}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{axisColor}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{yTicks}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{xTicks}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{logFormat}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{logXformat}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{logYformat}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{logMinor}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{minorLabel}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{logXminorLabel}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{logYminorLabel}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 If axes subplots is used, with multiple rows and columns, then the ndarray of axes subobjects
 can be flattened:
 \begin{quote}
 
+\sphinxAtStartPar
 axes.flatten().tolist()
 \end{quote}
 
+\sphinxAtStartPar
 The axisColor takes in a dictionary axisColor with keys as the spine position and values
 as the colour that has to be inserted.
 Be wary of the american spelling of ‘colour’, ‘color’, used in here.
@@ -1136,42 +1666,61 @@ NOTE: spines can only be used with figure and not subplots!
 
 \end{fulllineitems}
 
-\index{linearFit() (githubRepo.plotAnal.plotAnal method)@\spxentry{linearFit()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{linearFit() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{linearFit()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.linearFit}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{linearFit}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{lineDetails}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{color}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}darkorange\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.linearFit}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{linearFit}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{lineDetails}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{color}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}darkorange\textquotesingle{}}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{linearFit\_plotCal() (githubRepo.plotAnal.plotAnal method)@\spxentry{linearFit\_plotCal()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{linearFit\_plotCal() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{linearFit\_plotCal()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.linearFit_plotCal}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{linearFit\_plotCal}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.15}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.linearFit_plotCal}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{linearFit\_plotCal}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.15}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{pearson() (githubRepo.plotAnal.plotAnal method)@\spxentry{pearson()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{pearson() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{pearson()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.pearson}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{pearson}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{line}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{rSquared}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{linecolor}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}darkorange\textquotesingle{}}}, \emph{\DUrole{n}{lineDetails}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.pearson}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{pearson}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{line}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{rSquared}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{linecolor}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}darkorange\textquotesingle{}}}, \emph{\DUrole{n}{lineDetails}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{pearson\_spearman() (githubRepo.plotAnal.plotAnal method)@\spxentry{pearson\_spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{pearson\_spearman() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{pearson\_spearman()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.pearson_spearman}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{pearson\_spearman}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{line}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{rSquared}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{linecolor}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}darkorange\textquotesingle{}}}, \emph{\DUrole{n}{lineDetails}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.pearson_spearman}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{pearson\_spearman}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{line}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{rSquared}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{linecolor}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}darkorange\textquotesingle{}}}, \emph{\DUrole{n}{lineDetails}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{rSquared() (githubRepo.plotAnal.plotAnal method)@\spxentry{rSquared()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{rSquared() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{rSquared()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.rSquared}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{rSquared}}}{\emph{\DUrole{n}{y}}, \emph{\DUrole{n}{f}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.rSquared}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{rSquared}}}{\emph{\DUrole{n}{y}}, \emph{\DUrole{n}{f}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 This can only be there between the y values and the fitted values f from the fitted line.
 
 \end{fulllineitems}
 
-\index{spearman() (githubRepo.plotAnal.plotAnal method)@\spxentry{spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}}
+\index{spearman() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{spearman()}\spxextra{xmmPipeline.plotAnal.plotAnal method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.plotAnal.plotAnal.spearman}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{spearman}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{line}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{rSquared}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{linecolor}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}darkorange\textquotesingle{}}}, \emph{\DUrole{n}{lineDetails}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.plotAnal.plotAnal.spearman}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{spearman}}}{\emph{\DUrole{n}{x}}, \emph{\DUrole{n}{y}}, \emph{\DUrole{n}{line}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{xloc}\DUrole{o}{=}\DUrole{default_value}{0.05}}, \emph{\DUrole{n}{yloc}\DUrole{o}{=}\DUrole{default_value}{0.1}}, \emph{\DUrole{n}{decPlace}\DUrole{o}{=}\DUrole{default_value}{2}}, \emph{\DUrole{n}{rSquared}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{fontsize}\DUrole{o}{=}\DUrole{default_value}{15}}, \emph{\DUrole{n}{linecolor}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}darkorange\textquotesingle{}}}, \emph{\DUrole{n}{lineDetails}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
@@ -1179,11 +1728,12 @@ This can only be there between the y values and the fitted values f from the fit
 
 
 
-\subsection{githubRepo.pyXspec module}
-\label{\detokenize{githubRepo:githubrepo-pyxspec-module}}
+\subsection{xmmPipeline.pyXspec module}
+\label{\detokenize{xmmPipeline:xmmpipeline-pyxspec-module}}
 
-\subsection{githubRepo.rgsPipeline module}
-\label{\detokenize{githubRepo:module-githubRepo.rgsPipeline}}\label{\detokenize{githubRepo:githubrepo-rgspipeline-module}}\index{module@\spxentry{module}!githubRepo.rgsPipeline@\spxentry{githubRepo.rgsPipeline}}\index{githubRepo.rgsPipeline@\spxentry{githubRepo.rgsPipeline}!module@\spxentry{module}}
+\subsection{xmmPipeline.rgsPipeline module}
+\label{\detokenize{xmmPipeline:module-xmmPipeline.rgsPipeline}}\label{\detokenize{xmmPipeline:xmmpipeline-rgspipeline-module}}\index{module@\spxentry{module}!xmmPipeline.rgsPipeline@\spxentry{xmmPipeline.rgsPipeline}}\index{xmmPipeline.rgsPipeline@\spxentry{xmmPipeline.rgsPipeline}!module@\spxentry{module}}
+\sphinxAtStartPar
 01 April 2021:
 —
 Python routine to reduce the RGS data, obtain the Spectra and the light curve from it.
@@ -1191,86 +1741,119 @@ The SAS threads to be used, in order of execution are:
 \begin{enumerate}
 \sphinxsetlistlabels{\arabic}{enumi}{enumii}{}{.}%
 \item {} 
+\sphinxAtStartPar
 \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-rgs}
 Main thread to reduce the RGS data. Similar to ‘emproc’ and ‘epproc’.
 Should do all the work and obtain the Spectra and the light curves.
 
 \item {} 
+\sphinxAtStartPar
 \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-rgs2}
 To correct the Source coordinates and the extraction masks, if the above
 step was incorrect.
 
 \item {} 
+\sphinxAtStartPar
 \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-timing}
 For extraction of RGS light curves.
 
 \end{enumerate}
-\index{main() (in module githubRepo.rgsPipeline)@\spxentry{main()}\spxextra{in module githubRepo.rgsPipeline}}
+\index{main() (in module xmmPipeline.rgsPipeline)@\spxentry{main()}\spxextra{in module xmmPipeline.rgsPipeline}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.rgsPipeline.main}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.rgsPipeline.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{args}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.rgsPipeline.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.rgsPipeline.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{args}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{printErrorMessage() (in module githubRepo.rgsPipeline)@\spxentry{printErrorMessage()}\spxextra{in module githubRepo.rgsPipeline}}
+\index{printErrorMessage() (in module xmmPipeline.rgsPipeline)@\spxentry{printErrorMessage()}\spxextra{in module xmmPipeline.rgsPipeline}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.rgsPipeline.printErrorMessage}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.rgsPipeline.}}\sphinxbfcode{\sphinxupquote{printErrorMessage}}}{\emph{\DUrole{n}{message}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.rgsPipeline.printErrorMessage}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.rgsPipeline.}}\sphinxbfcode{\sphinxupquote{printErrorMessage}}}{\emph{\DUrole{n}{message}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
-\index{rgsObj (class in githubRepo.rgsPipeline)@\spxentry{rgsObj}\spxextra{class in githubRepo.rgsPipeline}}
+\index{rgsObj (class in xmmPipeline.rgsPipeline)@\spxentry{rgsObj}\spxextra{class in xmmPipeline.rgsPipeline}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.rgsPipeline.rgsObj}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{githubRepo.rgsPipeline.}}\sphinxbfcode{\sphinxupquote{rgsObj}}}{\emph{\DUrole{n}{ra}}, \emph{\DUrole{n}{dec}}, \emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{sas\_dir}}, \emph{\DUrole{n}{headas}}, \emph{\DUrole{n}{sas\_ccfpath}}}{}
-Bases: \sphinxcode{\sphinxupquote{object}}
-\index{findObsIDs() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{findObsIDs()}\spxextra{githubRepo.rgsPipeline.rgsObj method}}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.rgsPipeline.rgsObj}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{xmmPipeline.rgsPipeline.}}\sphinxbfcode{\sphinxupquote{rgsObj}}}{\emph{\DUrole{n}{ra}}, \emph{\DUrole{n}{dec}}, \emph{\DUrole{n}{workdir}}, \emph{\DUrole{n}{sas\_dir}}, \emph{\DUrole{n}{headas}}, \emph{\DUrole{n}{sas\_ccfpath}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Bases: \sphinxhref{https://docs.python.org/3/library/functions.html\#object}{\sphinxcode{\sphinxupquote{object}}}
+\index{findObsIDs() (xmmPipeline.rgsPipeline.rgsObj method)@\spxentry{findObsIDs()}\spxextra{xmmPipeline.rgsPipeline.rgsObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.rgsPipeline.rgsObj.findObsIDs}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{findObsIDs}}}{}{}~\begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.rgsPipeline.rgsObj.findObsIDs}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{findObsIDs}}}{}{}
+\pysigstopsignatures\begin{quote}\begin{description}
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 Coordinates of the object and path to work directory.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 List of obsIDs.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{readPickleFile() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{readPickleFile()}\spxextra{githubRepo.rgsPipeline.rgsObj method}}
+\index{readPickleFile() (xmmPipeline.rgsPipeline.rgsObj method)@\spxentry{readPickleFile()}\spxextra{xmmPipeline.rgsPipeline.rgsObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.rgsPipeline.rgsObj.readPickleFile}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{readPickleFile}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.rgsPipeline.rgsObj.readPickleFile}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{readPickleFile}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Reads the already obtained pickle file containing location parameters.
 
 \end{fulllineitems}
 
-\index{reduceRGSdata() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{reduceRGSdata()}\spxextra{githubRepo.rgsPipeline.rgsObj method}}
+\index{reduceRGSdata() (xmmPipeline.rgsPipeline.rgsObj method)@\spxentry{reduceRGSdata()}\spxextra{xmmPipeline.rgsPipeline.rgsObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.rgsPipeline.rgsObj.reduceRGSdata}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{reduceRGSdata}}}{}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.rgsPipeline.rgsObj.reduceRGSdata}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{reduceRGSdata}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Reduces the RGS data using ‘rgsproc’ to obtain Spectra.
 A folder names ‘RGS/’ is created in the work folder of each obsID directory.
 See: \sphinxurl{https://www.cosmos.esa.int/web/xmm-newton/sas-thread-rgs}
 \begin{quote}\begin{description}
-\item[{Input}] \leavevmode
+\sphinxlineitem{Input}
+\sphinxAtStartPar
 None.
 
-\item[{Output}] \leavevmode
+\sphinxlineitem{Output}
+\sphinxAtStartPar
 Source and Background RGS Spectra and the associated response matrices.
 
 \end{description}\end{quote}
 
 \end{fulllineitems}
 
-\index{save\_results() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{save\_results()}\spxextra{githubRepo.rgsPipeline.rgsObj method}}
+\index{save\_results() (xmmPipeline.rgsPipeline.rgsObj method)@\spxentry{save\_results()}\spxextra{xmmPipeline.rgsPipeline.rgsObj method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.rgsPipeline.rgsObj.save_results}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_results}}}{}{}~\begin{description}
-\item[{Does two tasks,}] \leavevmode\begin{description}
-\item[{One, saves a pickle file at each obsID directory containing}] \leavevmode
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.rgsPipeline.rgsObj.save_results}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{save\_results}}}{}{}
+\pysigstopsignatures\begin{description}
+\sphinxlineitem{Does two tasks,}\begin{description}
+\sphinxlineitem{One, saves a pickle file at each obsID directory containing}
+\sphinxAtStartPar
 sourceCCDs, sourceLoc, backgroundLoc and otherSources for it.
 
-\item[{Two, copies the Source, Background Events lists and other output files}] \leavevmode
+\sphinxlineitem{Two, copies the Source, Background Events lists and other output files}
+\sphinxAtStartPar
 from each obsID directory to a results folder in the main directory.
 
 \end{description}
@@ -1282,26 +1865,32 @@ from each obsID directory to a results folder in the main directory.
 
 \end{fulllineitems}
 
-\index{strToBool() (in module githubRepo.rgsPipeline)@\spxentry{strToBool()}\spxextra{in module githubRepo.rgsPipeline}}
+\index{strToBool() (in module xmmPipeline.rgsPipeline)@\spxentry{strToBool()}\spxextra{in module xmmPipeline.rgsPipeline}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{githubRepo:githubRepo.rgsPipeline.strToBool}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{githubRepo.rgsPipeline.}}\sphinxbfcode{\sphinxupquote{strToBool}}}{\emph{\DUrole{n}{s}}}{}
+\phantomsection\label{\detokenize{xmmPipeline:xmmPipeline.rgsPipeline.strToBool}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{xmmPipeline.rgsPipeline.}}\sphinxbfcode{\sphinxupquote{strToBool}}}{\emph{\DUrole{n}{s}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
 
 \subsection{Module contents}
-\label{\detokenize{githubRepo:module-githubRepo}}\label{\detokenize{githubRepo:module-contents}}\index{module@\spxentry{module}!githubRepo@\spxentry{githubRepo}}\index{githubRepo@\spxentry{githubRepo}!module@\spxentry{module}}
+\label{\detokenize{xmmPipeline:module-xmmPipeline}}\label{\detokenize{xmmPipeline:module-contents}}\index{module@\spxentry{module}!xmmPipeline@\spxentry{xmmPipeline}}\index{xmmPipeline@\spxentry{xmmPipeline}!module@\spxentry{module}}
 
 \chapter{Indices and tables}
 \label{\detokenize{index:indices-and-tables}}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \DUrole{xref,std,std-ref}{genindex}
 
 \item {} 
+\sphinxAtStartPar
 \DUrole{xref,std,std-ref}{modindex}
 
 \item {} 
+\sphinxAtStartPar
 \DUrole{xref,std,std-ref}{search}
 
 \end{itemize}
@@ -1310,17 +1899,17 @@ from each obsID directory to a results folder in the main directory.
 \renewcommand{\indexname}{Python Module Index}
 \begin{sphinxtheindex}
 \let\bigletter\sphinxstyleindexlettergroup
-\bigletter{g}
-\item\relax\sphinxstyleindexentry{githubRepo}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo}}
-\item\relax\sphinxstyleindexentry{githubRepo.convert}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.convert}}
-\item\relax\sphinxstyleindexentry{githubRepo.epicObj}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.epicObj}}
-\item\relax\sphinxstyleindexentry{githubRepo.epicPileup}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.epicPileup}}
-\item\relax\sphinxstyleindexentry{githubRepo.epicPipeline}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.epicPipeline}}
-\item\relax\sphinxstyleindexentry{githubRepo.epicSpectra}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.epicSpectra}}
-\item\relax\sphinxstyleindexentry{githubRepo.findOverlap}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.findOverlap}}
-\item\relax\sphinxstyleindexentry{githubRepo.getSpectraFitsTable}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.getSpectraFitsTable}}
-\item\relax\sphinxstyleindexentry{githubRepo.plotAnal}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.plotAnal}}
-\item\relax\sphinxstyleindexentry{githubRepo.rgsPipeline}\sphinxstyleindexpageref{githubRepo:\detokenize{module-githubRepo.rgsPipeline}}
+\bigletter{x}
+\item\relax\sphinxstyleindexentry{xmmPipeline}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.convert}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.convert}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.epicObj}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.epicObj}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.epicPileup}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.epicPileup}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.epicPipeline}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.epicPipeline}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.epicSpectra}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.epicSpectra}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.findOverlap}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.findOverlap}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.getSpectraFitsTable}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.getSpectraFitsTable}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.plotAnal}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.plotAnal}}
+\item\relax\sphinxstyleindexentry{xmmPipeline.rgsPipeline}\sphinxstyleindexpageref{xmmPipeline:\detokenize{module-xmmPipeline.rgsPipeline}}
 \end{sphinxtheindex}
 
 \renewcommand{\indexname}{Index}

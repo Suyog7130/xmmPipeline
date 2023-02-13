@@ -1,18 +1,18 @@
-\babel@toc {english}{}
-\contentsline {chapter}{\numberline {1}githubRepo}{1}{chapter.1}
-\contentsline {section}{\numberline {1.1}githubRepo package}{1}{section.1.1}
-\contentsline {subsection}{\numberline {1.1.1}Submodules}{1}{subsection.1.1.1}
-\contentsline {subsection}{\numberline {1.1.2}githubRepo.convert module}{1}{subsection.1.1.2}
-\contentsline {subsection}{\numberline {1.1.3}githubRepo.epicObj module}{1}{subsection.1.1.3}
-\contentsline {subsection}{\numberline {1.1.4}githubRepo.epicPileup module}{5}{subsection.1.1.4}
-\contentsline {subsection}{\numberline {1.1.5}githubRepo.epicPipeline module}{6}{subsection.1.1.5}
-\contentsline {subsection}{\numberline {1.1.6}githubRepo.epicSpectra module}{7}{subsection.1.1.6}
-\contentsline {subsection}{\numberline {1.1.7}githubRepo.findOverlap module}{8}{subsection.1.1.7}
-\contentsline {subsection}{\numberline {1.1.8}githubRepo.getSpectraFitsTable module}{10}{subsection.1.1.8}
-\contentsline {subsection}{\numberline {1.1.9}githubRepo.plotAnal module}{10}{subsection.1.1.9}
-\contentsline {subsection}{\numberline {1.1.10}githubRepo.pyXspec module}{11}{subsection.1.1.10}
-\contentsline {subsection}{\numberline {1.1.11}githubRepo.rgsPipeline module}{11}{subsection.1.1.11}
-\contentsline {subsection}{\numberline {1.1.12}Module contents}{12}{subsection.1.1.12}
-\contentsline {chapter}{\numberline {2}Indices and tables}{13}{chapter.2}
-\contentsline {chapter}{Python Module Index}{15}{section*.70}
-\contentsline {chapter}{Index}{17}{section*.71}
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}xmmPipeline}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}xmmPipeline package}{1}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Submodules}{1}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}xmmPipeline.convert module}{1}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}xmmPipeline.epicObj module}{1}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}xmmPipeline.epicPileup module}{6}{subsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.1.5}xmmPipeline.epicPipeline module}{8}{subsection.1.1.5}%
+\contentsline {subsection}{\numberline {1.1.6}xmmPipeline.epicSpectra module}{8}{subsection.1.1.6}%
+\contentsline {subsection}{\numberline {1.1.7}xmmPipeline.findOverlap module}{10}{subsection.1.1.7}%
+\contentsline {subsection}{\numberline {1.1.8}xmmPipeline.getSpectraFitsTable module}{13}{subsection.1.1.8}%
+\contentsline {subsection}{\numberline {1.1.9}xmmPipeline.plotAnal module}{13}{subsection.1.1.9}%
+\contentsline {subsection}{\numberline {1.1.10}xmmPipeline.pyXspec module}{14}{subsection.1.1.10}%
+\contentsline {subsection}{\numberline {1.1.11}xmmPipeline.rgsPipeline module}{14}{subsection.1.1.11}%
+\contentsline {subsection}{\numberline {1.1.12}Module contents}{15}{subsection.1.1.12}%
+\contentsline {chapter}{\numberline {2}Indices and tables}{17}{chapter.2}%
+\contentsline {chapter}{Python Module Index}{19}{section*.73}%
+\contentsline {chapter}{Index}{21}{section*.74}%

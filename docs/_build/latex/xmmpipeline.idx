@@ -1,87 +1,90 @@
-\indexentry{module@\spxentry{module}!githubRepo.convert@\spxentry{githubRepo.convert}|hyperpage}{1}
-\indexentry{githubRepo.convert@\spxentry{githubRepo.convert}!module@\spxentry{module}|hyperpage}{1}
-\indexentry{module@\spxentry{module}!githubRepo.epicObj@\spxentry{githubRepo.epicObj}|hyperpage}{1}
-\indexentry{githubRepo.epicObj@\spxentry{githubRepo.epicObj}!module@\spxentry{module}|hyperpage}{1}
-\indexentry{epicObj (class in githubRepo.epicObj)@\spxentry{epicObj}\spxextra{class in githubRepo.epicObj}|hyperpage}{1}
-\indexentry{combineEPICdata() (githubRepo.epicObj.epicObj method)@\spxentry{combineEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{1}
-\indexentry{combineGTIs() (githubRepo.epicObj.epicObj method)@\spxentry{combineGTIs()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{1}
-\indexentry{downloadData() (githubRepo.epicObj.epicObj method)@\spxentry{downloadData()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{1}
-\indexentry{extract\_InstrumentalGTIs() (githubRepo.epicObj.epicObj method)@\spxentry{extract\_InstrumentalGTIs()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{2}
-\indexentry{extract\_flareGTI() (githubRepo.epicObj.epicObj method)@\spxentry{extract\_flareGTI()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{2}
-\indexentry{extract\_srcBkg\_eventLists() (githubRepo.epicObj.epicObj method)@\spxentry{extract\_srcBkg\_eventLists()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{2}
-\indexentry{findObsIDs() (githubRepo.epicObj.epicObj method)@\spxentry{findObsIDs()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{2}
-\indexentry{findSourceCCD() (githubRepo.epicObj.epicObj method)@\spxentry{findSourceCCD()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{2}
-\indexentry{find\_otherSources() (githubRepo.epicObj.epicObj method)@\spxentry{find\_otherSources()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{2}
-\indexentry{find\_otherSources\_indi() (githubRepo.epicObj.epicObj method)@\spxentry{find\_otherSources\_indi()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
-\indexentry{getBackgroundCircles() (githubRepo.epicObj.epicObj method)@\spxentry{getBackgroundCircles()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
-\indexentry{getBackgroundCircles\_indi() (githubRepo.epicObj.epicObj method)@\spxentry{getBackgroundCircles\_indi()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{3}
-\indexentry{obtain\_lightCurves() (githubRepo.epicObj.epicObj method)@\spxentry{obtain\_lightCurves()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
-\indexentry{readCCDcoordsPickle() (githubRepo.epicObj.epicObj method)@\spxentry{readCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
-\indexentry{reduceEPICdata() (githubRepo.epicObj.epicObj method)@\spxentry{reduceEPICdata()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
-\indexentry{removeFlareBackground() (githubRepo.epicObj.epicObj method)@\spxentry{removeFlareBackground()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
-\indexentry{save\_results() (githubRepo.epicObj.epicObj method)@\spxentry{save\_results()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
-\indexentry{sortObsIDs() (githubRepo.epicObj.epicObj method)@\spxentry{sortObsIDs()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
-\indexentry{writeCCDcoordsPickle() (githubRepo.epicObj.epicObj method)@\spxentry{writeCCDcoordsPickle()}\spxextra{githubRepo.epicObj.epicObj method}|hyperpage}{4}
-\indexentry{printErrorMessage() (in module githubRepo.epicObj)@\spxentry{printErrorMessage()}\spxextra{in module githubRepo.epicObj}|hyperpage}{5}
-\indexentry{strToBool() (in module githubRepo.epicObj)@\spxentry{strToBool()}\spxextra{in module githubRepo.epicObj}|hyperpage}{5}
-\indexentry{module@\spxentry{module}!githubRepo.epicPileup@\spxentry{githubRepo.epicPileup}|hyperpage}{5}
-\indexentry{githubRepo.epicPileup@\spxentry{githubRepo.epicPileup}!module@\spxentry{module}|hyperpage}{5}
-\indexentry{epicPileup (class in githubRepo.epicPileup)@\spxentry{epicPileup}\spxextra{class in githubRepo.epicPileup}|hyperpage}{5}
-\indexentry{checkPileUp() (githubRepo.epicPileup.epicPileup method)@\spxentry{checkPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}|hyperpage}{5}
-\indexentry{correctPileUp() (githubRepo.epicPileup.epicPileup method)@\spxentry{correctPileUp()}\spxextra{githubRepo.epicPileup.epicPileup method}|hyperpage}{6}
-\indexentry{save\_pileUpResults() (githubRepo.epicPileup.epicPileup method)@\spxentry{save\_pileUpResults()}\spxextra{githubRepo.epicPileup.epicPileup method}|hyperpage}{6}
-\indexentry{main() (in module githubRepo.epicPileup)@\spxentry{main()}\spxextra{in module githubRepo.epicPileup}|hyperpage}{6}
-\indexentry{module@\spxentry{module}!githubRepo.epicPipeline@\spxentry{githubRepo.epicPipeline}|hyperpage}{6}
-\indexentry{githubRepo.epicPipeline@\spxentry{githubRepo.epicPipeline}!module@\spxentry{module}|hyperpage}{6}
-\indexentry{combineAndFind\_method() (in module githubRepo.epicPipeline)@\spxentry{combineAndFind\_method()}\spxextra{in module githubRepo.epicPipeline}|hyperpage}{6}
-\indexentry{extractProds\_method() (in module githubRepo.epicPipeline)@\spxentry{extractProds\_method()}\spxextra{in module githubRepo.epicPipeline}|hyperpage}{6}
-\indexentry{reduceData\_method() (in module githubRepo.epicPipeline)@\spxentry{reduceData\_method()}\spxextra{in module githubRepo.epicPipeline}|hyperpage}{6}
-\indexentry{module@\spxentry{module}!githubRepo.epicSpectra@\spxentry{githubRepo.epicSpectra}|hyperpage}{7}
-\indexentry{githubRepo.epicSpectra@\spxentry{githubRepo.epicSpectra}!module@\spxentry{module}|hyperpage}{7}
-\indexentry{epicSpectra (class in githubRepo.epicSpectra)@\spxentry{epicSpectra}\spxextra{class in githubRepo.epicSpectra}|hyperpage}{7}
-\indexentry{extractSpectra\_imageMode() (githubRepo.epicSpectra.epicSpectra method)@\spxentry{extractSpectra\_imageMode()}\spxextra{githubRepo.epicSpectra.epicSpectra method}|hyperpage}{7}
-\indexentry{save\_spectraResults() (githubRepo.epicSpectra.epicSpectra method)@\spxentry{save\_spectraResults()}\spxextra{githubRepo.epicSpectra.epicSpectra method}|hyperpage}{7}
-\indexentry{xspec\_fitSpectra() (githubRepo.epicSpectra.epicSpectra method)@\spxentry{xspec\_fitSpectra()}\spxextra{githubRepo.epicSpectra.epicSpectra method}|hyperpage}{7}
-\indexentry{main() (in module githubRepo.epicSpectra)@\spxentry{main()}\spxextra{in module githubRepo.epicSpectra}|hyperpage}{7}
-\indexentry{module@\spxentry{module}!githubRepo.findOverlap@\spxentry{githubRepo.findOverlap}|hyperpage}{8}
-\indexentry{githubRepo.findOverlap@\spxentry{githubRepo.findOverlap}!module@\spxentry{module}|hyperpage}{8}
-\indexentry{findOverlap (class in githubRepo.findOverlap)@\spxentry{findOverlap}\spxextra{class in githubRepo.findOverlap}|hyperpage}{8}
-\indexentry{backgroundCircles() (githubRepo.findOverlap.findOverlap method)@\spxentry{backgroundCircles()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
-\indexentry{backgroundCircles\_indi() (githubRepo.findOverlap.findOverlap method)@\spxentry{backgroundCircles\_indi()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
-\indexentry{createOutputImages() (githubRepo.findOverlap.findOverlap method)@\spxentry{createOutputImages()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{8}
-\indexentry{main() (githubRepo.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{9}
-\indexentry{obtainOverlap() (githubRepo.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{githubRepo.findOverlap.findOverlap method}|hyperpage}{9}
-\indexentry{imageMOS12() (in module githubRepo.findOverlap)@\spxentry{imageMOS12()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
-\indexentry{imageMOS12\_soft() (in module githubRepo.findOverlap)@\spxentry{imageMOS12\_soft()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
-\indexentry{imagePN() (in module githubRepo.findOverlap)@\spxentry{imagePN()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
-\indexentry{imagePNMOS12() (in module githubRepo.findOverlap)@\spxentry{imagePNMOS12()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
-\indexentry{imagePNMOS12\_soft() (in module githubRepo.findOverlap)@\spxentry{imagePNMOS12\_soft()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
-\indexentry{imagePN\_soft() (in module githubRepo.findOverlap)@\spxentry{imagePN\_soft()}\spxextra{in module githubRepo.findOverlap}|hyperpage}{9}
-\indexentry{module@\spxentry{module}!githubRepo.getSpectraFitsTable@\spxentry{githubRepo.getSpectraFitsTable}|hyperpage}{10}
-\indexentry{githubRepo.getSpectraFitsTable@\spxentry{githubRepo.getSpectraFitsTable}!module@\spxentry{module}|hyperpage}{10}
-\indexentry{main() (in module githubRepo.getSpectraFitsTable)@\spxentry{main()}\spxextra{in module githubRepo.getSpectraFitsTable}|hyperpage}{10}
-\indexentry{module@\spxentry{module}!githubRepo.plotAnal@\spxentry{githubRepo.plotAnal}|hyperpage}{10}
-\indexentry{githubRepo.plotAnal@\spxentry{githubRepo.plotAnal}!module@\spxentry{module}|hyperpage}{10}
-\indexentry{plotAnal (class in githubRepo.plotAnal)@\spxentry{plotAnal}\spxextra{class in githubRepo.plotAnal}|hyperpage}{10}
-\indexentry{PSNR() (githubRepo.plotAnal.plotAnal method)@\spxentry{PSNR()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{SSIM() (githubRepo.plotAnal.plotAnal method)@\spxentry{SSIM()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{SSIM\_value() (githubRepo.plotAnal.plotAnal method)@\spxentry{SSIM\_value()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{beautifyPlot() (githubRepo.plotAnal.plotAnal method)@\spxentry{beautifyPlot()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{linearFit() (githubRepo.plotAnal.plotAnal method)@\spxentry{linearFit()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{linearFit\_plotCal() (githubRepo.plotAnal.plotAnal method)@\spxentry{linearFit\_plotCal()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{pearson() (githubRepo.plotAnal.plotAnal method)@\spxentry{pearson()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{pearson\_spearman() (githubRepo.plotAnal.plotAnal method)@\spxentry{pearson\_spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{10}
-\indexentry{rSquared() (githubRepo.plotAnal.plotAnal method)@\spxentry{rSquared()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{11}
-\indexentry{spearman() (githubRepo.plotAnal.plotAnal method)@\spxentry{spearman()}\spxextra{githubRepo.plotAnal.plotAnal method}|hyperpage}{11}
-\indexentry{module@\spxentry{module}!githubRepo.rgsPipeline@\spxentry{githubRepo.rgsPipeline}|hyperpage}{11}
-\indexentry{githubRepo.rgsPipeline@\spxentry{githubRepo.rgsPipeline}!module@\spxentry{module}|hyperpage}{11}
-\indexentry{main() (in module githubRepo.rgsPipeline)@\spxentry{main()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{11}
-\indexentry{printErrorMessage() (in module githubRepo.rgsPipeline)@\spxentry{printErrorMessage()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{11}
-\indexentry{rgsObj (class in githubRepo.rgsPipeline)@\spxentry{rgsObj}\spxextra{class in githubRepo.rgsPipeline}|hyperpage}{11}
-\indexentry{findObsIDs() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{findObsIDs()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
-\indexentry{readPickleFile() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{readPickleFile()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
-\indexentry{reduceRGSdata() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{reduceRGSdata()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
-\indexentry{save\_results() (githubRepo.rgsPipeline.rgsObj method)@\spxentry{save\_results()}\spxextra{githubRepo.rgsPipeline.rgsObj method}|hyperpage}{11}
-\indexentry{strToBool() (in module githubRepo.rgsPipeline)@\spxentry{strToBool()}\spxextra{in module githubRepo.rgsPipeline}|hyperpage}{11}
-\indexentry{module@\spxentry{module}!githubRepo@\spxentry{githubRepo}|hyperpage}{12}
-\indexentry{githubRepo@\spxentry{githubRepo}!module@\spxentry{module}|hyperpage}{12}
+\indexentry{module@\spxentry{module}!xmmPipeline.convert@\spxentry{xmmPipeline.convert}|hyperpage}{1}
+\indexentry{xmmPipeline.convert@\spxentry{xmmPipeline.convert}!module@\spxentry{module}|hyperpage}{1}
+\indexentry{module@\spxentry{module}!xmmPipeline.epicObj@\spxentry{xmmPipeline.epicObj}|hyperpage}{1}
+\indexentry{xmmPipeline.epicObj@\spxentry{xmmPipeline.epicObj}!module@\spxentry{module}|hyperpage}{1}
+\indexentry{epicObj (class in xmmPipeline.epicObj)@\spxentry{epicObj}\spxextra{class in xmmPipeline.epicObj}|hyperpage}{1}
+\indexentry{combineEPICdata() (xmmPipeline.epicObj.epicObj method)@\spxentry{combineEPICdata()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{1}
+\indexentry{combineGTIs() (xmmPipeline.epicObj.epicObj method)@\spxentry{combineGTIs()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{1}
+\indexentry{downloadData() (xmmPipeline.epicObj.epicObj method)@\spxentry{downloadData()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{2}
+\indexentry{extract\_InstrumentalGTIs() (xmmPipeline.epicObj.epicObj method)@\spxentry{extract\_InstrumentalGTIs()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{2}
+\indexentry{extract\_flareGTI() (xmmPipeline.epicObj.epicObj method)@\spxentry{extract\_flareGTI()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{2}
+\indexentry{extract\_srcBkg\_eventLists() (xmmPipeline.epicObj.epicObj method)@\spxentry{extract\_srcBkg\_eventLists()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{2}
+\indexentry{findObsIDs() (xmmPipeline.epicObj.epicObj method)@\spxentry{findObsIDs()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{2}
+\indexentry{findSourceCCD() (xmmPipeline.epicObj.epicObj method)@\spxentry{findSourceCCD()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{3}
+\indexentry{find\_otherSources() (xmmPipeline.epicObj.epicObj method)@\spxentry{find\_otherSources()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{3}
+\indexentry{find\_otherSources\_indi() (xmmPipeline.epicObj.epicObj method)@\spxentry{find\_otherSources\_indi()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{3}
+\indexentry{getBackgroundCircles() (xmmPipeline.epicObj.epicObj method)@\spxentry{getBackgroundCircles()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{4}
+\indexentry{getBackgroundCircles\_indi() (xmmPipeline.epicObj.epicObj method)@\spxentry{getBackgroundCircles\_indi()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{4}
+\indexentry{obtain\_lightCurves() (xmmPipeline.epicObj.epicObj method)@\spxentry{obtain\_lightCurves()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{5}
+\indexentry{readCCDcoordsPickle() (xmmPipeline.epicObj.epicObj method)@\spxentry{readCCDcoordsPickle()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{5}
+\indexentry{reduceEPICdata() (xmmPipeline.epicObj.epicObj method)@\spxentry{reduceEPICdata()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{5}
+\indexentry{removeFlareBackground() (xmmPipeline.epicObj.epicObj method)@\spxentry{removeFlareBackground()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{5}
+\indexentry{save\_results() (xmmPipeline.epicObj.epicObj method)@\spxentry{save\_results()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{5}
+\indexentry{sortObsIDs() (xmmPipeline.epicObj.epicObj method)@\spxentry{sortObsIDs()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{5}
+\indexentry{updateCCDcoordsPickle() (xmmPipeline.epicObj.epicObj method)@\spxentry{updateCCDcoordsPickle()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{6}
+\indexentry{writeCCDcoordsPickle() (xmmPipeline.epicObj.epicObj method)@\spxentry{writeCCDcoordsPickle()}\spxextra{xmmPipeline.epicObj.epicObj method}|hyperpage}{6}
+\indexentry{printErrorMessage() (in module xmmPipeline.epicObj)@\spxentry{printErrorMessage()}\spxextra{in module xmmPipeline.epicObj}|hyperpage}{6}
+\indexentry{strToBool() (in module xmmPipeline.epicObj)@\spxentry{strToBool()}\spxextra{in module xmmPipeline.epicObj}|hyperpage}{6}
+\indexentry{module@\spxentry{module}!xmmPipeline.epicPileup@\spxentry{xmmPipeline.epicPileup}|hyperpage}{6}
+\indexentry{xmmPipeline.epicPileup@\spxentry{xmmPipeline.epicPileup}!module@\spxentry{module}|hyperpage}{6}
+\indexentry{epicPileup (class in xmmPipeline.epicPileup)@\spxentry{epicPileup}\spxextra{class in xmmPipeline.epicPileup}|hyperpage}{7}
+\indexentry{checkPileUp() (xmmPipeline.epicPileup.epicPileup method)@\spxentry{checkPileUp()}\spxextra{xmmPipeline.epicPileup.epicPileup method}|hyperpage}{7}
+\indexentry{correctPileUp() (xmmPipeline.epicPileup.epicPileup method)@\spxentry{correctPileUp()}\spxextra{xmmPipeline.epicPileup.epicPileup method}|hyperpage}{7}
+\indexentry{save\_pileUpResults() (xmmPipeline.epicPileup.epicPileup method)@\spxentry{save\_pileUpResults()}\spxextra{xmmPipeline.epicPileup.epicPileup method}|hyperpage}{8}
+\indexentry{main() (in module xmmPipeline.epicPileup)@\spxentry{main()}\spxextra{in module xmmPipeline.epicPileup}|hyperpage}{8}
+\indexentry{module@\spxentry{module}!xmmPipeline.epicPipeline@\spxentry{xmmPipeline.epicPipeline}|hyperpage}{8}
+\indexentry{xmmPipeline.epicPipeline@\spxentry{xmmPipeline.epicPipeline}!module@\spxentry{module}|hyperpage}{8}
+\indexentry{combineAndFind\_method() (in module xmmPipeline.epicPipeline)@\spxentry{combineAndFind\_method()}\spxextra{in module xmmPipeline.epicPipeline}|hyperpage}{8}
+\indexentry{extractProds\_method() (in module xmmPipeline.epicPipeline)@\spxentry{extractProds\_method()}\spxextra{in module xmmPipeline.epicPipeline}|hyperpage}{8}
+\indexentry{reduceData\_method() (in module xmmPipeline.epicPipeline)@\spxentry{reduceData\_method()}\spxextra{in module xmmPipeline.epicPipeline}|hyperpage}{8}
+\indexentry{runIndiBkgCircFuncs\_method() (in module xmmPipeline.epicPipeline)@\spxentry{runIndiBkgCircFuncs\_method()}\spxextra{in module xmmPipeline.epicPipeline}|hyperpage}{8}
+\indexentry{module@\spxentry{module}!xmmPipeline.epicSpectra@\spxentry{xmmPipeline.epicSpectra}|hyperpage}{8}
+\indexentry{xmmPipeline.epicSpectra@\spxentry{xmmPipeline.epicSpectra}!module@\spxentry{module}|hyperpage}{8}
+\indexentry{epicSpectra (class in xmmPipeline.epicSpectra)@\spxentry{epicSpectra}\spxextra{class in xmmPipeline.epicSpectra}|hyperpage}{8}
+\indexentry{extractSpectra\_imageMode() (xmmPipeline.epicSpectra.epicSpectra method)@\spxentry{extractSpectra\_imageMode()}\spxextra{xmmPipeline.epicSpectra.epicSpectra method}|hyperpage}{9}
+\indexentry{readUpdatedCCDcoordsPickle() (xmmPipeline.epicSpectra.epicSpectra method)@\spxentry{readUpdatedCCDcoordsPickle()}\spxextra{xmmPipeline.epicSpectra.epicSpectra method}|hyperpage}{9}
+\indexentry{save\_spectraResults() (xmmPipeline.epicSpectra.epicSpectra method)@\spxentry{save\_spectraResults()}\spxextra{xmmPipeline.epicSpectra.epicSpectra method}|hyperpage}{9}
+\indexentry{xspec\_fitSpectra() (xmmPipeline.epicSpectra.epicSpectra method)@\spxentry{xspec\_fitSpectra()}\spxextra{xmmPipeline.epicSpectra.epicSpectra method}|hyperpage}{9}
+\indexentry{main() (in module xmmPipeline.epicSpectra)@\spxentry{main()}\spxextra{in module xmmPipeline.epicSpectra}|hyperpage}{9}
+\indexentry{module@\spxentry{module}!xmmPipeline.findOverlap@\spxentry{xmmPipeline.findOverlap}|hyperpage}{10}
+\indexentry{xmmPipeline.findOverlap@\spxentry{xmmPipeline.findOverlap}!module@\spxentry{module}|hyperpage}{10}
+\indexentry{findOverlap (class in xmmPipeline.findOverlap)@\spxentry{findOverlap}\spxextra{class in xmmPipeline.findOverlap}|hyperpage}{10}
+\indexentry{backgroundCircles() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{backgroundCircles()}\spxextra{xmmPipeline.findOverlap.findOverlap method}|hyperpage}{11}
+\indexentry{backgroundCircles\_indi() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{backgroundCircles\_indi()}\spxextra{xmmPipeline.findOverlap.findOverlap method}|hyperpage}{11}
+\indexentry{createOutputImages() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{createOutputImages()}\spxextra{xmmPipeline.findOverlap.findOverlap method}|hyperpage}{11}
+\indexentry{main() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{main()}\spxextra{xmmPipeline.findOverlap.findOverlap method}|hyperpage}{11}
+\indexentry{obtainOverlap() (xmmPipeline.findOverlap.findOverlap method)@\spxentry{obtainOverlap()}\spxextra{xmmPipeline.findOverlap.findOverlap method}|hyperpage}{12}
+\indexentry{imageMOS12() (in module xmmPipeline.findOverlap)@\spxentry{imageMOS12()}\spxextra{in module xmmPipeline.findOverlap}|hyperpage}{12}
+\indexentry{imageMOS12\_soft() (in module xmmPipeline.findOverlap)@\spxentry{imageMOS12\_soft()}\spxextra{in module xmmPipeline.findOverlap}|hyperpage}{12}
+\indexentry{imagePN() (in module xmmPipeline.findOverlap)@\spxentry{imagePN()}\spxextra{in module xmmPipeline.findOverlap}|hyperpage}{12}
+\indexentry{imagePNMOS12() (in module xmmPipeline.findOverlap)@\spxentry{imagePNMOS12()}\spxextra{in module xmmPipeline.findOverlap}|hyperpage}{12}
+\indexentry{imagePNMOS12\_soft() (in module xmmPipeline.findOverlap)@\spxentry{imagePNMOS12\_soft()}\spxextra{in module xmmPipeline.findOverlap}|hyperpage}{12}
+\indexentry{imagePN\_soft() (in module xmmPipeline.findOverlap)@\spxentry{imagePN\_soft()}\spxextra{in module xmmPipeline.findOverlap}|hyperpage}{12}
+\indexentry{module@\spxentry{module}!xmmPipeline.getSpectraFitsTable@\spxentry{xmmPipeline.getSpectraFitsTable}|hyperpage}{13}
+\indexentry{xmmPipeline.getSpectraFitsTable@\spxentry{xmmPipeline.getSpectraFitsTable}!module@\spxentry{module}|hyperpage}{13}
+\indexentry{main() (in module xmmPipeline.getSpectraFitsTable)@\spxentry{main()}\spxextra{in module xmmPipeline.getSpectraFitsTable}|hyperpage}{13}
+\indexentry{module@\spxentry{module}!xmmPipeline.plotAnal@\spxentry{xmmPipeline.plotAnal}|hyperpage}{13}
+\indexentry{xmmPipeline.plotAnal@\spxentry{xmmPipeline.plotAnal}!module@\spxentry{module}|hyperpage}{13}
+\indexentry{plotAnal (class in xmmPipeline.plotAnal)@\spxentry{plotAnal}\spxextra{class in xmmPipeline.plotAnal}|hyperpage}{13}
+\indexentry{PSNR() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{PSNR()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{13}
+\indexentry{SSIM() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{SSIM()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{13}
+\indexentry{SSIM\_value() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{SSIM\_value()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{13}
+\indexentry{beautifyPlot() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{beautifyPlot()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{13}
+\indexentry{linearFit() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{linearFit()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{14}
+\indexentry{linearFit\_plotCal() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{linearFit\_plotCal()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{14}
+\indexentry{pearson() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{pearson()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{14}
+\indexentry{pearson\_spearman() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{pearson\_spearman()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{14}
+\indexentry{rSquared() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{rSquared()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{14}
+\indexentry{spearman() (xmmPipeline.plotAnal.plotAnal method)@\spxentry{spearman()}\spxextra{xmmPipeline.plotAnal.plotAnal method}|hyperpage}{14}
+\indexentry{module@\spxentry{module}!xmmPipeline.rgsPipeline@\spxentry{xmmPipeline.rgsPipeline}|hyperpage}{14}
+\indexentry{xmmPipeline.rgsPipeline@\spxentry{xmmPipeline.rgsPipeline}!module@\spxentry{module}|hyperpage}{14}
+\indexentry{main() (in module xmmPipeline.rgsPipeline)@\spxentry{main()}\spxextra{in module xmmPipeline.rgsPipeline}|hyperpage}{14}
+\indexentry{printErrorMessage() (in module xmmPipeline.rgsPipeline)@\spxentry{printErrorMessage()}\spxextra{in module xmmPipeline.rgsPipeline}|hyperpage}{14}
+\indexentry{rgsObj (class in xmmPipeline.rgsPipeline)@\spxentry{rgsObj}\spxextra{class in xmmPipeline.rgsPipeline}|hyperpage}{14}
+\indexentry{findObsIDs() (xmmPipeline.rgsPipeline.rgsObj method)@\spxentry{findObsIDs()}\spxextra{xmmPipeline.rgsPipeline.rgsObj method}|hyperpage}{14}
+\indexentry{readPickleFile() (xmmPipeline.rgsPipeline.rgsObj method)@\spxentry{readPickleFile()}\spxextra{xmmPipeline.rgsPipeline.rgsObj method}|hyperpage}{14}
+\indexentry{reduceRGSdata() (xmmPipeline.rgsPipeline.rgsObj method)@\spxentry{reduceRGSdata()}\spxextra{xmmPipeline.rgsPipeline.rgsObj method}|hyperpage}{14}
+\indexentry{save\_results() (xmmPipeline.rgsPipeline.rgsObj method)@\spxentry{save\_results()}\spxextra{xmmPipeline.rgsPipeline.rgsObj method}|hyperpage}{15}
+\indexentry{strToBool() (in module xmmPipeline.rgsPipeline)@\spxentry{strToBool()}\spxextra{in module xmmPipeline.rgsPipeline}|hyperpage}{15}
+\indexentry{module@\spxentry{module}!xmmPipeline@\spxentry{xmmPipeline}|hyperpage}{15}
+\indexentry{xmmPipeline@\spxentry{xmmPipeline}!module@\spxentry{module}|hyperpage}{15}
