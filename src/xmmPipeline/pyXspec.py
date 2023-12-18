@@ -81,6 +81,7 @@ def allSpec (workdir, obsID, eMin=0.3, eMax=1.5, \
     
     #-- `xspec data` --#
     if grouped:
+        # the src, bkg, `rmf`, `arf` files are grouped together.
         pnS = Spectrum(workdir+"/PN_spectrum_grouped_"+obsID+".fits")
         if not smallMode:
             mos1S = Spectrum(workdir+"/MOS1_spectrum_grouped_"+obsID+".fits")
@@ -482,8 +483,7 @@ if __name__=="__main__":
     #-- parse the arguments --#
     args = parser.parse_args()
     
-    obsID = args.obsID
-    workdir = '/media/suyog/DATA/xmm_obs/'+obsID+'/work'
+    workdir = args.workdir+'/'+args.obsID+'/work'
     instName, model, modelParams = args.instName, args.model, args.modelParams
 
     grouped, smallMode = strToBool(args.grouped), strToBool(args.smallMode)
@@ -491,12 +491,12 @@ if __name__=="__main__":
     doNotOverwriteModel = strToBool(args.doNotOverwriteModel)
     
     if instName == 'all':
-        allSpec(workdir, obsID=obsID, eMin=args.eMin, eMax=args.eMax, \
+        allSpec(workdir, obsID=args.obsID, eMin=args.eMin, eMax=args.eMax, \
                 model=model, modelParams=modelParams,
                 grouped=grouped, smallMode=smallMode, \
                 saveFig=saveFig, showFig=showFig, doNotOverwriteModel=doNotOverwriteModel)
     else:
-        indiSpec(instName=instName, workdir=workdir, obsID=obsID, model=model, \
+        indiSpec(instName=instName, workdir=workdir, obsID=args.obsID, model=model, \
                  grouped=grouped, saveFig=args.noSaveFig, showFig=args.showFig)
     
     

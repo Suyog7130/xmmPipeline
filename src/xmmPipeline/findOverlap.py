@@ -83,6 +83,7 @@ What is much better in my opinion is that I can repeat the procedure of filterin
 last found BkgPt + 2R dist points n number of times to obtain n number of Bkg points.
 Let's try that out now!
 
+
 This recursive way of finding the background circles takes care of overlap between the 
 circles all by itself, since the ``xToUse`` and ``yToUse`` are recursively filtered for 
 the circle area.
@@ -649,6 +650,7 @@ class findOverlap:
 
         self.bCircle1 = [Bx1, By1, Br1*header['CDELT2L']]
         self.bCircle2 = [Bx2, By2, Br2*header['CDELT2L']]
+        self.bCircles = [self.bCircle1, self.bCircle2]
         return True
 
 
@@ -685,11 +687,10 @@ class findOverlap:
             else:
                 img = self.overlap
             fname = 'source_background_circles.png'
-            bCircles = [self.bCircle1, self.bCircle2]
         else:
             img = self.imgInst
             fname = 'srcBkg_circs_'+inst+'.png'
-            bCircles = self.bCircles
+        bCircles = self.bCircles
 
         fig, ax = plt.subplots(1, 1, figsize=(5, 5))
         ax.imshow(img, cmap='afmhot', origin='lower')

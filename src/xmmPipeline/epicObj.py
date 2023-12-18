@@ -28,6 +28,8 @@ Starting to write the functions for obtaining individual background circles.
 Making the code compatible with Mac.
 If the path names are Windows like, containing white-spaces, then we need to have
 additional single quotes around them before calling the `subprocess.run` command.
+
+
 """
 
 import os
@@ -148,12 +150,10 @@ class epicObj:
                            "sudo gedit browse_extract_wget.pl &", shell=True)
             
         #-- download and save parts of xmmmaster table --##
-        print('checking this')
         subprocess.run(f"cd '{workdir}';"+ \
                        "sudo chmod +x browse_extract_wget.pl;"+ \
                        "sudo ./browse_extract_wget.pl table=xmmmaster position='"+ra+","+dec+ \
                        "' coordinates=equatorial outfile=obsIDs_list.dat", shell=True)
-        print('checking done')
         
         #-- extract obsIDs from the file --#
         df = pd.read_csv(workdir+'/obsIDs_list.dat', sep='|', delim_whitespace=False, header=0)[:-1]  #--remove last line.
@@ -601,6 +601,8 @@ class epicObj:
                            ". $SAS_DIR/setsas.sh;"+ \
                            "mgtime "+workdir+"/pnGTI.fits,"+workdir+"/mos1GTI.fits,"+workdir+"/mos2GTI.fits,"+ \
                                workdir+"/flareGTI.fits "+workdir+"/combinedGTI_"+obsID+".fits AND;"
+                           #"ftmgtime "+workdir+"/pnGTI.fits,"+workdir+"/mos1GTI.fits"+workdir+"/mos2GTI.fits "+ \
+                           #    workdir+"/flareGTI.fits "+workdir+"/combinedGTI_"+obsID+".fits AND;"
                            #"fv combinedGTI_"+obsID+".fits;"
                            , shell=True)
 
@@ -1074,6 +1076,7 @@ class epicObj:
             fname = workdir+'/'+'ccd_coords_info.pickle'
 
             #-- load the `ccd_coords_info.pickle` if already present --#
+            print(self.backgroundLoc[obsID])
             if os.path.isfile(fname):
                 result = pickle.load(open(fname, 'rb'))
                     #-- create a backup file --#
@@ -1093,10 +1096,12 @@ class epicObj:
                 result['badObs'] = True
             else:
                 result['badObs'] = False
+            print(self.backgroundLoc[obsID])
 
             outfile = open(fname, 'wb')
             pickle.dump(result, outfile)
             outfile.close()
+            print(result['backgroundLoc'])
 
         return print('\nWrote location parameters to the pickle file.')
 

@@ -325,7 +325,9 @@ class epicSpectra (epicObj):
                             ". $HEADAS/headas-init.sh;"+ \
                             ". $SAS_DIR/setsas.sh;"+ \
                             #'''export SAS_CCF="`pwd`/ccf.cif";'''+ \
-                            "python3 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py --obsID "+obsID+ \
+                            "python3.11 ~/Dropbox/Dheeraj@MIT_2020-21/pyXspec.py"+ \
+                                " --workdir "+self.workdir+ \
+                                " --obsID "+obsID+ \
                                 " --instName all --showFig "+showFig+" --smallMode "+smallMode+ \
                                 " --eMin "+eMin+" --eMax "+eMax+ \
                                 " --model "+model+" --modelParams "+modelParams+ \
@@ -527,4 +529,3 @@ if __name__=="__main__":
 
 #################### End of Program #########################
 #############################################################
-
