@@ -21,6 +21,7 @@ import sys
 import subprocess
 import requests
 import wget
+import logging
 
 import glob
 import pickle
@@ -86,7 +87,7 @@ class rgsObj:
         if not os.path.isdir(path):
             os.makedirs(path, exist_ok=True)
         if not (os.access(path, os.W_OK) and os.access(path, os.X_OK)):
-            print(f"Error: You do not have write/execute permissions in {path}.")
+            logging.error(f"Error: You do not have write/execute permissions in {path}.")
             sys.exit(1)
 
     ##-- function to find the obsIDs --##
@@ -96,19 +97,19 @@ class rgsObj:
         :Output: List of obsIDs.
         """
         ra, dec, workdir = str(self.ra), str(self.dec), self.workdir
-        print('\nLooking for obsIDs at RA={} and DEC={}\nWORKDIR is set at {}'.format(ra,dec,workdir))
+        logging.info(f'\nLooking for obsIDs at RA={ra} and DEC={dec}\nWORKDIR is set at {workdir}')
         
         #-- check if workdir exists --#
         self._check_dir(workdir)
             
         #-- check if browse_extract_wget.pl file exists --#
         if not os.path.isfile(workdir+"/"+"browse_extract_wget.pl"):
-            print('\nbrowse_extract_wget.pl not found.')
+            logging.info('\nbrowse_extract_wget.pl not found.')
             subprocess.run("cd "+workdir+";"+
                            "wget -q https://heasarc.gsfc.nasa.gov/FTP/heasarc/software/web_batch/browse_extract_wget.pl", shell=True)
             
-            print('browse_extract_wget.pl downloaded.')
-            print('\nPlease check the PERL path in the file. If required, correct the path given in first line and save the file.')
+            logging.info('browse_extract_wget.pl downloaded.')
+            logging.info('\nPlease check the PERL path in the file. If required, correct the path given in first line and save the file.')
             subprocess.run("cd "+workdir+";"+
                            "touch browse_extract_wget.pl", shell=True)
             
@@ -138,7 +139,7 @@ class rgsObj:
         subprocess.run("cd "+workdir+";"+ \
                        "cp obsIDs_list.dat obsIDs_list_"+objName+".dat;", shell=True) 
         
-        return print('\nFound '+str(len(obsIDs))+' obsIDs for the object at given position.')
+        return logging.info('\nFound '+str(len(obsIDs))+' obsIDs for the object at given position.')
 
 
     ##-- read the pickle file for location parameters --##
@@ -146,7 +147,7 @@ class rgsObj:
         """
         Reads the already obtained pickle file containing location parameters.
         """
-        print('\nLoading the Pickle file obtained from xmmPipeline.')
+        logging.info('\nLoading the Pickle file obtained from xmmPipeline.')
 
         workdir, objName = self.workdir, self.objName
 
@@ -163,7 +164,7 @@ class rgsObj:
         obsIDs, badObs = set(self.obsIDs), set(self.badObs)
         self.obsIDs = list(obsIDs-badObs)
 
-        return print('Read location parameters from the xmmPipeline Pickle file.')
+        logging.info('Read location parameters from the xmmPipeline Pickle file.')
 
 
     ##-- function to reduce the RGS data --##
@@ -176,7 +177,7 @@ class rgsObj:
         :Input: None.
         :Output: Source and Background RGS Spectra and the associated response matrices.
         """
-        print('\nInitializing RGS data reduction.')
+        logging.info('\nInitializing RGS data reduction.')
 
         maindir = self.workdir
         
@@ -187,7 +188,7 @@ class rgsObj:
         
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nReducing RGS data for obsID {}.'.format(obsID))
+            logging.info(f'\nReducing RGS data for obsID {obsID}.')
 
             #-- set SAS_ODF environment variable --#
             os.environ['SAS_ODF'] = maindir+'/'+obsID+'/ODF'
@@ -210,9 +211,9 @@ class rgsObj:
                            "rgsproc;" 
                            #"fv *R1*SRCLI*;"
                            , shell=True)
-            print('\nData reduction for obsID {} finished.'.format(obsID))
+            logging.info(f'\nData reduction for obsID {obsID} finished.')
             
-        return print('\nCompleted RGS data reduction.')
+        logging.info('\nCompleted RGS data reduction.')
 
 
 
@@ -225,7 +226,7 @@ class rgsObj:
             Two, copies the Source, Background Events lists and other output files 
                  from each obsID directory to a results folder in the main directory.
         """
-        print('\nLastly saving results to a pickle file for each obsID.')
+        logging.info('\nLastly saving results to a pickle file for each obsID.')
 
         maindir = self.workdir
 
@@ -237,7 +238,7 @@ class rgsObj:
 
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nSaving results for obsID {}.'.format(obsID))
+            logging.info(f'\nSaving results for obsID {obsID}.')
             workdir = maindir+'/'+obsID+'/work'
             
             #-- save the CCD and coords info in a pickle file --#
@@ -267,9 +268,9 @@ class rgsObj:
 
                 subprocess.run("cp "+file+" "+resultdir+"/"+fname, shell=True)
 
-            print(f'Save for obsID {obsID} done.')
+            logging.info(f'Save for obsID {obsID} done.')
 
-        return print('\nSaved the result!')
+        logging.info('\nSaved the result!')
 
 
 ##-------------------------------------------------------------------------------------------##
@@ -286,20 +287,20 @@ def main (args):
     try:
         obj.findObsIDs()
     except KeyError:
-        print('\nNo obsIDs found for the given location. Confirm that you are connected to the Internet!')
+        logging.error('\nNo obsIDs found for the given location. Confirm that you are connected to the Internet!')
 
     #-- check if obsID has been given --#
     if args.obsIDs!=None:
         obj.obsIDs = args.obsIDs
-        print('Using the obsIDs passed.')
+        logging.info('Using the obsIDs passed.')
 
     #-- run the spectra functions --#
     #obj.readPickleFile()
     obj.reduceRGSdata()
 
-    print('\nHurray! The Method Succesfully ran.')
+    logging.info('\nHurray! The Method Succesfully ran.')
     #if len(obj.badObs)!=0:
-    #    print('These obsIDs were excluded from analysis: ', obj.badObs)
+    #    logging.info(f'These obsIDs were excluded from analysis: {obj.badObs}')
 
     return True
 

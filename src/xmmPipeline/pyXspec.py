@@ -16,6 +16,8 @@ import os
 import json
 import argparse
 import subprocess
+import logging
+
 import matplotlib.pyplot as plt
 
 from xspec import *
@@ -82,7 +84,7 @@ def allSpec (workdir, obsID, eMin=0.3, eMax=1.5, \
         if type(i) == int:
             param = m1(i)                   #--find the `i`th parameter object.
             param.values = modelParams[i]   #--assign value from the modelParams dict.
-            #print(param.values)
+            #logging.info(param.values)
             if freeze is not None and i in freeze:
                 param.frozen = True
     
@@ -116,7 +118,7 @@ def allSpec (workdir, obsID, eMin=0.3, eMax=1.5, \
     mName = model
     if doNotOverwriteModel:
         mName = mName + '_1'
-        print(f'\n--doNotOverwriteModel flag is ON\nmodel name is {mName}')
+        logging.info(f'\n--doNotOverwriteModel flag is ON\nmodel name is {mName}')
     resultDict[mName] = {}
 
     #-- save model fit parameters to the JSON file --#

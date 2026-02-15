@@ -8,6 +8,7 @@ import os
 import subprocess
 import requests
 import wget
+import logging
 
 import glob
 import pickle
@@ -57,7 +58,7 @@ class epicPileup (epicObj):
 
         :Note: The term `filtered` means that the GTI have been applied.
         """
-        print('\nStarting Pile-up Checking.')
+        logging.info('\nStarting Pile-up Checking.')
 
         #-- set the environment variables --#
         os.environ['SAS_DIR'] = self.sas_dir
@@ -66,7 +67,7 @@ class epicPileup (epicObj):
         
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nChecking Pile-up in {}.'.format(obsID))
+            logging.info(f'\nChecking Pile-up in {obsID}.')
             workdir = self.workdir+'/'+obsID+'/work'
             
             #-- get the location parameters --#
@@ -96,9 +97,9 @@ class epicPileup (epicObj):
                 subprocess.run("cd "+workdir+";"+ \
                             "evince source_PN_filteredPattern.ps;"
                             , shell=True)
-            print(f'\nChecked Pile-up for {obsID}.')
+            logging.info(f'\nChecked Pile-up for {obsID}.')
 
-        return print('\nPile-up checking finished.')
+        return logging.info('\nPile-up checking finished.')
 
 
     ##-- correct the Pile-up --##
@@ -136,14 +137,14 @@ class epicPileup (epicObj):
 
         :Note: The term `filtered` means that the GTI have been applied.
         """
-        print('\nStarting Pile-up Correction.')
+        logging.info('\nStarting Pile-up Correction.')
         if srcRin is None:
-            return printErrorMessage('Please provide a valid inner radius.')
+            return logging.error('Please provide a valid inner radius.')
         elif srcRin == 0:      
             for obsID in self.obsIDs:
                 self.sourceLoc[obsID]['rIn'] = None
-                print('\nInner radius of the Source circle has been changed to None.')
-            return print(self.sourceLoc[obsID])
+                logging.info('\nInner radius of the Source circle has been changed to None.')
+            return logging.info(self.sourceLoc[obsID])
         else:
             srcRin = str(srcRin)
 
@@ -154,13 +155,13 @@ class epicPileup (epicObj):
         
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nCorrecting Pile-up in {}.'.format(obsID))
+            logging.info('\nCorrecting Pile-up in {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
             
             #-- get the location parameters --#
             locParams = self.sourceLoc[obsID]
             srcX, srcY, srcR = str(locParams['x']), str(locParams['y']), str(locParams['r'])
-            print(f'Source X, Y and R: {srcX} {srcY} {srcR}')
+            logging.info(f'Source X, Y and R: {srcX} {srcY} {srcR}')
 
             #-- get the CCD numbers --#
             pnCCD = str(self.sourceCCDs[obsID]['PN'])
@@ -188,9 +189,9 @@ class epicPileup (epicObj):
             #-- save the new radius parameters --#
             self.sourceLoc[obsID]['rIn'] = srcRin
             self.sourceLoc[obsID]['rOut'] = srcR
-            print(f'\nCorrected Pile-up for {obsID}.')
+            logging.info(f'\nCorrected Pile-up for {obsID}.')
 
-        return print('\nPile-up correction finished.')
+        return logging.info('\nPile-up correction finished.')
 
 
     ##-- save the results --##
@@ -199,7 +200,7 @@ class epicPileup (epicObj):
         Saves the `*filteredPattern.ps` and `*filteredAnnulus*.ps`
         to the results directory.
         """
-        print('\nSaving the Pile-up results for each obsID to a common results folder.')
+        logging.info('\nSaving the Pile-up results for each obsID to a common results folder.')
 
         maindir = self.workdir
         #objName+".dat;"
@@ -214,7 +215,7 @@ class epicPileup (epicObj):
 
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nSaving results for obsID {}.'.format(obsID))
+            logging.info(f'\nSaving results for obsID {obsID}.')
             workdir = maindir+'/'+obsID+'/work'
             
             #-- copy results --#
@@ -229,9 +230,9 @@ class epicPileup (epicObj):
                 
                 subprocess.run("cp "+file+" "+resultdir+"/"+fname, shell=True)
 
-            print(f'Save for obsID {obsID} done.')
+            logging.info(f'Save for obsID {obsID} done.')
 
-        return print('\nSaved the result!')
+        return logging.info('\nSaved the result!')
 
 
 ##-------------------------------------------------------------------------------------------##
@@ -248,14 +249,14 @@ def main (args):
         try:
             obj.findObsIDs()
         except KeyError:
-            print('\nNo obsIDs found for the given location. Confirm that you are connected to the Internet!')
+            logging.error('\nNo obsIDs found for the given location. Confirm that you are connected to the Internet!')
     else:
         obj.objName = args.objName
 
     #-- check if obsID has been passed --#
     if args.obsIDs is not None:
         obj.obsIDs = args.obsIDs
-        print('Using the obsIDs passed.')
+        logging.info('Using the obsIDs passed.')
 
     if args.saveResults:
         obj.save_pileUpResults()
@@ -272,11 +273,11 @@ def main (args):
         obj.checkPileUp()
     obj.save_pileUpResults()
 
-    print('\nHurray! Pile-up correction ran successfully.')
+    logging.info('\nHurray! Pile-up correction ran successfully.')
     if len(obj.smallMode) != 0 and args.obsIDs is None:
-        print(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
+        logging.info(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
     if len(obj.badObs) != 0:
-        print('These obsIDs were excluded from analysis: ', obj.badObs)
+        logging.info(f'These obsIDs were excluded from analysis: {obj.badObs}')
 
     return True
 

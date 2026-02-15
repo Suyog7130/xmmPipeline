@@ -8,6 +8,8 @@ import time
 import glob
 import argparse
 import subprocess
+import logging
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -131,7 +133,7 @@ class findOverlap:
         
         if printHeader:
             for key in header.keys():
-                print('{}\t{}\t{}'.format(key, header.comments[key], header[key]))
+                logging.info('{}\t{}\t{}'.format(key, header.comments[key], header[key]))
         if header:
             header = hdu[0].header
             return (img, header)
@@ -287,7 +289,7 @@ class findOverlap:
         if np.abs( len(overlap1[overlap1>0.0].flatten()) - len(imgMOS[imgMOS>0.0].flatten()) ) < 500: 
             overlap = imgPNMOS
             self.isSmallMode = True
-            print('\nNote: obsID in Small Mode.')
+            logging.info('\nNote: obsID in Small Mode.')
     
         ##-- distance between two points --##
         def __euclideanDist (P1, P2):
@@ -361,7 +363,7 @@ class findOverlap:
             else:
                 yC, xC = srcCoords   #--the axes are opposite here.
             """
-            print('\nThe Source coordinate value in log scale pixel is: {}, {}'.format(xC, yC))
+            logging.info('\nThe Source coordinate value in log scale pixel is: {}, {}'.format(xC, yC))
         else:
             xC, yC = int(imgPNMOS.shape[0]/2), int(imgPNMOS.shape[1]/2)
         #axes[3].plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
@@ -384,10 +386,10 @@ class findOverlap:
             if srcThreshold <= dSrcThreshold:
                 dSrcThreshold = srcThreshold
             else:
-                print(f'\nProvided threshold value exceed {dSrcThreshold} arcsec. Defaulting to this value.')
+                logging.warning(f'\nProvided threshold value exceed {dSrcThreshold} arcsec. Defaulting to this value.')
 
         DSource = dSrcThreshold*(1/3600)/header['CDELT2']
-        print('\nThe distance between random Background circle center and the Source is set at {} arcsec.'.format(dSrcThreshold))
+        logging.info('\nThe distance between random Background circle center and the Source is set at {} arcsec.'.format(dSrcThreshold))
 
         #-- radius of the background circles --#
         Br = np.array([dSrcThreshold/2, dSrcThreshold/2 - 10])  #--value in arcsec.
@@ -398,14 +400,14 @@ class findOverlap:
                 Br = bkgR
                 Br1, Br2 = bkgR*(1/3600)/header['CDELT2']
             else:
-                print('\nProvided background circle radii are more than half of threshold distance.')
+                logging.warning('\nProvided background circle radii are more than half of threshold distance.')
         #print(Br1, Br2)
     
         #-- dSrcThreshold gives the Source circle radius --#
         srcR = dSrcThreshold/2
         srcToLines = [__pDistToLine((xC, yC), cornerLine) for cornerLine in cornerLines]  #--output is in pixels.
         if min(srcToLines) < srcR*(1/3600)/header['CDELT2']:
-            print('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
+            logging.warning('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
             srcR = min(srcToLines)*3600*header['CDELT2']  #--convert to arcsec
 
         if self.srcR != None:
@@ -413,9 +415,9 @@ class findOverlap:
             if srcR_given <= srcR:
                 srcR = srcR_given
             else:
-                print(f'\nsrcCircRadius value of {np.round(srcR_given, 2)} arcsec provided exceed the distance to the nearest overlap border. Defaulting to this distance.')
+                logging.warning(f'\nsrcCircRadius value of {np.round(srcR_given, 2)} arcsec provided exceed the distance to the nearest overlap border. Defaulting to this distance.')
 
-        print(f'The Source radius is set at {np.round(srcR, 2)} arcsec.')
+        logging.info(f'The Source radius is set at {np.round(srcR, 2)} arcsec.')
         self.srcR = (srcR*(1/3600)/header['CDELT2'] )*header['CDELT2L']  #--convert pixels to log pixels.
 
         #-- shortlisting random points --#
@@ -461,7 +463,7 @@ class findOverlap:
             
             #-- check if the arrays are empty --#
             if len(xToUse)<2:
-                print(message)
+                logging.warning(message)
                 return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
             #-- first random point --#
@@ -486,7 +488,7 @@ class findOverlap:
                 
             #-- when other sources are too many --#
             else:
-                print(message)
+                logging.warning(message)
                 return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
         if Bx1 is not None:
@@ -550,8 +552,8 @@ class findOverlap:
 
         #-- return the background circles --#
         Bx1, By1, Bx2, By2 = np.array([Bx1, By1, Bx2, By2])*header['CDELT2L']  #--coords in Sky coords.
-        print('\nFirst Background circle: ', Bx1, By1, Br[0])
-        print('Second Background circle: ', Bx2, By2, Br[1])
+        logging.info('\nFirst Background circle: {} {} {}'.format(Bx1, By1, Br[0]))
+        logging.info('Second Background circle: {} {} {}'.format(Bx2, By2, Br[1]))
 
         self.bCircle1 = [Bx1, By1, Br1*header['CDELT2L']]
         self.bCircle2 = [Bx2, By2, Br2*header['CDELT2L']]
@@ -754,7 +756,7 @@ class findOverlap:
         if srcCoords!=None:
             srcCoords = np.array(srcCoords)/header['CDELT2L']
             xC, yC = srcCoords
-            print('\nThe Source coordinate value in log scale pixel is: {}, {}'.format(xC, yC))
+            logging.info('\nThe Source coordinate value in log scale pixel is: {}, {}'.format(xC, yC))
         #ax.plot(xC, yC, '*', markersize=20, color='white', markeredgecolor='black', markeredgewidth=0.2)
 
         #-- correct the position of main Source --#
@@ -775,10 +777,10 @@ class findOverlap:
             if srcThreshold <= dSrcThreshold:
                 dSrcThreshold = srcThreshold
             else:
-                print(f'\nProvided threshold value exceed {dSrcThreshold} arcsec. Defaulting to this value.')
+                logging.warning(f'\nProvided threshold value exceed {dSrcThreshold} arcsec. Defaulting to this value.')
 
         DSource = dSrcThreshold*(1/3600)/header['CDELT2']
-        print('\nThe distance between random Background circle center and the Source is set at {} arcsec.'.format(dSrcThreshold))
+        logging.info('\nThe distance between random Background circle center and the Source is set at {} arcsec.'.format(dSrcThreshold))
 
         #-- radius of the background circles --#
         Br = np.array([dSrcThreshold/2, dSrcThreshold/2 - 10])  #--value in arcsec.
@@ -789,14 +791,14 @@ class findOverlap:
                 Br = bkgR
                 Br1, Br2 = bkgR*(1/3600)/header['CDELT2']
             else:
-                print('\nProvided background circle radii are more than half of threshold distance.')
+                logging.warning('\nProvided background circle radii are more than half of threshold distance.')
         #print(Br1, Br2)
     
         #-- dSrcThreshold gives the Source circle radius --#
         srcR = dSrcThreshold/2
         srcToLines = [__pDistToLine((xC, yC), cornerLine) for cornerLine in cornerLines]  #--output is in pixels.
         if min(srcToLines) < srcR*(1/3600)/header['CDELT2']:
-            print('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
+            logging.warning('\nNote: The Source is very near the overlap edge. Source circle area maybe small.')
             srcR = min(srcToLines)*3600*header['CDELT2']  #--convert to arcsec
 
         if self.srcR != None:
@@ -804,9 +806,9 @@ class findOverlap:
             if srcR_given <= srcR:
                 srcR = srcR_given
             else:
-                print(f'\nsrcCircRadius value of {np.round(srcR_given, 2)} arcsec provided exceed the distance to the nearest overlap border. Defaulting to this distance.')
+                logging.warning(f'\nsrcCircRadius value of {np.round(srcR_given, 2)} arcsec provided exceed the distance to the nearest overlap border. Defaulting to this distance.')
 
-        print(f'\nThe Source radius is set at {np.round(srcR, 2)} arcsec.')
+        logging.info(f'\nThe Source radius is set at {np.round(srcR, 2)} arcsec.')
         self.srcR = (srcR*(1/3600)/header['CDELT2'] )*header['CDELT2L']  #--convert pixels to log pixels.
 
         #-- shortlisting random points --#
@@ -850,7 +852,7 @@ class findOverlap:
             
             #-- check if the arrays are empty --#
             #if len(xToUse)<2:
-            #    print(message)
+            #    logging.warning(message)
             #    return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
 
             #-- first random point --#
@@ -873,7 +875,7 @@ class findOverlap:
                 if len(xf) > 0:
                     __backgroundPt(xToUse=xf, yToUse=yf, ax=ax)
                 else:   #-- when other sources are too many --#
-                    print(message)
+                    logging.warning(message)
                     return __backgroundPt(xToUse=xUse, yToUse=yUse, ax=ax)
                 
 
@@ -916,7 +918,7 @@ class findOverlap:
             if br <= 0:
                 badBkgCircsWarning = '\n\tFound BkgCircs overlap with eachother.' + \
                                      '\n\tPlease try running the routine once again!'
-                print(badBkgCircsWarning)
+                logging.warning(badBkgCircsWarning)
     
         #-- plot the randomly selected background points --#
         for i in range(4):
@@ -947,8 +949,8 @@ class findOverlap:
         globalBy = np.array(globalBy)*header['CDELT2L']  #--coords in Sky coords.
         for i, bx, by, br in zip(range(len(Br)), globalBx, globalBy, Br):
             if i==0:
-                print('')
-            print(f'Background circle {i+1}:\t{bx} {by} {br}')
+                logging.info('')
+            logging.info(f'Background circle {i+1}:\t{bx} {by} {br}')
 
         globalBr = np.array(globalBr)*header['CDELT2L']  #--radius in log-pixel for FITS overlay plot.
         for bx, by, br in zip(globalBx, globalBy, globalBr):
@@ -1019,15 +1021,17 @@ if __name__=="__main__":
     
     start = time.time()
     for obsID in obsIDs:
-        print('\nWorking for obsID {}.'.format(obsID))
+        logging.info('\nWorking for obsID {}.'.format(obsID))
         workdir = maindir+'/'+str(obsID)+'/work'
 
         findOverlapObj = findOverlap(workdir=workdir, obsID=obsID, saveFig=False)
         bCircle1, bCircle2, srcR, isSmallMode = findOverlapObj.main()
-        print(bCircle1, bCircle2, srcR, isSmallMode, sep='\n')
+        logging.info(f'bCircle1: {bCircle1}')
+        logging.info(f'bCircle2: {bCircle2}')
+        logging.info(f'srcR: {srcR}')
+        logging.info(f'isSmallMode: {isSmallMode}')
     end = time.time()
-    print(f'Time taken for execution: {np.round(end-start, 5)} sec')
-    
+    logging.info(f'Time taken for execution: {np.round(end-start, 5)} sec')
     
     
     

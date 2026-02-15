@@ -17,6 +17,8 @@ Swaping the Row of the `specResultsTable` with the columns will take sometime.
 import os
 import json
 import argparse
+import logging
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -65,12 +67,12 @@ def main (args):
     #-- iterate for all the models --#
     for model in models:
         if verbose:
-            print(f'\nCreating specResultsTable for model\n\t{model}')
+            logging.info(f'\nCreating specResultsTable for model\n\t{model}')
     
         #-- iterate for each obsIDs --#
         for obsID in sortedObsIDs:
             if verbose:
-                print(f'\nLoading specModelParams.json for {obsID}')
+                logging.info(f'\nLoading specModelParams.json for {obsID}')
             workdir = args.workdir +'/'+ obsID +'/work'
             
             #-- load the `specModelParams.json` file --#
@@ -80,15 +82,15 @@ def main (args):
                 #print(resultDict)
             else:
                 if verbose:
-                    printErrorMessage('file not found!')
-                    print(f'\nRow for {obsID} will not be added.')
+                    logging.warning('file not found!')
+                    logging.info(f'\nRow for {obsID} will not be added.')
                 continue
 
             #-- check for presence of the model --#
             modelDict = resultDict.get(model, None)
             if modelDict is None:
                 if verbose:
-                    print('\nPresent model is not saved in the JSON file.')
+                    logging.info('\nPresent model is not saved in the JSON file.')
                 continue
 
             #-- add columns for useful model parameters --#
@@ -124,7 +126,7 @@ def main (args):
             toDrop = list( set(df.index.tolist()) - set(args.obsIDs) )
             df = df.drop(toDrop)
             if verbose:
-                print('Using the obsIDs passed.')
+                logging.info('Using the obsIDs passed.')
 
         df = df.replace('None', 0.0)  #--convert empty values to float64.
 
@@ -159,13 +161,13 @@ def main (args):
                 redChiSq.append(0)
         df['redChiSq'] = redChiSq
 
-        print(f'\nThe final specResultsTable for model\n\t{model}\n')  
-        print(df)   #, df.columns.tolist())
-        print('\nSuccessfully created the specResultsTable!')
+        logging.info(f'\nThe final specResultsTable for model\n\t{model}\n')  
+        logging.info(df)   #, df.columns.tolist())
+        logging.info('\nSuccessfully created the specResultsTable!')
 
         df.to_csv('specResultsTable_'+model+'.csv')
         if verbose:
-            print('Saved the specResultsTable to CSV.')
+            logging.info('Saved the specResultsTable to CSV.')
 
     return True
 

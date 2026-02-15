@@ -8,6 +8,7 @@ import os
 import subprocess
 import requests
 import wget
+import logging
 
 import json
 import glob
@@ -40,16 +41,16 @@ class epicSpectra (epicObj):
         `ccd_coords_info.pickle` file which contains the location parameters.
         """
         workdir = self.workdir
-        print('\nLoading the ccd_coords_info.pickle file.')
+        logging.info('\nLoading the ccd_coords_info.pickle file.')
 
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nReading indi inst bkgCircs for obsID {}.'.format(obsID))
+            logging.info(f'\nReading indi inst bkgCircs for obsID {obsID}.')
             fname = workdir+'/'+obsID+'/work/ccd_coords_info.pickle'
 
             #-- check for the pickle file --#
             if not os.path.isfile(fname):
-                print(f'\nFile {fname} not found!\n')
+                logging.error(f'\nFile {fname} not found!\n')
                 self.badObs.append(obsID)
                 continue
 
@@ -68,7 +69,7 @@ class epicSpectra (epicObj):
             else:
                 self.otherSourcesIndi[obsID] = None
 
-        return print('Read indi inst bkgCircs from the pickle files.')
+        return logging.info('Read indi inst bkgCircs from the pickle files.')
         
 
     ##-- extract the Spectra in Image Mode --##
@@ -104,7 +105,7 @@ class epicSpectra (epicObj):
         or if the former is not available for any given obsID, the overlap bkgCircs
         are used.
         """
-        print('\nStarting Spectra extraction for MOS12 and PN in Image Mode.')
+        logging.info('\nStarting Spectra extraction for MOS12 and PN in Image Mode.')
         
         #-- set the environment variables --#
         os.environ['SAS_DIR'] = self.sas_dir
@@ -113,7 +114,7 @@ class epicSpectra (epicObj):
         
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nExtracting Image Mode Spectra for obsID {}.'.format(obsID))
+            logging.info('\nExtracting Image Mode Spectra for obsID {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
             
             #-- get the source location parameters --#
@@ -125,13 +126,13 @@ class epicSpectra (epicObj):
             if not self.ignorePileup and srcRin is not None:
                 srcRin = str(srcRin)
                 srcRout = str(locParams['rOut'])
-                print('\nThis observation was piled-up. Using ANNULUS for Source.')
+                logging.info('\nThis observation was piled-up. Using ANNULUS for Source.')
                 srcSpectrumSet = "spectrum_source_annulus_"+obsID+".fits"
                 srcFilterExp = "((X,Y) in ANNULUS("+srcX+","+srcY+","+srcRin+","+srcRout+"))"
             else:
                 srcSpectrumSet = "spectrum_source_"+obsID+".fits"
                 srcFilterExp = "((X, Y) IN circle("+srcX+","+srcY+","+srcR+"))"
-            print(f'\nsrcFilterExp:\n{srcFilterExp}')
+            logging.info(f'\nsrcFilterExp:\n{srcFilterExp}')
             
             #-- get the background location parameters --#
             bLocParams = self.backgroundLoc[obsID]
@@ -140,14 +141,14 @@ class epicSpectra (epicObj):
 
             for inst in ['PN', 'MOS1', 'MOS2']:
                 if bLocParamsIndi is not None:
-                    print(f'\nUsing {inst} bkgCircs.')
+                    logging.info(f'\nUsing {inst} bkgCircs.')
                     bkgCircs = bLocParamsIndi.get(inst, None)
                     if bkgCircs is None: #--if particular inst is not present.
-                        print(f'\nIndi inst bkgCircs not found for {inst}')
+                        logging.warning(f'\nIndi inst bkgCircs not found for {inst}')
                         bkgCircs = bLocParams
                 else:
                     bkgCircs = bLocParams
-                    print('\nIndi inst bkgCircs not found. Using overlap bkgCircs.')
+                    logging.warning('\nIndi inst bkgCircs not found. Using overlap bkgCircs.')
 
                 bkgFlist = []
                 for i in range( len(bkgCircs)//3 ):  #--for nBkgCircs.
@@ -155,7 +156,7 @@ class epicSpectra (epicObj):
                     Bx, By, Br = str(bkgCircs[xKey]), str(bkgCircs[yKey]), str(bkgCircs[rKey])
                     bkgFlist.append( "((X,Y) in CIRCLE("+Bx+","+By+","+Br+"))" )
                 bkgFilterExp[inst] = "||".join(bkgFlist)
-                print(f'\n{inst} bkgFilterExp:\n{bkgFilterExp[inst]}')
+                logging.info(f'\n{inst} bkgFilterExp:\n{bkgFilterExp[inst]}')
 
             #-- extract PN Spectra --#
             subprocess.run("cd "+workdir+";"+ \
@@ -182,11 +183,11 @@ class epicSpectra (epicObj):
                                " groupedset=PN_spectrum_grouped_"+obsID+".fits;"
                            #"fv PN_spectrum_grouped_"+obsID+".fits;"
                            , shell=True)
-            print('\nPN Spectra extracted.')
+            logging.info('\nPN Spectra extracted.')
 
             #-- extract MOS1 Spectra --#
             if self.smallMode[obsID]:
-                print(f'\n{obsID} is in Small Mode. Skipping MOS1 Spectra extraction for it.')
+                logging.info(f'\n{obsID} is in Small Mode. Skipping MOS1 Spectra extraction for it.')
             else:
                 subprocess.run("cd "+workdir+";"+ \
                                ". $HEADAS/headas-init.sh;"+ \
@@ -212,11 +213,11 @@ class epicSpectra (epicObj):
                                    " groupedset=MOS1_spectrum_grouped_"+obsID+".fits;" 
                                #"fv MOS1_spectrum_grouped_"+obsID+".fits;"
                                , shell=True)
-                print('\nMOS1 Spectra extracted.')
+                logging.info('\nMOS1 Spectra extracted.')
 
             #-- extract MOS2 Spectra --#
             if self.smallMode[obsID]:
-                print(f'\n{obsID} is in Small Mode. Skipping MOS2 Spectra extraction for it.')
+                logging.info(f'\n{obsID} is in Small Mode. Skipping MOS2 Spectra extraction for it.')
             else:
                 subprocess.run("cd "+workdir+";"+ \
                                ". $HEADAS/headas-init.sh;"+ \
@@ -242,10 +243,10 @@ class epicSpectra (epicObj):
                                    " groupedset=MOS2_spectrum_grouped_"+obsID+".fits;" 
                                #"fv MOS2_spectrum_grouped_"+obsID+".fits;"
                                , shell=True)
-                print('\nMOS2 Spectra extracted.')
-            print('\nExtracting Image Mode Spectra for obsID {} finished.'.format(obsID)) 
+                logging.info('\nMOS2 Spectra extracted.')
+            logging.info('\nExtracting Image Mode Spectra for obsID {} finished.'.format(obsID)) 
 
-        return print('\nCompleted extracting Spectra in Image Mode.')
+        return logging.info('\nCompleted extracting Spectra in Image Mode.')
 
 
     ##-- fit Spectra to extracted group Spectra data --##
@@ -261,7 +262,7 @@ class epicSpectra (epicObj):
 
         20th May 2021: Adding feature to allow model parameter value inputs.
         """
-        print('\nStarting to fit a model Spectra to the extracted Spectra using xspec.')
+        logging.info('\nStarting to fit a model Spectra to the extracted Spectra using xspec.')
         
         #-- set the environment variables --#
         os.environ['SAS_DIR'] = self.sas_dir
@@ -270,7 +271,7 @@ class epicSpectra (epicObj):
         
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nFitting Spectra for obsID {}.'.format(obsID))
+            logging.info('\nFitting Spectra for obsID {}.'.format(obsID))
             workdir = self.workdir+'/'+obsID+'/work'
 
             smallMode = self.smallMode[obsID]
@@ -297,9 +298,9 @@ class epicSpectra (epicObj):
                                 " --model "+model+" --modelParams "+modelParams+ \
                                 " --doNotOverwriteModel "+doNotOverwriteModel+";"
                             , shell=True)
-            print('\nSpectra fitting for obsID {} finished.'.format(obsID))
+            logging.info('\nSpectra fitting for obsID {} finished.'.format(obsID))
             
-        return print('Fitted model Spectra to the extracted Spectra.')
+        return logging.info('Fitted model Spectra to the extracted Spectra.')
 
 
     ##-- function to save the final results --##
@@ -309,7 +310,7 @@ class epicSpectra (epicObj):
                 Copies the Spectra images from each obsID directory to a results 
                 folder in the main directory.
         """
-        print('\nLastly saving results for each obsID to a common results folder.')
+        logging.info('\nLastly saving results for each obsID to a common results folder.')
 
         maindir = self.workdir
         #objName+".dat;"
@@ -324,7 +325,7 @@ class epicSpectra (epicObj):
 
         #-- iterating for all the obsIDs --#      
         for obsID in self.obsIDs:
-            print('\nSaving results for obsID {}.'.format(obsID))
+            logging.info('\nSaving results for obsID {}.'.format(obsID))
             workdir = maindir+'/'+obsID+'/work'
             
             #-- copy Event lists and other results --#
@@ -349,9 +350,9 @@ class epicSpectra (epicObj):
 
                 subprocess.run("cp "+file+" "+resultdir+"/"+fname, shell=True)
 
-            print(f'Save for obsID {obsID} done.')
+            logging.info(f'Save for obsID {obsID} done.')
 
-        return print('\nSaved the result!')
+        return logging.info('\nSaved the result!')
 
 
 ##-------------------------------------------------------------------------------------------##
@@ -371,15 +372,15 @@ def main (args):
         try:
             obj.findObsIDs()
         except KeyError:
-            print('\nNo obsIDs found for the given location.')
-            print('Confirm that you are connected to the Internet!')
+            logging.error('\nNo obsIDs found for the given location.')
+            logging.error('Confirm that you are connected to the Internet!')
     else:
         obj.objName = args.objName
 
     #-- check if obsID has been passed --#
     if args.obsIDs is not None:
         obj.obsIDs = args.obsIDs
-        print('Using the obsIDs passed.')
+        logging.info('Using the obsIDs passed.')
     
     if args.saveResults:
         obj.save_spectraResults()
@@ -397,11 +398,11 @@ def main (args):
         obj.xspec_fitSpectra()
     obj.save_spectraResults()
 
-    print('\nHurray! The Spectra method ran successfully.')
+    logging.info('\nHurray! The Spectra method ran successfully.')
     #if len(obj.smallMode) != 0:
-    #    print(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
+    #    logging.info(f'\nThe following obsIDs have Small-mode MOS data.\n{obj.smallMode}')
     if len(obj.badObs)!=0:
-        print('These obsIDs were excluded from analysis: ', obj.badObs)
+        logging.info('These obsIDs were excluded from analysis: {}'.format(obj.badObs))
 
     return True
 

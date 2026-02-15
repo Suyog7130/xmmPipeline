@@ -8,6 +8,8 @@ import os
 import subprocess
 import requests
 import wget
+import logging
+import datetime
 
 import glob
 import pickle
@@ -21,6 +23,9 @@ from astropy.table import Table
 from epicObj import epicObj
 from epicObj import strToBool, printErrorMessage
 from plotAnal import plotAnal
+
+
+NOW = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 ##-- the reduceData main function --##
@@ -174,6 +179,25 @@ if __name__=="__main__":
     description = 'Download, Reduce and extract products from the XMM data of the object located at the given coordinates.'
     
     parser = argparse.ArgumentParser(description=description)   #--create a ArgumentParser object.
+
+    # Set up logging with both file and stream handlers
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    file_handler = logging.FileHandler(f'xmmPipeline-{NOW}.log')
+    file_handler.setLevel(logging.INFO)
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.INFO)
+
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    stream_handler.setFormatter(formatter)
+
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
+
+    logging.info(f'XMM Pipeline started at {NOW} with arguments: {parser.parse_args()}')
     
     #-- location paths arguments --#
     SAS_DIR = '/usr/local/xmmsas_20201028_0905'  
@@ -277,7 +301,7 @@ if __name__=="__main__":
     elif args.saveResults:
         extractProds_method(args)
     else:
-        printErrorMessage('Please give which method to proceed with!')
+        logging.error('Please give which method to proceed with!')
         parser.print_help()
 
    
