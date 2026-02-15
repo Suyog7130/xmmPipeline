@@ -17,7 +17,11 @@ from epicPileup import *
 from epicSpectra import *
 
 from findOverlap import *
+
+# TODO: upgrade this to plotutils code, that would be
+# made available via `pip install putils`
 from plotAnal import *
+
 from convert import *
 
 #__all__ = ['xmmPipeline']

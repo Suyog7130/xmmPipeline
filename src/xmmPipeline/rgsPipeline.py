@@ -4,8 +4,6 @@
 ##############################
 
 """
-01 April 2021:
----
 Python routine to reduce the RGS data, obtain the Spectra and the light curve from it.
 The SAS threads to be used, in order of execution are:
     1. https://www.cosmos.esa.int/web/xmm-newton/sas-thread-rgs

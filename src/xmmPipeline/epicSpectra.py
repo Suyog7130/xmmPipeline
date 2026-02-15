@@ -3,42 +3,6 @@
 ###      Spectra of XMM Object      ###
 #######################################
 
-"""
-10th May 2021:
----
-Am making several changes to the code procedure arrangements. 
-See the GitHub repo, the Notes on Google Docs and the documentation for more information.
-For previous docstring comments, see earlier code files, namely `spectra.py`
-
-11th May 2021:
----
-Since model fitting for individual obsIDs has to be done manually, I don't think
-`xspec_fitSpectra` would be used now. `pyXspec.py` will have to be run manually
-for each obsIDs with the different model parameters varrying.
-
-20th May 2021:
----
-Completing the pending work of fitting Models to the Spectra.
-Two criterions to be checked for each obsIDs:
-    - whether obsID is Piled-up? DONE!
-    - whether obsID is in Small-mode? DONE!
-
-21st May 2021:
----
-Changed to using Flare Background filtered Event Lists for Spectra extraction.
-Found a way to save the output parameter values from `pyXspec.py`.
-Completing the SpecModel fitting now.
-
-13th June 2021:
----
-Completing the work for obtaining individual instrument bkgCircs.
-    * Adding `runIndiBkgCircFuncs` to the main function.
-
-17th June 2021:
----
-Adding features to read individual instrument bkgCircs from ccdCoordsPickle file.
-And finally starting the manual specModel fits.
-"""
 
 import os
 import subprocess

@@ -3,42 +3,6 @@
 ###      EPIC Pile-up Issue      ###
 ####################################
 
-"""
-08 May 2021:
----
-For clearing the EPIC Pile-up in early time obsIDs.
-See: `https://www.cosmos.esa.int/web/xmm-newton/sas-thread-epatplot`
-
-This would be used to correct for the Pile-up seperately for individual
-obsIDs. Thus, the `workdir` is changed to `workdir`+'/work' folder.
-
-This procedure will give the Source Annulus radii for which Pile-up is 
-negligible for any particular obsIDs. Henceforth, it is this Source region
-for which the Light Curve and the Spectra extraction should be done.
-
-So, I will have to: 
-    -> Modify `xmmPipeline.py` so that it knows which obsIDs have the 
-       Pile-up issue and need the Source region to lie within an Annulus.
-    -> Modify `spectra.py` so that the Source Spectra are extracted from 
-       within this Annulus.
-
-See the notes of Google Doc for open questions.
-
-09 May 2021:
----
-`epatplot` calculates two diagnostic numbers which may be used to assess 
-the presence of pile-up: In the absence of pile-up, the 0.5 - 2.0 keV (default range) 
-observed-to-model singles and doubles pattern fractions ratios should both be 
-consistent with 1.0 within statistical errors (1 sigma errors are given). 
-If pile-up is present, the singles ratio will be smaller than 1.0 and the 
-doubles ratio will be larger than 1.0.
-
-13 May 2021:
----
-Adding `correctPileUp` function.
-Some late-time obsIDs 0770981001, 0810200501 and 0810200701 also appear to be Piled-up!
-Gotta get this discrepancy cleared up.
-"""
 
 import os
 import subprocess

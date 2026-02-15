@@ -3,13 +3,6 @@
 ###      Reduce the XMM Data       ###
 ######################################
 
-"""
-10th May 2021:
----
-Am making several changes to the code procedure arrangements. 
-See the GitHub repo, the Notes on Google Docs and the documentation for more information.
-For previous docstring comments, see earlier code files, namely `xmmPipeline.py`
-"""
 
 import os
 import subprocess

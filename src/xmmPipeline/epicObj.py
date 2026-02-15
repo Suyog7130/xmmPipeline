@@ -3,34 +3,6 @@
 ###      The `epicObj` class       ###
 ######################################
 
-"""
-10th May 2021:
----
-Am making several changes to the code procedure arrangements. 
-See the GitHub repo, the Notes on Google Docs and the documentation for more information.
-For previous docstring comments, see earlier code files, namely `xmmPipeline.py`
-
-18th and 19th May 2021:
----
-Adding options for Pile-up obsIDs.
-
-21st May 2021:
----
-Editing the `removeFlareBackground` function.
-A seperate function `extract_flareGTI` will also be added.
-
-9th~13th June 2021:
----
-Starting to write the functions for obtaining individual background circles.
-
-20th Jan 2023:
----
-Making the code compatible with Mac.
-If the path names are Windows like, containing white-spaces, then we need to have
-additional single quotes around them before calling the `subprocess.run` command.
-
-
-"""
 
 import os
 import subprocess

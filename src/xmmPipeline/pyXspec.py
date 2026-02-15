@@ -4,57 +4,12 @@
 ###########################################
 
 """
-10th April 2021:
----
-Getting the spectra fits using PyXspec module.
-
-13th April 2021:
----
-Adding ArgParse so that this code can be used by ``spectra.py``
-to fit spectra.
-Nope. This doesn't actually work.
-
-20th April 2021:
----
-It works fine now. See the notes for Google Docs for more info.
-
-08 May 2021:
----
-Lots of fitting to the Spectra thing remains.
-Note: Gotta make sure that only the available grouped Spectra files are looked for in `pyXspec.py`
-      when `all` is passed as the `instName`, since Small-mode obsIDs do not have the MOS Spectra.
-
-20&21 May 2021:
----
-Completing the pending work of fitting Models to the Spectra.
-Two criterions to be checked for each obsIDs:
-    - whether obsID is Piled-up? DONE! 
-    - whether obsID is in Small-mode? DONE!
-Piled-up cases are already taken care of by `epicSpectra.py` is `ignorePileup` flag is OFF.
-For these cases, `spectrum_grouped.fits` will contain `spectrum_source_annulus`.
-
-NOTE: The xspec Model object cannot be pickled or dumped into a JSON file.
-So, I think this automation can be done later and for now I can manually do the specModel fitting.
-
-FOUND Out how the output can be accessed, logged, saved and used otherwise!
-Bingo!
-
-22nd May 2021:
----
 See: `https://heasarc.gsfc.nasa.gov/docs/xanadu/xspec/manual/node98.html` for `flux`
       calculation in `xspec`
 the Sigma values of the parameters should be the Errors in them, isn't it?
 
 See: `https://heasarc.gsfc.nasa.gov/docs/xanadu/xspec/python/html/spectrum.html#xspec.Spectrum`
 for the units in which the Flux and Lumin tuples are returned.
-
-17th June 2021:
----
-Finally doing the manual specModel fitting.
-
-18th June 2021:
----
-Changed to the output of a 4-panel plot.
 """
 
 import os

@@ -4,23 +4,6 @@
 #########################################
 
 """
-22nd May 2021:
----
-Have completed much of the pending work regarding Spectral Analysis
-of ASASSN-14li. This Python routine is to read the `specModelParams.json`
-files for each of the obsIDs and create a `specResultsTable` using them.
-
-I don't the obsIDs thing will be valid here.
-Why would one not wanna include some obsIDs in the final table?
-Anyway.
-
-23rd May 2021:
----
-The primary ``for`` loop should be for model since each model will have a
-separate ``specResultsTable``.
-
-18th June 2021:
----
 Finishing up the manual specModel fitting.
 
 NOTE: Be wary of the specModel name with single additive model component
