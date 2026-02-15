@@ -5,13 +5,11 @@
 
 import os
 import time
-import glob
 import argparse
 import subprocess
 import logging
 
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 
 from astropy.io import fits

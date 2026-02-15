@@ -3,27 +3,13 @@
 ###      Reduce the XMM Data       ###
 ######################################
 
-
-import os
-import subprocess
-import requests
-import wget
 import logging
 import datetime
 
-import glob
 import pickle
 import argparse
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-from astropy.table import Table
 
 from epicObj import epicObj
-from epicObj import strToBool, printErrorMessage
-from plotAnal import plotAnal
-
 
 NOW = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 

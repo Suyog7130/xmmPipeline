@@ -19,8 +19,6 @@ The SAS threads to be used, in order of execution are:
 import os
 import sys
 import subprocess
-import requests
-import wget
 import logging
 
 import glob
@@ -28,9 +26,6 @@ import pickle
 import argparse
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-
-from astropy.table import Table
 
 #from xmmPipeline import xmmObj
 from plotAnal import plotAnal
