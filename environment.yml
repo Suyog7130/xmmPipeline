@@ -1,0 +1,21 @@
+name: xmm_epic_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - numpy
+  - pandas
+  - matplotlib
+  - astropy
+  - scikit-learn
+  - scikit-image
+  - opencv
+  - scipy
+  - seaborn
+  - requests
+  - wget
+  - pip
+  - pip:
+      - glob2
+      # - opencv-python
