@@ -130,7 +130,7 @@ class epicObj:
             print('browse_extract_wget.pl downloaded.')
             print('\nPlease check the PERL path in the file. If required, correct the path given in first line and save the file.')
             subprocess.run(f"cd '{workdir}';"+ \
-                           "gedit browse_extract_wget.pl &", shell=True)
+                           "touch browse_extract_wget.pl", shell=True)
             
         #-- download and save parts of xmmmaster table --##
         subprocess.run(f"cd '{workdir}';"+ \
