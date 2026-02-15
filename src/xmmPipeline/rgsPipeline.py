@@ -17,6 +17,7 @@ The SAS threads to be used, in order of execution are:
 """
 
 import os
+import sys
 import subprocess
 import requests
 import wget
@@ -78,6 +79,16 @@ class rgsObj:
         self.smallMode = {}       #--is obsID in smallMode, dict for all obsIDs.
 
 
+    def _check_dir(self, path):
+        """
+        Checks if the given path exists and is writable. If not, it creates the directory and checks permissions.
+        """
+        if not os.path.isdir(path):
+            os.makedirs(path, exist_ok=True)
+        if not (os.access(path, os.W_OK) and os.access(path, os.X_OK)):
+            print(f"Error: You do not have write/execute permissions in {path}.")
+            sys.exit(1)
+
     ##-- function to find the obsIDs --##
     def findObsIDs (self):
         """
@@ -88,24 +99,23 @@ class rgsObj:
         print('\nLooking for obsIDs at RA={} and DEC={}\nWORKDIR is set at {}'.format(ra,dec,workdir))
         
         #-- check if workdir exists --#
-        if not os.path.isdir(workdir):
-            subprocess.run("sudo mkdir "+workdir, shell=True)
+        self._check_dir(workdir)
             
         #-- check if browse_extract_wget.pl file exists --#
         if not os.path.isfile(workdir+"/"+"browse_extract_wget.pl"):
             print('\nbrowse_extract_wget.pl not found.')
             subprocess.run("cd "+workdir+";"+
-                           "sudo wget -q https://heasarc.gsfc.nasa.gov/FTP/heasarc/software/web_batch/browse_extract_wget.pl", shell=True)
+                           "wget -q https://heasarc.gsfc.nasa.gov/FTP/heasarc/software/web_batch/browse_extract_wget.pl", shell=True)
             
             print('browse_extract_wget.pl downloaded.')
             print('\nPlease check the PERL path in the file. If required, correct the path given in first line and save the file.')
             subprocess.run("cd "+workdir+";"+
-                           "sudo gedit browse_extract_wget.pl", shell=True)
+                           "gedit browse_extract_wget.pl &", shell=True)
             
         #-- download and save parts of xmmmaster table --##
         subprocess.run("cd "+workdir+";"+ \
-                       "sudo chmod +x browse_extract_wget.pl;"+ \
-                       "sudo ./browse_extract_wget.pl table=xmmmaster position='"+ ra+","+dec+ \
+                       "chmod +x browse_extract_wget.pl;"+ \
+                       "./browse_extract_wget.pl table=xmmmaster position='"+ ra+","+dec+ \
                        "' coordinates=equatorial outfile=obsIDs_list.dat", shell=True)
         
         #-- extract obsIDs from the file --#
